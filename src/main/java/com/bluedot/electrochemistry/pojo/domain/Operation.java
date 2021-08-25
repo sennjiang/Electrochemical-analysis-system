@@ -6,4 +6,5 @@ package com.bluedot.electrochemistry.pojo.domain;
  * @createDate 2021/8/25-14:41
  */
 public class Operation {
+    private int id;
 }
