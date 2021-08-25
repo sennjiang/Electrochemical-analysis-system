@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e8e4fc67-5afc-4494-99ed-7473fb6c14c0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="e8e4fc67-5afc-4494-99ed-7473fb6c14c0" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -76,6 +73,7 @@
       <updated>1629873185418</updated>
       <workItem from="1629873187319" duration="2970000" />
       <workItem from="1629881305331" duration="1136000" />
+      <workItem from="1629882662908" duration="363000" />
     </task>
     <task id="LOCAL-00001" summary="基础的框架、vo 视图实体类的包">
       <created>1629874381694</created>
@@ -105,7 +103,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629881347957</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Merge remote-tracking branch 'ea/main' into main">
+      <created>1629882765874</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1629882765874</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -121,10 +126,12 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="基础的框架、vo 视图实体类的包" />
     <MESSAGE value="更新Operation" />
-    <option name="LAST_COMMIT_MESSAGE" value="更新Operation" />
+    <MESSAGE value="Merge remote-tracking branch 'ea/main' into main" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'ea/main' into main" />
   </component>
 </project>
