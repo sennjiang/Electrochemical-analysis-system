@@ -53,6 +53,14 @@
       <version>${log.version}</version>
     </dependency>
 
+    <!-- 引入 dom4j 依赖 解析xml -->
+    <dependency>
+      <groupId>dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+      <version>1.6.1</version>
+    </dependency>
+
+
   </dependencies>
 
   <build>
