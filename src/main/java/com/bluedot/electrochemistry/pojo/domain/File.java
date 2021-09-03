@@ -5,6 +5,6 @@ package com.bluedot.electrochemistry.pojo.domain;
  * @description
  * @createDate 2021/9/3-16:34
  */
-public class EAFile {
+public class File {
     private int id;
 }
