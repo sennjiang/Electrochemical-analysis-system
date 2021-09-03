@@ -1,4 +1,4 @@
-package com.bluedot.electrochemistry.dao;
+package com.bluedot.electrochemistry.dao.base;
 
 /**
  *
