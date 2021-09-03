@@ -1,4 +1,4 @@
-package com.bluedot.electrochemistry.dao.bese;
+package com.bluedot.electrochemistry.dao.base;
 
 /**
  * @author JDsen99
