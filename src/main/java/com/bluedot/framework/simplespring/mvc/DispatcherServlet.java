@@ -1,12 +1,16 @@
 package com.bluedot.framework.simplespring.mvc;
 
 
-
-
 import com.bluedot.framework.simplespring.aop.AspectWeaver;
 import com.bluedot.framework.simplespring.core.BeanContainer;
 import com.bluedot.framework.simplespring.inject.DependencyInject;
 import com.bluedot.framework.simplespring.util.LogUtil;
+import javafx.util.Pair;
+import org.dom4j.Attribute;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 
 import javax.servlet.ServletConfig;
@@ -20,22 +24,21 @@ import java.io.InputStream;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author xxbb
  */
-@WebServlet(name="DispatcherServlet" ,urlPatterns="/*",
-initParams ={@WebInitParam(name="contextConfigLocation",value = "application.properties")},
-loadOnStartup = 1)
+@WebServlet(name = "DispatcherServlet", urlPatterns = "/*",
+        initParams = {@WebInitParam(name = "contextConfigLocation", value = "application.properties"),
+                @WebInitParam(name = "serviceXmlName", value = "service.xml")},
+        loadOnStartup = 1)
 public class DispatcherServlet extends HttpServlet {
     /**
      * 保存application.properties配置文件中的内容
      */
     private Properties contextCofig = new Properties();
+
     /**
      * 请求处理器
      */
@@ -43,7 +46,7 @@ public class DispatcherServlet extends HttpServlet {
     /**
      * 日志
      */
-    private final Logger log= LogUtil.getLogger();
+    private final Logger log = LogUtil.getLogger();
 
     @Override
     public void init(ServletConfig servletConfig) {
@@ -58,6 +61,8 @@ public class DispatcherServlet extends HttpServlet {
         //new SqlSessionFactoryBuilder().build(servletConfig.getInitParameter("contextConfigLocation"));
         //依赖注入
         new DependencyInject().doDependencyInject();
+        // xml字典映射 处理
+        doParsingXmlMappings(servletConfig.getInitParameter("serviceXmlName"));
 
 
         //初始化请求处理器责任链
@@ -66,14 +71,41 @@ public class DispatcherServlet extends HttpServlet {
 //        PROCESSORS.add(new JspRequestProcessor(servletConfig.getServletContext()));
 //        PROCESSORS.add(new ControllerRequestProcessor());
     }
+
+    private void doParsingXmlMappings(String serviceXmlName) {
+        Document doc = null;
+        Map<String, Pair<String, String>> xmlMap = null;
+        try {
+            SAXReader reader = new SAXReader();
+            xmlMap = new HashMap();
+            doc = reader.read(serviceXmlName);
+            Element service = doc.getRootElement();
+            Iterator nodes = service.elementIterator();
+
+            String number = null;
+            String service1 = null;
+            String method = null;
+
+            while (nodes.hasNext()) {
+                Element node = (Element) nodes.next();
+                //取节点的值
+                number = (String) node.element("number").getData();
+                service1 = (String) node.element("service").getData();
+                method = (String) node.element("method").getData();
+                xmlMap.put(number, new Pair<>(service1, method));
+            }
+        } catch (DocumentException e) {
+            log.error("service.xml parse error",e);
+            e.printStackTrace();
+        }
+        if (xmlMap != null) {
+            BeanContainer.getInstance().addBean(Map.class,xmlMap);
+        }
+    }
+
+
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) {
-//        //1.创建责任链对象实例
-//        RequestProcessorChain requestProcessorChain = new RequestProcessorChain(PROCESSORS.iterator(), req, resp);
-//        //2.通过责任链模式来一次调用请求处理器对请求进行处理
-//        requestProcessorChain.doRequestProcessorChain();
-//        //3.对处理结果进行渲染
-//        requestProcessorChain.doRender();
+    protected void service(HttpServletRequest request, HttpServletResponse response) {
 
     }
 
@@ -85,8 +117,8 @@ public class DispatcherServlet extends HttpServlet {
     private void doLoadConfig(String contextConfigLocation) {
         //直接通过类路径找到框架主配置文件的路径
         //并将配置文件内容读取到properties对象中
-        log.info("Loading configLocation--->path:{} ",contextConfigLocation);
-        InputStream is=null;
+        log.info("Loading configLocation--->path:{} ", contextConfigLocation);
+        InputStream is = null;
         try {
             is = this.getClass().getClassLoader().getResourceAsStream(contextConfigLocation);
             contextCofig.load(is);
