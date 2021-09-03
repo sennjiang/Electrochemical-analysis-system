@@ -1,4 +1,4 @@
-package com.bluedot.framework.simpespring.util;
+package com.bluedot.framework.simplespring.util;
 
 import com.google.gson.Gson;
 /**
