@@ -2,9 +2,16 @@
 <mapper namespace="com.bluedot.electrochemistry.dao.BaseMapper">
     <!--算法相关-->
     <select id="getAlgorithms" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
-        select * from algorithm limit #{pageStart},#{pageSize}
+        select * from t_algorithm limit #{pageStart},#{pageSize}
     </select>
     <select id="getAlgorithmsCount" resultType="java.lang.Long">
-        select count(*) from algorithm
+        select count(*) from t_algorithm
     </select>
+    <!--有问题
+    <select id="getAlgorithmsByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
+        select * from t_algorithm where #{queryCondition}=#{queryValue} limit #{pageStart},#{pageSize}
+    </select>
+    <select id="getAlgorithmsCountByQueryCondition" resultType="java.lang.Long">
+        select count(*) from t_algorithm where #{queryCondition}=#{queryValue}
+    </select>-->
 </mapper>
