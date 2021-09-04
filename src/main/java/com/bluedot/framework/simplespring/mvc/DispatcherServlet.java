@@ -57,7 +57,7 @@ public class DispatcherServlet extends HttpServlet {
         //AOP织入
         new AspectWeaver().doAspectOrientedProgramming();
         //初始化简易mybatis框架，往IoC容器中注入SqlSessionFactory对象
-        new SqlSessionFactoryBuilder().build(servletConfig.getInitParameter("contextConfigLocation"));
+        //new SqlSessionFactoryBuilder().build(servletConfig.getInitParameter("contextConfigLocation"));
         //依赖注入
         new DependencyInject().doDependencyInject();
         // xml字典映射 处理
@@ -72,13 +72,14 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     public void doParsingXmlMappings(String serviceXmlName) {
+        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(serviceXmlName);
         Document doc = null;
         Map<String, Pair> xmlMap = null;
         try {
             SAXReader reader = new SAXReader();
             xmlMap = new HashMap();
 
-            doc = reader.read(serviceXmlName);
+            doc = reader.read(resourceAsStream);
 
             Element service = doc.getRootElement();
             Iterator nodes = service.elementIterator();
