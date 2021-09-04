@@ -49,7 +49,7 @@ public class User {
 	/**
 	 * @return
 	 * @Description 有参构造方法, 不提供对gmtModified参数的修改
-	 * @Param [username, password, nickname, gender, age, email, birth, status, portrait, gmtCreated]
+	 * @Param [username 用户名, password 密码, nickname 昵称, gender 性别, age 年龄, email 邮件, birth 出生日期, status 状态, portrait 头像, gmtCreated 创建时间]
 	 * @Author KangLongPing
 	 * @Date 2021/9/4 14:50
 	 **/
