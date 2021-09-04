@@ -14,6 +14,16 @@ import java.util.List;
 public interface BaseMapper {
 
     /**
+     * 根据文件id查找对应的文件
+     * @author zero
+     * @param id 文件的id
+     * @param pageStart 起始页码
+     * @param pageSize 一页的数据量
+     * @return 被查找到的指定文件
+     */
+    File findFileById(int id,int pageStart,int pageSize);
+
+    /**
      * 电化学分析模块查询文件
      * @author zero
      * @param username 查询指定账户的文件
