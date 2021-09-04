@@ -13,6 +13,9 @@ import java.util.List;
  */
 public interface BaseMapper {
 
+    List<File> listBinFileBySearch(int username, String condition, int fileType, int timeOrder, int pageStart, int pageSize);
+    long getBinFileCountBySearch(int username, String condition, int fileType, int timeOrder);
+
     /**
      * 根据文件id查找对应的文件
      * @author zero
