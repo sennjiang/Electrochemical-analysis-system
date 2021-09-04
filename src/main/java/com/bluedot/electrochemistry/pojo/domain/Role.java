@@ -16,7 +16,7 @@ public class Role {
     private Timestamp genTime;
     //角色描述
     private String description;
-    //角色级别
+    //角色级别,0:管理员；1：普通用户
     private Integer rightType;
 
     public Role() {
