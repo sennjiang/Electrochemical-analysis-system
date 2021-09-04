@@ -1,6 +1,7 @@
 package com.bluedot.electrochemistry.service;
 
 import com.bluedot.electrochemistry.pojo.domain.File;
+import com.bluedot.electrochemistry.service.base.BaseService;
 
 import java.util.Map;
 
@@ -8,7 +9,7 @@ import java.util.Map;
  * @description
  * @createDate 2021/8/25-14:37
  */
-public class FileService {
+public class FileService extends BaseService {
 
     /**
      * 导出文件

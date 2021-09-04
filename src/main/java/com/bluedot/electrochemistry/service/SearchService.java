@@ -10,7 +10,7 @@ import java.util.Map;
  * @description
  * @createDate 2021/8/25-18:32
  */
-public class SearchService extends BaseService {
+public class SearchService extends BaseService  {
     /**
      * 所有查询入口
      * @param map
