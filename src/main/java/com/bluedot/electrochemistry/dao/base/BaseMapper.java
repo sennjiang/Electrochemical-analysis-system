@@ -1,5 +1,6 @@
 package com.bluedot.electrochemistry.dao.base;
 
+import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.pojo.domain.User;
 
 import java.util.List;
@@ -46,4 +47,39 @@ public interface BaseMapper {
      */
     Long getAdminCountByQueryCondition(String queryCondition , String queryValue);
 
+    /**
+     * 获取备份文件信息列表
+     *
+     * @param pageStart 页码
+     * @param pageSize 每页数据
+     * @return 备份文件列表
+     */
+    List<File> getBackupFiles(int pageStart , int pageSize);
+
+    /**
+     * 获取备份文件数据总数
+     *
+     * @return 备份文件数据总数
+     */
+    Long getBackupFileCount();
+
+    /**
+     * 根据查询条件获取备份文件信息列表
+     *
+     * @param queryCondition 查询条件（字段）
+     * @param queryValue 要查询的值
+     * @param pageStart 页码
+     * @param pageSize 每页数据
+     * @return 备份文件列表
+     */
+    List<File> getFileByQueryCondition(String queryCondition , String queryValue , int pageStart , int pageSize);
+
+    /**
+     * 根据查询条件获取备份文件数据总数
+     *
+     * @param queryCondition 查询条件（字段）
+     * @param queryValue 要查询的值
+     * @return 备份文件数据总数
+     */
+    Long getFileCountByQueryCondition(String queryCondition , String queryValue);
 }
