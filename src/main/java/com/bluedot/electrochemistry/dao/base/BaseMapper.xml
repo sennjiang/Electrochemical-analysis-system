@@ -1,3 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapper namespace="com.bluedot.electrochemistry.dao.BaseMapper">
+<!--超级管理员相关-->
+    <!--查询管理员相关-->
+    <select id="getAdmins" resultType="com.bluedot.electrochemistry.pojo.domain.User">
+        select * from user limit #{pageStart},#{pageSize}
+    </select>
+    <select id="getAdminByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.User">
+        select * from user where #{queryCondition}=#{queryValue} limit #{pageStart},#{pageSize}
+    </select>
+    <select id="getAdminCount" resultType="java.lang.Long">
+        select count(*) from user
+    </select>
+    <select id="getAdminCountByQueryCondition" resultType="java.lang.Long">
+        select count(*) from user where #{queryCondition}=#{queryValue}
+    </select>
+    <!--查询备份文件相关-->
+    <select id="getBackupFiles" resultType="com.bluedot.electrochemistry.pojo.domain.File">
+        select * from file limit #{pageStart},#{pageSize}
+    </select>
+    <select id="getBackupFileCount" resultType="java.lang.Long">
+        select count(*) from file
+    </select>
+    <select id="getFileByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.File">
+        select * from file where #{queryCondition}=#{queryValue} limit #{pageStart},#{pageSize}
+    </select>
+    <select id="getFileCountByQueryCondition" resultType="java.lang.Long">
+        select count(*) from file where #{queryCondition}=#{queryValue}
+    </select>
+    <!--查询角色相关-->
+    <select id="getRoles" resultType="com.bluedot.electrochemistry.pojo.domain.Role">
+        select * from role limit #{pageStart},#{pageSize}
+    </select>
+    <select id="getRoleCount" resultType="java.lang.Long">
+        select count(*) from role
+    </select>
+    <select id="getRoleByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.Role">
+        select * from role where #{queryCondition}=#{queryValue} limit #{pageStart},#{pageSize}
+    </select>
+    <select id="getRoleCountByQueryCondition" resultType="java.lang.Long">
+        select count(*) from role where #{queryCondition}=#{queryValue}
+    </select>
 </mapper>
