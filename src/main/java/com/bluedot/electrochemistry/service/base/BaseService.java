@@ -1,6 +1,9 @@
 package com.bluedot.electrochemistry.service.base;
 
+import com.bluedot.electrochemistry.pojo.domain.File;
+import com.bluedot.electrochemistry.service.FileService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
+import com.bluedot.framework.simplespring.core.BeanContainer;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -11,6 +14,8 @@ import java.util.Map;
  * @createDate 2021/8/25-14:37
  */
 public class BaseService {
+
+    //private BeanContainer beanContainer = BeanContainer.getInstance();
 
     /**
      * 查询数据列表的方法
@@ -44,10 +49,11 @@ public class BaseService {
         String methodName = (String) map.get("service");
         Class<?> clazz = this.getClass();
 //        Object obj = beanContainer.getBean(clazz);
+        FileService fileService = new FileService();
         try {
             Method method = clazz.getDeclaredMethod(methodName, Map.class);
             method.setAccessible(true);
-//            method.invoke(obj, map);
+            method.invoke(fileService, map);
         } catch (Exception e) {
             e.printStackTrace();
             map.put("error", e.getMessage());

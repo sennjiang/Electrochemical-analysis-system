@@ -2,6 +2,7 @@ package com.bluedot.electrochemistry.dao.base;
 
 import com.bluedot.electrochemistry.pojo.domain.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.bluedot.electrochemistry.pojo.domain.File;
@@ -123,9 +124,39 @@ public interface BaseMapper {
      */
     Long getRoleCountByQueryCondition(String queryCondition , String queryValue);
 
+    /**
+     * 比较hash值
+     * @param File_hash
+     * @param username
+     * @return
+     */
+    long contrastFile(String File_hash,int username);
 
-    List<File> listBinFileBySearch(int username, String condition, int fileType, int timeOrder, int pageStart, int pageSize);
-    long getBinFileCountBySearch(int username, String condition, int fileType, int timeOrder);
+    /**
+     * 按照条件查询
+     * @param username 账号
+     * @param condition 条件
+     * @param timeOrder  时间
+     * @param status 0 正常 1 已删除
+     * @param type 0 用户 1 系统
+     * @param pageStart 页面
+     * @param pageSize 页面大小
+     * @return List
+     */
+    List<File> listFileByQueryCondition(int username, String condition, Timestamp timeOrder,
+                                        int status,int type, int pageStart, int pageSize);
+
+    /**
+     * 查询查询条数
+     * @param username 账号
+     * @param condition 条件
+     * @param timeOrder 时间
+     * @param status 0 正常 1 已删除
+     * @param type  0 用户 1 系统
+     * @return List
+     */
+    long getFileCountByQuery(int username, String condition, Timestamp timeOrder,
+                             int status,int type);
 
     /**
      * 根据文件id查找对应的文件

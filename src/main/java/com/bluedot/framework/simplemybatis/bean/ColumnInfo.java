@@ -1,30 +1,30 @@
 package com.bluedot.framework.simplemybatis.bean;
 
 /**
- * @version: 1.0.0
- * @className: ColumnInfo
- * @Description: 封装数据库表的一个字段的信息
- * @Author: KangLongPing
- * @Date: 2021/8/20 9:13
+ * 封装数据库表的一个字段的信息
+ *
+ * @author xxbb
  */
 public class ColumnInfo {
-
-    // 字段名
+    /**
+     * 字段名
+     */
     private String name;
-
-    // 字段数据类型
-    private String dateType;
-
-    // 字段的键类型(规定 0:普通键，1：主键，2：外键)
+    /**
+     * 字段数据类型
+     */
+    private String dataType;
+    /**
+     * 字段的键类型(规定 0:普通键，1：主键，2：外键)
+     */
     private int keyType;
 
     public ColumnInfo() {
     }
 
-
-    public ColumnInfo(String name, String dateType, int keyType) {
+    public ColumnInfo(String name, String dataType, int keyType) {
         this.name = name;
-        this.dateType = dateType;
+        this.dataType = dataType;
         this.keyType = keyType;
     }
 
@@ -36,12 +36,12 @@ public class ColumnInfo {
         this.name = name;
     }
 
-    public String getDateType() {
-        return dateType;
+    public String getDataType() {
+        return dataType;
     }
 
-    public void setDateType(String dateType) {
-        this.dateType = dateType;
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 
     public int getKeyType() {
@@ -56,7 +56,7 @@ public class ColumnInfo {
     public String toString() {
         return "ColumnInfo{" +
                 "name='" + name + '\'' +
-                ", dateType='" + dateType + '\'' +
+                ", dataType='" + dataType + '\'' +
                 ", keyType=" + keyType +
                 '}';
     }
