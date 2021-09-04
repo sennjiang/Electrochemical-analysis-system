@@ -4,14 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @version: v1.0
- * @className: LogUtils
- * @Description:
- * @Author: KangLongPing
- * @Date: 2021/8/20 15:10
+ * 每个线程获取不同的Logger对象
+ * @author xxbb
  */
 public class LogUtils {
-	public static Logger getLogger() {
-		return LoggerFactory.getLogger(Thread.currentThread().getName());
-	}
+    public static Logger getLogger() {
+        return LoggerFactory.getLogger(Thread.currentThread().getName());
+    }
 }

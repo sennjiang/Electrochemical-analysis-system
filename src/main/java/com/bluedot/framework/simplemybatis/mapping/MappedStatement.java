@@ -1,68 +1,83 @@
 package com.bluedot.framework.simplemybatis.mapping;
 
 /**
- * @version: v1.0
- * @className: MappedStatement
- * @Description: 封装了mapper.xml中sql语句的相关信息, 一个对象封装一条sql语句相关信息
- * @Author: KangLongPing
- * @Date: 2021/8/20 10:56
+ * 封装mapper.xml映射文件中的信息，一个对象封装一条sql语句相关信息
+ *
+ * @author xxbb
  */
 public class MappedStatement {
-	// mapper文件的namespace命名空间
-	private String namespace;
+    /**
+     * mapper文件的namespace命名空间
+     */
+    private String namespace;
+    /**
+     * sql标签的id，和namespace一起组成唯一的标记
+     */
+    private String id;
+    /**
+     * sql标签的的类型：select/insert/update/delete
+     */
+    private String sqlType;
+    /**
+     * 查询结果的返回值类型
+     */
+    private String returnType;
+    /**
+     * sql语句
+     */
+    private String sql;
 
-	// sql标签的id, 和namespace一起组成唯一的标记
-	private String id;
+    public MappedStatement() {
+    }
 
-	// sql标签的类型: select/insert/update/delete
-	private String sqlType;
+    public String getNamespace() {
+        return namespace;
+    }
 
-	// 查询结果的返回值类型
-	private String returnType;
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
 
-	// sql语句
-	private String sql;
+    public String getId() {
+        return id;
+    }
 
-	public MappedStatement() {
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getNamespace() {
-		return namespace;
-	}
+    public String getSqlType() {
+        return sqlType;
+    }
 
-	public void setNamespace(String namespace) {
-		this.namespace = namespace;
-	}
+    public void setSqlType(String sqlType) {
+        this.sqlType = sqlType;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getReturnType() {
+        return returnType;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setReturnType(String returnType) {
+        this.returnType = returnType;
+    }
 
-	public String getSqlType() {
-		return sqlType;
-	}
+    public String getSql() {
+        return sql;
+    }
 
-	public void setSqlType(String sqlType) {
-		this.sqlType = sqlType;
-	}
+    public void setSql(String sql) {
+        this.sql = sql;
+    }
 
-	public String getReturnType() {
-		return returnType;
-	}
-
-	public void setReturnType(String returnType) {
-		this.returnType = returnType;
-	}
-
-	public String getSql() {
-		return sql;
-	}
-
-	public void setSql(String sql) {
-		this.sql = sql;
-	}
+    @Override
+    public String toString() {
+        return "MappedStatement{" +
+                "namespace='" + namespace + '\'' +
+                ", id='" + id + '\'' +
+                ", sqlType='" + sqlType + '\'' +
+                ", returnType='" + returnType + '\'' +
+                ", sql='" + sql + '\'' +
+                '}';
+    }
 }

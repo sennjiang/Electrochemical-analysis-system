@@ -1,12 +1,12 @@
 package com.bluedot.framework.simplespring.mvc;
 
 
+import com.bluedot.electrochemistry.service.FileService;
+import com.bluedot.framework.simplemybatis.session.SqlSessionFactoryBuilder;
 import com.bluedot.framework.simplespring.aop.AspectWeaver;
 import com.bluedot.framework.simplespring.core.BeanContainer;
 import com.bluedot.framework.simplespring.inject.DependencyInject;
 import com.bluedot.framework.simplespring.util.LogUtil;
-import javafx.util.Pair;
-import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -27,11 +27,10 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * @author xxbb
+ * @author JDsen99
  */
 @WebServlet(name = "DispatcherServlet", urlPatterns = "/*",
-        initParams = {@WebInitParam(name = "contextConfigLocation", value = "application.properties"),
-                @WebInitParam(name = "serviceXmlName", value = "service.xml")},
+        initParams = {@WebInitParam(name = "contextConfigLocation", value = "application.properties")},
         loadOnStartup = 1)
 public class DispatcherServlet extends HttpServlet {
     /**
@@ -58,11 +57,11 @@ public class DispatcherServlet extends HttpServlet {
         //AOP织入
         new AspectWeaver().doAspectOrientedProgramming();
         //初始化简易mybatis框架，往IoC容器中注入SqlSessionFactory对象
-        //new SqlSessionFactoryBuilder().build(servletConfig.getInitParameter("contextConfigLocation"));
+        new SqlSessionFactoryBuilder().build(servletConfig.getInitParameter("contextConfigLocation"));
         //依赖注入
         new DependencyInject().doDependencyInject();
         // xml字典映射 处理
-        doParsingXmlMappings(servletConfig.getInitParameter("serviceXmlName"));
+        doParsingXmlMappings("service.xml");
 
 
         //初始化请求处理器责任链
@@ -72,13 +71,15 @@ public class DispatcherServlet extends HttpServlet {
 //        PROCESSORS.add(new ControllerRequestProcessor());
     }
 
-    private void doParsingXmlMappings(String serviceXmlName) {
+    public void doParsingXmlMappings(String serviceXmlName) {
         Document doc = null;
-        Map<String, Pair<String, String>> xmlMap = null;
+        Map<String, Pair> xmlMap = null;
         try {
             SAXReader reader = new SAXReader();
             xmlMap = new HashMap();
+
             doc = reader.read(serviceXmlName);
+
             Element service = doc.getRootElement();
             Iterator nodes = service.elementIterator();
 
@@ -92,21 +93,23 @@ public class DispatcherServlet extends HttpServlet {
                 number = (String) node.element("number").getData();
                 service1 = (String) node.element("service").getData();
                 method = (String) node.element("method").getData();
-                xmlMap.put(number, new Pair<>(service1, method));
+                xmlMap.put(number, new Pair(service1, method));
             }
+
+            BeanContainer.getInstance().addBean(Map.class,xmlMap);
         } catch (DocumentException e) {
             log.error("service.xml parse error",e);
             e.printStackTrace();
         }
-        if (xmlMap != null) {
-            BeanContainer.getInstance().addBean(Map.class,xmlMap);
-        }
+
     }
 
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) {
-
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("service","export");
+        new FileService().doService(hashMap);
     }
 
     /**
@@ -155,5 +158,14 @@ public class DispatcherServlet extends HttpServlet {
 //            }
 //        }
 
+    }
+}
+class Pair {
+    public String first;
+    public String second;
+
+    public Pair(String first, String second) {
+        this.first = first;
+        this.second = second;
     }
 }
