@@ -1,4 +1,4 @@
-package com.bluedot.electrochemistry.dao;
+package com.bluedot.electrochemistry.dao.base;
 
 /**
  *
@@ -6,4 +6,5 @@ package com.bluedot.electrochemistry.dao;
  * @createDate 2021/8/25-14:36
  */
 public interface BaseMapper {
+
 }
