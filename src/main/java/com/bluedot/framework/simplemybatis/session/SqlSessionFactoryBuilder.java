@@ -1,8 +1,8 @@
 package com.bluedot.framework.simplemybatis.session;
 
 import com.bluedot.framework.simplemybatis.session.defaults.DefaultSqlSessionFactory;
-import com.bluedot.framework.simplemybatis.utils.BeanContainer;
 import com.bluedot.framework.simplemybatis.utils.LogUtils;
+import com.bluedot.framework.simplespring.core.BeanContainer;
 
 import java.io.IOException;
 import java.io.InputStream;
