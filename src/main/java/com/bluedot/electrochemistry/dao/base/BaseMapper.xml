@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapper namespace="com.bluedot.electrochemistry.dao.BaseMapper">
+    <!--算法相关-->
+    <select id="getAlgorithms" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
+        select * from algorithm limit #{pageStart},#{pageSize}
+    </select>
+    <select id="getAlgorithmsCount" resultType="java.lang.Long">
+        select count(*) from algorithm
+    </select>
 </mapper>

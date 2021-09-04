@@ -148,8 +148,8 @@ public interface BaseMapper {
      * @param pageSize 一页的数据量
      * @return 文件列表
      */
-    List<File> listFileByCondition(int username, String condition, int fileType, int timeOrder, int pageStart, int pageSize);
-    long getFileCountByCondition(int username, String condition, int fileType, int timeOrder);
+    List<File> getFilesByCondition(int username, String condition, int fileType, int timeOrder, int pageStart, int pageSize);
+    long getFilesCountByCondition(int username, String condition, int fileType, int timeOrder);
 
     /**
      * 获取所有算法集合
@@ -158,8 +158,8 @@ public interface BaseMapper {
      * @param pageSize 一页的数据量
      * @return 算法列表
      */
-    List<Algorithm> listAlgorithms(int pageStart, int pageSize);
-    long getAlgorithmCount();
+    List<Algorithm> getAlgorithms(int pageStart, int pageSize);
+    long getAlgorithmsCount();
 
     /**
      * @author zero
@@ -170,8 +170,8 @@ public interface BaseMapper {
      * @param pageSize 一页的数据量
      * @return 算法列表
      */
-    List<Algorithm> listAlgorithmsByCondition(String condition,int type,int timeOrder,int pageStart, int pageSize);
-    long getAlgorithmCountByCondition(String condition,int type,int timeOrder);
+    List<Algorithm> getAlgorithmsByCondition(String condition,int type,int timeOrder,int pageStart, int pageSize);
+    long getAlgorithmsCountByCondition(String condition,int type,int timeOrder);
 
     /**
      * 获取所有算法申请集合
@@ -180,8 +180,8 @@ public interface BaseMapper {
      * @param pageSize 一页的数据量
      * @return 算法申请列表
      */
-    List<AlgorithmSend> listAlgorithmSends(int pageStart, int pageSize);
-    long getAlgorithmSendCount();
+    List<AlgorithmSend> getAlgorithmSends(int pageStart, int pageSize);
+    long getAlgorithmSendsCount();
 
     /**
      * @author zero
@@ -192,6 +192,6 @@ public interface BaseMapper {
      * @param pageSize 一页的数据量
      * @return 算法申请集合
      */
-    List<AlgorithmSend> listAlgorithmSendsByCondition(String condition,int type,int timeOrder,int pageStart, int pageSize);
-    long getAlgorithmSendCountByCondition(String condition,int type,int timeOrder);
+    List<AlgorithmSend> getAlgorithmSendsByCondition(String condition,int type,int timeOrder,int pageStart, int pageSize);
+    long getAlgorithmSendsCountByCondition(String condition,int type,int timeOrder);
 }
