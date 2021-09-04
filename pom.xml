@@ -22,6 +22,11 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.20</version>
+    </dependency>
     <!-- 引入 slf4j-api 依赖-->
     <dependency>
       <groupId>org.slf4j</groupId>
