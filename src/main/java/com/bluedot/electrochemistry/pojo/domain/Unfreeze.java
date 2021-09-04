@@ -8,4 +8,5 @@ package com.bluedot.electrochemistry.pojo.domain;
  * @Date 2021/9/3 21:37
  **/
 public class Unfreeze {
+
 }
