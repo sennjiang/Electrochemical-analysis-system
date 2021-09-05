@@ -2,7 +2,6 @@ package com.bluedot.framework.simplespring.mvc;
 
 
 import com.bluedot.electrochemistry.service.FileService;
-import com.bluedot.framework.simplemybatis.session.SqlSessionFactoryBuilder;
 import com.bluedot.framework.simplespring.aop.AspectWeaver;
 import com.bluedot.framework.simplespring.core.BeanContainer;
 import com.bluedot.framework.simplespring.inject.DependencyInject;
