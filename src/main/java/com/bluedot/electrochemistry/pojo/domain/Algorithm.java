@@ -1,6 +1,6 @@
 package com.bluedot.electrochemistry.pojo.domain;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 /**
  * @author zero
@@ -10,9 +10,9 @@ public class Algorithm {
     private Integer algID;              //算法实体的唯一标识
     private String algorithm_name;      //算法的名称
     private Integer username;           //算法上传者的账户
-    private Date created_time;          //算法生成的时间
+    private Timestamp created_time;          //算法生成的时间
     private Short classification;       //算法的类别 1：平滑处理、2：滤波处理、3：CV伏安法、4：DPV、5：SWV、6：LSV
-    private Date change_time;           //最新修改时间
+    private Timestamp change_time;           //最新修改时间
     private String url;                 //算法文件路径
     private Short isUsed;               //是否启用 1 ：启用 2 ：未启用
 
@@ -25,14 +25,14 @@ public class Algorithm {
     public Integer getUsername() { return username; }
     public void setUsername(Integer username) { this.username = username; }
 
-    public Date getCreated_time() { return created_time; }
-    public void setCreated_time(Date created_time) { this.created_time = created_time; }
+    public Timestamp getCreated_time() { return created_time; }
+    public void setCreated_time(Timestamp created_time) { this.created_time = created_time; }
 
     public Short getClassification() { return classification; }
     public void setClassification(Short classification) { this.classification = classification; }
 
-    public Date getChange_time() { return change_time; }
-    public void setChange_time(Date change_time) { this.change_time = change_time; }
+    public Timestamp getChange_time() { return change_time; }
+    public void setChange_time(Timestamp change_time) { this.change_time = change_time; }
 
     public String getUrl() { return url; }
     public void setUrl(String url) { this.url = url; }

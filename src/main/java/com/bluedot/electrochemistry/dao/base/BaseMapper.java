@@ -17,6 +17,38 @@ import java.util.List;
 public interface BaseMapper {
 
     /**
+     * @Return List<User> 用户列表
+     * @Description 返回用户列表
+     * @Param [pageSize 页面大小, currentPage 当前页, key]
+     * @Date 2021/9/4 18:55
+     **/
+    List<User> listUser(int pageSize, int currentPage, String key);
+
+    /**
+     * @Return User实体类
+     * @Description 根据username查询用户
+     * @Param [username 用户名]
+     * @Date 2021/9/4 18:57
+     **/
+    User queryUserByUsername(String username);
+
+    /**
+     * @Return User实体类
+     * @Description 根据email查询用户
+     * @Param [email 邮箱]
+     * @Date 2021/9/4 18:58
+     **/
+    User queryUserByEmail(String email);
+
+    /**
+     * 获取管理员信息列表
+     *
+     * @param pageStart 页码
+     * @param pageSize  每页大小
+     * @return 管理员列表
+     */
+
+    /**
      * 获取管理员信息列表
      *
      * @param pageStart 页码
