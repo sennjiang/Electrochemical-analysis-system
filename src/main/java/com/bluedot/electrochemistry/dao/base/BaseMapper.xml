@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mapper namespace="com.bluedot.electrochemistry.dao.BaseMapper">
+<mapper namespace="com.bluedot.electrochemistry.dao.base.BaseMapper">
 <!--超级管理员相关-->
     <!--查询管理员相关-->
     <select id="getAdmins" resultType="com.bluedot.electrochemistry.pojo.domain.User">
@@ -55,5 +55,4 @@
     <select id="getAlgorithmsCountByQueryCondition" resultType="java.lang.Long">
         select count(*) from t_algorithm where #{queryCondition}=#{queryValue}
     </select>-->
-<mapper namespace="com.bluedot.electrochemistry.dao.base.BaseMapper">
 </mapper>
