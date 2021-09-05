@@ -8,23 +8,77 @@ import java.sql.Timestamp;
  * @createDate 2021/9/3-16:34
  */
 public class File {
+    /**
+     * 文件id
+     */
     private int id;
+    /**
+     * 文件名
+     */
     private String name;
+    /**
+     * 文件路径
+     */
     private String url;
+    /**
+     * 文件owner
+     */
     private int owner;
+    /**
+     * 文件大小
+     */
     private double size;
+    /**
+     * 文件hash值
+     */
     private String hash;
+    /**
+     * 文件类型
+     */
     private short type;
+    /**
+     * 文件状态
+     */
     private short status;
+    /**
+     * 文件创建时间
+     */
     private Timestamp produceTime;
+    /**
+     * 文件处理时间
+     */
     private Timestamp modifiedTime;
+    /**
+     * 文件数据起始点
+     */
     private double dataStart;
+    /**
+     * 文件数据结束点
+     */
     private double dataEnd;
+    /**
+     * 文件数据最小值
+     */
     private double dataBottom;
+    /**
+     * 文件数据最大值
+     */
     private double dataPeak;
+    /**
+     * 文件数据精度
+     */
     private double dataPrecision;
+    /**
+     * 文件数据圈数
+     */
     private double dataCycle;
+    /**
+     * 文件数据速率
+     */
     private double dataRate;
+    /**
+     * 文件数据计算结果
+     */
     private double dataResult;
 
     public File() {

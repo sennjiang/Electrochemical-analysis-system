@@ -8,14 +8,41 @@ import java.sql.Timestamp;
  * @createDate 2021/8/25-14:41
  */
 public class Operation {
+    /**
+     * 日志id
+     */
     private int id;
+    /**
+     * 日志信息
+     */
     private String message;
+    /**
+     * 日志级别
+     */
     private String level;
+    /**
+     * 日志user
+     */
     private int user;
+    /**
+     * 日志 地点
+     */
     private String recorder;
+    /**
+     * 日志类型
+     */
     private short type;
+    /**
+     * 日志时间
+     */
     private Timestamp time;
+    /**
+     * 是否为文件
+     */
     private Boolean isFile;
+    /**
+     * 文件类型
+     */
     private short FileType;
 
     public Operation() {
