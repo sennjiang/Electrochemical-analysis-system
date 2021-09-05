@@ -6,6 +6,7 @@ import com.bluedot.framework.simplespring.aop.AspectWeaver;
 import com.bluedot.framework.simplespring.core.BeanContainer;
 import com.bluedot.framework.simplespring.inject.DependencyInject;
 import com.bluedot.framework.simplespring.util.LogUtil;
+import javafx.util.Pair;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -61,7 +62,6 @@ public class DispatcherServlet extends HttpServlet {
         new DependencyInject().doDependencyInject();
         // xml字典映射 处理
         doParsingXmlMappings("service.xml");
-
 
         //初始化请求处理器责任链
 //        PROCESSORS.add(new PreRequestProcessor());
@@ -158,14 +158,5 @@ public class DispatcherServlet extends HttpServlet {
 //            }
 //        }
 
-    }
-}
-class Pair {
-    public String first;
-    public String second;
-
-    public Pair(String first, String second) {
-        this.first = first;
-        this.second = second;
     }
 }
