@@ -19,7 +19,7 @@ public class Unfreeze {
     // 用户名
     private Integer username;
     // 申请时间
-    private String applicationTime;
+    private Timestamp applicationTime;
     // 邮箱
     private String email;
     // 处理状态
@@ -40,7 +40,7 @@ public class Unfreeze {
      * @Param [id, freezeId, reviewer, username, applicationTime, email, handleStatus, refuseReason, applicationReason]
      * @Date 2021/9/5 10:22
      **/
-    public Unfreeze(Integer id, Integer freezeId, Integer reviewer, Integer username, String applicationTime, String email, Integer handleStatus, String refuseReason, String applicationReason) {
+    public Unfreeze(Integer id, Integer freezeId, Integer reviewer, Integer username, Timestamp applicationTime, String email, Integer handleStatus, String refuseReason, String applicationReason) {
         this.id = id;
         this.freezeId = freezeId;
         this.reviewer = reviewer;
@@ -84,11 +84,11 @@ public class Unfreeze {
         this.username = username;
     }
 
-    public String getApplicationTime() {
+    public Timestamp getApplicationTime() {
         return applicationTime;
     }
 
-    public void setApplicationTime(String applicationTime) {
+    public void setApplicationTime(Timestamp applicationTime) {
         this.applicationTime = applicationTime;
     }
 

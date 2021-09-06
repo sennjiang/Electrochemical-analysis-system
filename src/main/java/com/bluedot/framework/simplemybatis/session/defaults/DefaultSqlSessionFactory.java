@@ -159,12 +159,16 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
                 if (tableInfo.getPrimaryKeys().size() == 0) {
                     logger.debug("数据库表" + tableName + "未检测到主键");
                 }
-                //获取外键列信息
-                ResultSet foreignKeyResultSet = databaseMetaData.getExportedKeys(catalog, "%", tableName);
+
+//                //获取外键列信息
+//                ResultSet foreignKeyResultSet = databaseMetaData.getExportedKeys(catalog, "%", tableName);
+                ResultSet foreignKeyResultSet = databaseMetaData.getImportedKeys(catalog, null, tableName);
+
+
                 //遍历
                 while (foreignKeyResultSet.next()) {
                     //获取外键列
-                    ColumnInfo foreignColumnInfo = tableInfo.getColumnInfoMap().get(foreignKeyResultSet.getString("COLUMN_NAME"));
+                    ColumnInfo foreignColumnInfo = tableInfo.getColumnInfoMap().get(foreignKeyResultSet.getString("FKCOLUMN_NAME"));
                     tableInfo.getForeignKeys().add(foreignColumnInfo);
                 }
                 //反射获取该表对应的po类

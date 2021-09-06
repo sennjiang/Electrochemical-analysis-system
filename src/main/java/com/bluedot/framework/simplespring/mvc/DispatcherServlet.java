@@ -2,6 +2,7 @@ package com.bluedot.framework.simplespring.mvc;
 
 
 import com.bluedot.electrochemistry.service.FileService;
+import com.bluedot.framework.simplemybatis.session.SqlSessionFactoryBuilder;
 import com.bluedot.framework.simplespring.aop.AspectWeaver;
 import com.bluedot.framework.simplespring.core.BeanContainer;
 import com.bluedot.framework.simplespring.inject.DependencyInject;
@@ -57,7 +58,7 @@ public class DispatcherServlet extends HttpServlet {
         //AOP织入
         new AspectWeaver().doAspectOrientedProgramming();
         //初始化简易mybatis框架，往IoC容器中注入SqlSessionFactory对象
-        //new SqlSessionFactoryBuilder().build(servletConfig.getInitParameter("contextConfigLocation"));
+        new SqlSessionFactoryBuilder().build(servletConfig.getInitParameter("contextConfigLocation"));
         //依赖注入
         new DependencyInject().doDependencyInject();
         // xml字典映射 处理
