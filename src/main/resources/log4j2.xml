@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<configuration status="info">
+<configuration status="debug">
     <appenders>
         <Console name="CONSOLE" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%t] [%d{MM-dd:HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
+            <PatternLayout pattern="[%p] [%d{MM-dd:HH:mm:ss:SSS}] - %l - %m%n"/>
         </Console>
         <!--文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定，临时测试用-->
         <File name="file" fileName="logs/test.log" append="true">
@@ -11,7 +11,7 @@
     </appenders>
 
     <Loggers>
-        <root level="info">
+        <root level="debug">
             <AppenderRef ref="CONSOLE" />
 <!--            <AppenderRef ref="file" />-->
         </root>

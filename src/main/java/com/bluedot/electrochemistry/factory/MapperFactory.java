@@ -12,6 +12,7 @@ import com.bluedot.framework.simplespring.inject.annotation.Autowired;
  */
 @Repository
 public class MapperFactory {
+
     @Autowired
     private SqlSessionFactory sqlSessionFactory;
     

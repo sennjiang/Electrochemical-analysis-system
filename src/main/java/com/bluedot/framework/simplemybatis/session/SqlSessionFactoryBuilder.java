@@ -1,7 +1,6 @@
 package com.bluedot.framework.simplemybatis.session;
 
 
-
 import com.bluedot.framework.simplemybatis.session.defaults.DefaultSqlSessionFactory;
 import com.bluedot.framework.simplespring.core.BeanContainer;
 import com.bluedot.framework.simplespring.util.LogUtil;
@@ -33,10 +32,10 @@ public class SqlSessionFactoryBuilder {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        SqlSessionFactory factory=DefaultSqlSessionFactory.getInstance(new Configuration());
+        SqlSessionFactory factory = DefaultSqlSessionFactory.getInstance(new Configuration());
         //将sqlFactory注入到IoC容器中
-        LogUtil.getLogger().debug("load bean: "+factory.getClass().getName());
-        BeanContainer.getInstance().addBean(factory.getClass(),factory);
+        LogUtil.getLogger().debug("load bean: " + factory.getClass().getName());
+        BeanContainer.getInstance().addBean(factory.getClass(), factory);
         return factory;
     }
 
