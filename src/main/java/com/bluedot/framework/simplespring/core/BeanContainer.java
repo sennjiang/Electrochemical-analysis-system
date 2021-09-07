@@ -60,6 +60,9 @@ public class BeanContainer {
 
         return ContainerHolder.HOLDER.instance;
     }
+    public Map getBeanContainer() {
+        return this.beanMap;
+    }
 
     /**
      * 将bean对象加载进容器
