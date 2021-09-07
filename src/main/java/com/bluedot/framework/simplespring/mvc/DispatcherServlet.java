@@ -14,6 +14,7 @@ import com.bluedot.framework.simplespring.core.annotation.Bean;
 import com.bluedot.framework.simplespring.inject.DependencyInject;
 import com.bluedot.framework.simplespring.mvc.cache.ResultCache;
 import com.bluedot.framework.simplespring.mvc.processor.RequestProcessor;
+import com.bluedot.framework.simplespring.mvc.processor.impl.MQRequestProcessor;
 import com.bluedot.framework.simplespring.mvc.processor.impl.PreRequestProcessor;
 import com.bluedot.framework.simplespring.mvc.processor.impl.StaticResourceRequestProcessor;
 import com.bluedot.framework.simplespring.util.JsonUtil;
@@ -61,8 +62,6 @@ public class DispatcherServlet extends HttpServlet {
      */
     private final Logger log = LogUtil.getLogger();
 
-    RequestDispatcher defaultDispatcher;
-
     @Override
     public void init(ServletConfig servletConfig) {
         //读取配置文件
@@ -79,11 +78,10 @@ public class DispatcherServlet extends HttpServlet {
         // xml字典映射 处理
         doParsingXmlMappings("service.xml");
 
-        defaultDispatcher = servletConfig.getServletContext().getNamedDispatcher("default");
-
         //初始化请求处理器责任链
-//        PROCESSORS.add(new PreRequestProcessor());
+        PROCESSORS.add(new PreRequestProcessor());
         PROCESSORS.add(new StaticResourceRequestProcessor(servletConfig.getServletContext()));
+        PROCESSORS.add(new MQRequestProcessor());
 //        PROCESSORS.add(new JspRequestProcessor(servletConfig.getServletContext()));
 //        PROCESSORS.add(new ControllerRequestProcessor());
     }
@@ -125,30 +123,12 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
-        if (request.getPathInfo().endsWith(".jsp")) {
-            defaultDispatcher.forward(request,response);
-        }
-        SearchService searchService = new SearchService();
-//        MapperFactory mapperFactory = searchService.getMapperFactory();
-        MapperFactory mapperFactory = (MapperFactory) BeanContainer.getInstance().getBean(MapperFactory.class);
-        log.info("{} mapperFactory对象",mapperFactory);
-        List<User> users = mapperFactory.createMapper().listUser();
-        String json = JsonUtil.getJson(users);
-        response.getWriter().write(json);
-        System.out.println("你好");
-//        BeanContainer beanContainer = BeanContainer.getInstance();
-//        Map beanContainer1 = beanContainer.getBeanContainer();
-//        Set set = beanContainer1.entrySet();
-//        for (Object o : set) {
-//            System.out.println(o);
-//        }
-//        HashMap<String, Object> hashMap = new HashMap<>();
-//        hashMap.put("service","list");
-//        new SearchService().doService(hashMap);
-//        List list = (List) hashMap.get("list");
-//        String json = JsonUtil.getJson(list);
-//        response.getWriter().write(json);
+        //1.创建责任链对象实例
+        RequestProcessorChain requestProcessorChain = new RequestProcessorChain(PROCESSORS.iterator(), request, response);
+        //2.通过责任链模式来一次调用请求处理器对请求进行处理
+        requestProcessorChain.doRequestProcessorChain();
+        //3.对处理结果进行渲染
+        requestProcessorChain.doRender();
     }
 
     /**
