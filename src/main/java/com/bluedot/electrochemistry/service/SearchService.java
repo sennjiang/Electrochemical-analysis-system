@@ -8,7 +8,10 @@ import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.BeanContainer;
 import com.bluedot.framework.simplespring.core.annotation.Service;
 import com.bluedot.framework.simplespring.inject.annotation.Autowired;
+import com.bluedot.framework.simplespring.mvc.monitor.Data;
+import com.bluedot.framework.simplespring.util.JsonUtil;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -32,12 +35,11 @@ public class SearchService extends BaseService  {
      * 所有列表入口
      * @param map
      */
-    private void list(Map map) {
-//        BaseMapper baseMapper = mapperFactory.createMapper();
+    private void list(Map map) throws IOException {
         MapperFactory mapperFactory = (MapperFactory) BeanContainer.getInstance().getBean(MapperFactory.class);
         BaseMapper baseMapper = mapperFactory.createMapper();
         List<User> users = baseMapper.listUser();
-        map.put("list",users);
+        //map.put("list",users);
     }
     public MapperFactory getMapperFactory() {
         return mapperFactory;

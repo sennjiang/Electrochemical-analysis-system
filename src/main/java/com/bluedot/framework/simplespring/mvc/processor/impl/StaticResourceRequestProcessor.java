@@ -17,6 +17,7 @@ public class StaticResourceRequestProcessor implements RequestProcessor {
     private static final String ASSETS_RESOURCE_PREFIX = "/assets/";
     private static final String HTML_RESOURCE_SUFFIX = ".html";
     private static final String VUE_RESOURCE_SUFFIX = ".vue";
+    private static final String JSP_RESOURCE_SUFFIX = ".jsp";
 
     /**
      * tomcat默认的请求派发器
@@ -56,6 +57,7 @@ public class StaticResourceRequestProcessor implements RequestProcessor {
         return requestPath.startsWith(STATIC_RESOURCE_PREFIX)
                 || requestPath.startsWith(ASSETS_RESOURCE_PREFIX)
                 || requestPath.endsWith(HTML_RESOURCE_SUFFIX)
-                || requestPath.endsWith(VUE_RESOURCE_SUFFIX);
+                || requestPath.endsWith(VUE_RESOURCE_SUFFIX)
+                || requestPath.endsWith("index.jsp");
     }
 }

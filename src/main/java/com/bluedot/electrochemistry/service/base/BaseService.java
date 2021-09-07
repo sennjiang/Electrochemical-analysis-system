@@ -47,7 +47,7 @@ public class BaseService {
      * @param map 包含请求参数和需要执行的service方法参数
      */
     public void doService(Map<String, Object> map) {
-        String methodName = (String) map.get("service");
+        String methodName = (String) map.get("serviceMethod");
         Class<?> clazz = this.getClass();
 //        Object obj = beanContainer.getBean(clazz);
         SearchService searchService = new SearchService();
