@@ -1,12 +1,16 @@
 package com.bluedot.framework.simplespring.mvc;
 
 
+import com.bluedot.electrochemistry.dao.base.BaseMapper;
+import com.bluedot.electrochemistry.factory.MapperFactory;
+import com.bluedot.electrochemistry.pojo.domain.User;
 import com.bluedot.electrochemistry.service.FileService;
 import com.bluedot.electrochemistry.service.SearchService;
 import com.bluedot.framework.simplemybatis.pool.MyDataSourceImpl;
 import com.bluedot.framework.simplemybatis.session.SqlSessionFactoryBuilder;
 import com.bluedot.framework.simplespring.aop.AspectWeaver;
 import com.bluedot.framework.simplespring.core.BeanContainer;
+import com.bluedot.framework.simplespring.core.annotation.Bean;
 import com.bluedot.framework.simplespring.inject.DependencyInject;
 import com.bluedot.framework.simplespring.mvc.cache.ResultCache;
 import com.bluedot.framework.simplespring.mvc.processor.RequestProcessor;
@@ -125,19 +129,26 @@ public class DispatcherServlet extends HttpServlet {
         if (request.getPathInfo().endsWith(".jsp")) {
             defaultDispatcher.forward(request,response);
         }
-
-        BeanContainer beanContainer = BeanContainer.getInstance();
-        Map beanContainer1 = beanContainer.getBeanContainer();
-        Set set = beanContainer1.entrySet();
-        for (Object o : set) {
-            System.out.println(o);
-        }
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("service","list");
-        new SearchService().doService(hashMap);
-        List list = (List) hashMap.get("list");
-        String json = JsonUtil.getJson(list);
+        SearchService searchService = new SearchService();
+//        MapperFactory mapperFactory = searchService.getMapperFactory();
+        MapperFactory mapperFactory = (MapperFactory) BeanContainer.getInstance().getBean(MapperFactory.class);
+        log.info("{} mapperFactory对象",mapperFactory);
+        List<User> users = mapperFactory.createMapper().listUser();
+        String json = JsonUtil.getJson(users);
         response.getWriter().write(json);
+        System.out.println("你好");
+//        BeanContainer beanContainer = BeanContainer.getInstance();
+//        Map beanContainer1 = beanContainer.getBeanContainer();
+//        Set set = beanContainer1.entrySet();
+//        for (Object o : set) {
+//            System.out.println(o);
+//        }
+//        HashMap<String, Object> hashMap = new HashMap<>();
+//        hashMap.put("service","list");
+//        new SearchService().doService(hashMap);
+//        List list = (List) hashMap.get("list");
+//        String json = JsonUtil.getJson(list);
+//        response.getWriter().write(json);
     }
 
     /**

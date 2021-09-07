@@ -44,7 +44,7 @@ public class ReflectUtils {
         Method method;
         try {
             method = clazz.getDeclaredMethod("set" + StringUtils.columnNameToMethodName(columnName), value.getClass());
-
+            method.setAccessible(true);
             method.invoke(obj, value);
         } catch (Exception e) {
             LogUtil.getLogger().error("通过反射将数据库字段值注入类属性失败:",e);

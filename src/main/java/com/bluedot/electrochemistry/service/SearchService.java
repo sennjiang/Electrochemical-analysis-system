@@ -39,4 +39,7 @@ public class SearchService extends BaseService  {
         List<User> users = baseMapper.listUser();
         map.put("list",users);
     }
+    public MapperFactory getMapperFactory() {
+        return mapperFactory;
+    }
 }
