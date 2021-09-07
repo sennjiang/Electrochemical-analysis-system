@@ -1,9 +1,8 @@
 package com.bluedot.electrochemistry.pojo.domain;
 
+
 /**
- * @author JDsen99
- * @description
- * @createDate 2021/9/6-20:27
+ * @author 万梓豪
  */
 public class RoleRight {
     private Integer rrId;
@@ -51,5 +50,15 @@ public class RoleRight {
 
     public void setRightType(Integer rightType) {
         this.rightType = rightType;
+    }
+
+    @Override
+    public String toString() {
+        return "RoleRight{" +
+                "rrId=" + rrId +
+                ", roleId=" + roleId +
+                ", rightId=" + rightId +
+                ", rightType=" + rightType +
+                '}';
     }
 }
