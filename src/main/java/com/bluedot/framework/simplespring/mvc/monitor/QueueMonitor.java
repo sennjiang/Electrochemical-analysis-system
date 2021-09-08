@@ -1,12 +1,14 @@
 package com.bluedot.framework.simplespring.mvc.monitor;
 
-import com.bluedot.electrochemistry.service.SearchService;
 import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.framework.simplespring.core.BeanContainer;
+import com.bluedot.framework.simplespring.mvc.processor.RequestProcessor;
+import com.bluedot.framework.simplespring.mvc.processor.impl.MQRequestProcessor;
 import com.bluedot.framework.simplespring.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.processing.Processor;
 import java.io.IOException;
 
 /**
@@ -36,9 +38,14 @@ public class QueueMonitor implements Runnable {
     private Integer capacity = 10;
 
     /**
-     * 数据队列
+     * 向下队列 数据队列
      */
-    private BlockQueue<Data> blockQueue;
+    private BlockQueue<Data> downBlockQueue;
+
+    /**
+     * 向上队列
+     */
+    private BlockQueue<Data> upBlockQueue;
 
     /**
      * 排序阈值 % 默认 75%
@@ -60,6 +67,7 @@ public class QueueMonitor implements Runnable {
      */
     private Boolean running = false;
 
+
     public QueueMonitor(Integer capacity) {
         this(capacity,50,500);
     }
@@ -67,7 +75,8 @@ public class QueueMonitor implements Runnable {
     public QueueMonitor(Integer capacity, Integer frequency, Integer sleepTime) {
         checkParameterValid(capacity,frequency,sleepTime);
         this.capacity = capacity;
-        blockQueue = new BlockQueue<>(capacity);
+        downBlockQueue = new BlockQueue<>(capacity);
+        upBlockQueue = new BlockQueue<>(capacity);
         this.frequency = frequency;
         this.sleepTime = sleepTime;
     }
@@ -100,28 +109,34 @@ public class QueueMonitor implements Runnable {
             try {
                 Thread.sleep(frequency);
                 if (isSort()) {
-                    blockQueue.sort();
+                    downBlockQueue.sort();
                 }
-                Data data = blockQueue.take();
-                if (data != null) {
-                    String serviceName = data.getService();
-                    Class clazz = Thread.currentThread().getContextClassLoader().loadClass(serviceBasePath + "." + serviceName);
-                    logger.info(clazz.getName()+ clazz);
-                    BaseService service = (BaseService) beanContainer.getBean(clazz);
-                    service.doService(data);
-                    data.getResponse().getWriter().write(JsonUtil.getJson(data));
-                }
-                if (blockQueue.size() <= 0) {
-                    Thread.sleep(sleepTime);
+                if (downBlockQueue.size() > 0) {
+                    Data data = downBlockQueue.take();
+                    if (data != null) {
+                        logger.info("开始处理请求---{}", data.getRequest().getPathInfo());
+                        String serviceName = data.getService();
+                        Class clazz = Thread.currentThread().getContextClassLoader().loadClass(serviceBasePath + "." + serviceName);
+                        logger.info(clazz.getName() + clazz);
+                        BaseService service = (BaseService) beanContainer.getBean(clazz);
+                        service.doService(data);
+                        logger.info("处理请求结束---{}", data.getRequest().getPathInfo());
+                        upBlockQueue.put(data);
+                        Thread.yield();
+                    }
+                }else {
+                    Thread.yield();
                 }
             } catch (InterruptedException | ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    /**
+     * 获取阈值
+     * @return
+     */
     private double getThreshold() {
         if (orderingThreshold < MIN_PARAM_PRICE || orderingThreshold > 100) {
             logger.error("orderingThreshold illegal : {}", orderingThreshold);
@@ -135,15 +150,18 @@ public class QueueMonitor implements Runnable {
      * @return
      */
     private Boolean isSort() {
-        return (blockQueue.size() / capacity) >= getThreshold();
+        return (downBlockQueue.size() / capacity) >= getThreshold();
     }
 
     public void setRunning(Boolean running) {
         this.running = running;
     }
 
-    public BlockQueue<Data> getBlockQueue() {
-        return blockQueue;
+    public BlockQueue<Data> getDownBlockQueue() {
+        return downBlockQueue;
+    }
+    public BlockQueue<Data> getUpBlockQueue() {
+        return upBlockQueue;
     }
 
     public Boolean getRunning() {

@@ -1,5 +1,8 @@
 package com.bluedot.framework.simplespring.mvc.monitor;
 
+import com.bluedot.framework.simplemybatis.utils.LogUtils;
+import org.slf4j.Logger;
+
 import java.util.Arrays;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.locks.Condition;
@@ -11,6 +14,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * @createDate 2021/9/6-18:25
  */
 public class BlockQueue<E> {
+
+    private Logger logger = LogUtils.getLogger();
 
     private Object[] items;
     private int count = 0;
@@ -85,6 +90,7 @@ public class BlockQueue<E> {
         try {
             while (count == items.length)
                 notFull.await();
+            logger.info("数据 [{}] ---放入队列",e);
             enqueue(e);
         } finally {
             lock.unlock();
@@ -102,6 +108,7 @@ public class BlockQueue<E> {
         try {
             while (count == 0)
                 notEmpty.await();
+            logger.info("数据 --- 取出队列");
             return dequeue();
         } finally {
             lock.unlock();
@@ -158,5 +165,16 @@ public class BlockQueue<E> {
      */
     public int size() {
         return this.count;
+    }
+
+    public boolean hadOne(String threadName) {
+        if (this.count == 0) {
+            return false;
+        }
+        String name = ((Data) items[takeIndex]).getThreadName();
+        if (threadName.equals(name) && name != null) {
+            return true;
+        }
+        return false;
     }
 }
