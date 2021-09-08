@@ -39,7 +39,7 @@ public class SearchService extends BaseService  {
         MapperFactory mapperFactory = (MapperFactory) BeanContainer.getInstance().getBean(MapperFactory.class);
         BaseMapper baseMapper = mapperFactory.createMapper();
         List<User> users = baseMapper.listUser();
-        //map.put("list",users);
+        ((Data)map).put("list",users);
     }
     public MapperFactory getMapperFactory() {
         return mapperFactory;

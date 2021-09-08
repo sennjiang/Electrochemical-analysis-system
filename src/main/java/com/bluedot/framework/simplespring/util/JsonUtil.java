@@ -1,6 +1,9 @@
 package com.bluedot.framework.simplespring.util;
 
+import com.bluedot.framework.simplespring.mvc.monitor.Data;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 /**
  * @author JDsen99
  * @description 解析成json对象
@@ -11,7 +14,7 @@ public class JsonUtil {
     public static String getJson(Object ojb) {
         if (gson == null) {
             synchronized (JsonUtil.class) {
-                gson = new Gson();
+                gson = new GsonBuilder().create();
             }
         }
         return gson.toJson(ojb);
