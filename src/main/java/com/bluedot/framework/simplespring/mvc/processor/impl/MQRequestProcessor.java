@@ -115,7 +115,6 @@ public class MQRequestProcessor implements RequestProcessor{
     public boolean process(RequestProcessorChain requestProcessorChain) throws Exception {
 
         if (requestProcessorChain.getRequestPath().endsWith("/")) {
-            // requestProcessorChain.getResp().sendRedirect("index.jsp");
             return false;
         }
 
