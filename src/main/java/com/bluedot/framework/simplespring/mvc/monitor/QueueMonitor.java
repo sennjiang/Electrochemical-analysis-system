@@ -27,10 +27,6 @@ public class QueueMonitor implements Runnable {
     private static final int MAX_FREQUENCY_PRICE = 10000;
     private static final int MIN_PARAM_PRICE = 0;
 
-    /**
-     * service基础路径
-     */
-    private String serviceBasePath = "com.bluedot.electrochemistry.service";
 
     /**
      * 队列容量
@@ -114,20 +110,18 @@ public class QueueMonitor implements Runnable {
                 if (downBlockQueue.size() > 0) {
                     Data data = downBlockQueue.take();
                     if (data != null) {
-                        logger.info("开始处理请求---{}", data.getRequest().getPathInfo());
-                        String serviceName = data.getService();
-                        Class clazz = Thread.currentThread().getContextClassLoader().loadClass(serviceBasePath + "." + serviceName);
-                        logger.info(clazz.getName() + clazz);
+                        logger.info("开始处理请求--- 请求路径: {}", data.getRequest().getPathInfo());
+                        Class clazz = data.getService();
                         BaseService service = (BaseService) beanContainer.getBean(clazz);
                         service.doService(data);
-                        logger.info("处理请求结束---{}", data.getRequest().getPathInfo());
+                        logger.info("处理请求结束--- 请求路径: {}", data.getRequest().getPathInfo());
                         upBlockQueue.put(data);
                         Thread.yield();
                     }
                 }else {
-                    Thread.yield();
+                    Thread.sleep(sleepTime);
                 }
-            } catch (InterruptedException | ClassNotFoundException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -166,5 +160,53 @@ public class QueueMonitor implements Runnable {
 
     public Boolean getRunning() {
         return running;
+    }
+
+    public void setOrderingThreshold(String property) {
+        if(isNull(property)) {
+            this.orderingThreshold = 75;
+        } else {
+            this.orderingThreshold = Integer.parseInt(property);
+        }
+    }
+
+
+    public void setFrequency(String property) {
+        if(isNull(property)) {
+            this.frequency = 50;
+        } else {
+            this.frequency = Integer.parseInt(property);
+        }
+    }
+
+    public void setSleepTime(String property) {
+        if(isNull(property)) {
+            this.sleepTime = 500;
+        } else {
+            this.sleepTime = Integer.parseInt(property);
+        }
+    }
+
+    private boolean isNull(String str) {
+        if ("".equals(str)|| str == null) {
+            return true;
+        }
+        return false;
+    }
+
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    public int getOrderingThreshold() {
+        return orderingThreshold;
+    }
+
+    public Integer getFrequency() {
+        return frequency;
+    }
+
+    public Integer getSleepTime() {
+        return sleepTime;
     }
 }

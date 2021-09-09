@@ -51,12 +51,15 @@ public class DispatcherServlet extends HttpServlet {
     /**
      * 保存application.properties配置文件中的内容
      */
-    private Properties contextCofig = new Properties();
+    private Properties contextConfig = new Properties();
 
     /**
      * 请求处理器
      */
     List<RequestProcessor> PROCESSORS = new ArrayList<>();
+
+    private Map<String, Pair<Class,String>> xmlMap;
+
     /**
      * 日志
      */
@@ -68,7 +71,7 @@ public class DispatcherServlet extends HttpServlet {
         doLoadConfig(servletConfig.getInitParameter("contextConfigLocation"));
         //初始化容器
         BeanContainer beanContainer = BeanContainer.getInstance();
-        beanContainer.loadBeans(contextCofig.getProperty("scanPackage"));
+        beanContainer.loadBeans(contextConfig.getProperty("scanPackage"));
         //AOP织入
         new AspectWeaver().doAspectOrientedProgramming();
         //初始化简易mybatis框架，往IoC容器中注入SqlSessionFactory对象
@@ -76,26 +79,29 @@ public class DispatcherServlet extends HttpServlet {
         //依赖注入
         new DependencyInject().doDependencyInject();
         // xml字典映射 处理
-        doParsingXmlMappings("service.xml");
+        doParsingXmlMappings(contextConfig);
 
         //初始化请求处理器责任链
         PROCESSORS.add(new PreRequestProcessor());
         PROCESSORS.add(new StaticResourceRequestProcessor(servletConfig.getServletContext()));
-        PROCESSORS.add(new MQRequestProcessor());
+        PROCESSORS.add(new MQRequestProcessor(xmlMap,contextConfig));
 //        PROCESSORS.add(new JspRequestProcessor(servletConfig.getServletContext()));
 //        PROCESSORS.add(new ControllerRequestProcessor());
     }
 
-    public void doParsingXmlMappings(String serviceXmlName) {
+    public void doParsingXmlMappings(Properties contextConfig) {
+
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        String serviceXmlName = contextConfig.getProperty("serviceMapper.name");
+        String serviceXmlPath = contextConfig.getProperty("serviceMapper.path");
+
+        log.info("Loading parsingXmlMappings --->name:{} ", serviceXmlName);
         InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(serviceXmlName);
         Document doc = null;
-        Map<String, Pair> xmlMap = null;
         try {
             SAXReader reader = new SAXReader();
             xmlMap = new HashMap();
-
             doc = reader.read(resourceAsStream);
-
             Element service = doc.getRootElement();
             Iterator nodes = service.elementIterator();
 
@@ -109,15 +115,20 @@ public class DispatcherServlet extends HttpServlet {
                 number = (String) node.element("number").getData();
                 service1 = (String) node.element("service").getData();
                 method = (String) node.element("method").getData();
-                xmlMap.put(number, new Pair(service1, method));
+
+                Class<?> clazz = classLoader.loadClass(serviceXmlPath + "." + service1);
+                xmlMap.put(number, new Pair<Class,String>(clazz, method));
             }
 
-            BeanContainer.getInstance().addBean(Map.class,xmlMap);
+            log.debug("parsingXmlMappings had complete ---> name: {}","xmlMap");
+
         } catch (DocumentException e) {
             log.error("service.xml parse error",e);
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            log.error("service.xml load Class error",e);
+            e.printStackTrace();
         }
-
     }
 
 
@@ -143,7 +154,7 @@ public class DispatcherServlet extends HttpServlet {
         InputStream is = null;
         try {
             is = this.getClass().getClassLoader().getResourceAsStream(contextConfigLocation);
-            contextCofig.load(is);
+            contextConfig.load(is);
         } catch (IOException e) {
             LogUtil.getLogger().error(e.getMessage());
             throw new RuntimeException(e);

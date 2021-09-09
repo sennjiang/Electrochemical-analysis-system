@@ -37,8 +37,8 @@ public class Data implements Comparable<Data>, Map {
         this.threadName = threadName;
     }
 
-    public String getService() {
-        return (String) data.get("service");
+    public Class getService() {
+        return (Class) data.get("service");
     }
 
     public String getServiceMethod() {
