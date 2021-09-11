@@ -6,6 +6,7 @@ import com.bluedot.framework.simplespring.mvc.monitor.Data;
 import com.bluedot.framework.simplespring.mvc.monitor.QueueMonitor;
 import com.bluedot.framework.simplespring.mvc.processor.RequestProcessor;
 import com.bluedot.framework.simplespring.mvc.render.impl.DefaultResultRender;
+import com.bluedot.framework.simplespring.mvc.render.impl.InternalErrorResultRender;
 import com.bluedot.framework.simplespring.mvc.render.impl.JsonResultRender;
 import com.bluedot.framework.simplespring.util.JsonUtil;
 import com.bluedot.framework.simplespring.util.LogUtil;
@@ -76,9 +77,10 @@ public class MQRequestProcessor implements RequestProcessor{
             Map<String, String[]> parameterMap = request.getParameterMap();
             Data data = new Data(parameterMap,Thread.currentThread().getName());
             String boundary = (String) data.get("boundary");
-            if (baseBoundary != null || boundary == null)
+            if (baseBoundary != null || boundary == null) {
                 boundary = baseBoundary;
-                data.put("boundary",boundary);
+                data.put("boundary", boundary);
+            }
 
             if (requestProcessorChain.getRequestPath().endsWith("/")) {
                 requestProcessorChain.setResultRender(new DefaultResultRender());
@@ -109,8 +111,16 @@ public class MQRequestProcessor implements RequestProcessor{
                         hadFind = upBlockQueue.hadOne(threadName);
                         if (hadFind) {
                             newData = upBlockQueue.take();
-                            logger.debug("json --- data: {}",JsonUtil.getJson(newData));
-                            requestProcessorChain.setResultRender(new JsonResultRender(newData));
+                            logger.debug("json --- data: {}",JsonUtil.toJson(newData));
+
+                            //判断是否存在错误 若存在 则交给 异常处理器处理。
+                            if (newData.containsKey("error")) {
+                                Exception error = (Exception) newData.get("error");
+                                requestProcessorChain.setResultRender(new InternalErrorResultRender(error.getMessage()));
+                            }else {
+                                requestProcessorChain.setResultRender(new JsonResultRender(newData));
+                            }
+
                         }
                     Thread.sleep(25);
                 }
