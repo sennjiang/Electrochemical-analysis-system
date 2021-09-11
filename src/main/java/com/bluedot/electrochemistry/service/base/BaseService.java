@@ -49,12 +49,12 @@ public class BaseService {
     public void doService(Map<String, Object> map) {
         String methodName = (String) map.get("serviceMethod");
         Class<?> clazz = this.getClass();
-//        Object obj = beanContainer.getBean(clazz);
-        SearchService searchService = new SearchService();
+        Object obj = beanContainer.getBean(clazz);
+        //SearchService searchService = new SearchService();
         try {
             Method method = clazz.getDeclaredMethod(methodName, Map.class);
             method.setAccessible(true);
-            method.invoke(searchService, map);
+            method.invoke(obj, map);
         } catch (Exception e) {
             e.printStackTrace();
             map.put("error", e.getMessage());
