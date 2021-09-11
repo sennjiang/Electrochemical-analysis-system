@@ -110,7 +110,7 @@ public class MQRequestProcessor implements RequestProcessor{
                         hadFind = upBlockQueue.hadOne(threadName);
                         if (hadFind) {
                             newData = upBlockQueue.take();
-                            logger.debug("json --- data: {}",JsonUtil.getJson(newData));
+                            logger.debug("json --- data: {}",JsonUtil.toJson(newData));
                             requestProcessorChain.setResultRender(new JsonResultRender(newData));
                         }
                     Thread.sleep(25);
