@@ -76,9 +76,10 @@ public class MQRequestProcessor implements RequestProcessor{
             Map<String, String[]> parameterMap = request.getParameterMap();
             Data data = new Data(parameterMap,Thread.currentThread().getName());
             String boundary = (String) data.get("boundary");
-            if (baseBoundary != null || boundary == null)
+            if (baseBoundary != null || boundary == null) {
                 boundary = baseBoundary;
                 data.put("boundary",boundary);
+            }
 
             if (requestProcessorChain.getRequestPath().endsWith("/")) {
                 requestProcessorChain.setResultRender(new DefaultResultRender());

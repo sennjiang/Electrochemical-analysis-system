@@ -17,7 +17,7 @@ public class Unfreeze {
     // todo
     private Integer reviewer;
     // 用户名
-    private Integer username;
+    private Long username;
     // 申请时间
     private Timestamp applicationTime;
     // 邮箱
@@ -40,7 +40,7 @@ public class Unfreeze {
      * @Param [id, freezeId, reviewer, username, applicationTime, email, handleStatus, refuseReason, applicationReason]
      * @Date 2021/9/5 10:22
      **/
-    public Unfreeze(Integer id, Integer freezeId, Integer reviewer, Integer username, Timestamp applicationTime, String email, Integer handleStatus, String refuseReason, String applicationReason) {
+    public Unfreeze(Integer id, Integer freezeId, Integer reviewer, Long username, Timestamp applicationTime, String email, Integer handleStatus, String refuseReason, String applicationReason) {
         this.id = id;
         this.freezeId = freezeId;
         this.reviewer = reviewer;
@@ -76,11 +76,11 @@ public class Unfreeze {
         this.reviewer = reviewer;
     }
 
-    public Integer getUsername() {
+    public Long getUsername() {
         return username;
     }
 
-    public void setUsername(Integer username) {
+    public void setUsername(Long username) {
         this.username = username;
     }
 
