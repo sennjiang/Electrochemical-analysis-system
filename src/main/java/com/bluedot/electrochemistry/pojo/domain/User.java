@@ -11,7 +11,7 @@ import java.sql.Timestamp;
  **/
 public class User {
 	// 用户名
-	private Long username;
+	private Integer username;
 
 	// 密码
 	private String password;
@@ -53,7 +53,7 @@ public class User {
 	 * @Author KangLongPing
 	 * @Date 2021/9/4 14:50
 	 **/
-	public User(Long username, String password, String nickname, Integer gender, Integer age, String email, Timestamp birth, Integer status, String portrait, Timestamp gmtCreated) {
+	public User(Integer username, String password, String nickname, Integer gender, Integer age, String email, Timestamp birth, Integer status, String portrait, Timestamp gmtCreated) {
 		this.username = username;
 		this.password = password;
 		this.nickname = nickname;
@@ -66,11 +66,11 @@ public class User {
 		this.gmtCreated = gmtCreated;
 	}
 
-	public Long getUsername() {
+	public Integer getUsername() {
 		return username;
 	}
 
-	public void setUsername(Long username) {
+	public void setUsername(Integer username) {
 		this.username = username;
 	}
 
