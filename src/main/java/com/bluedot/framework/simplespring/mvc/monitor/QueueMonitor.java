@@ -5,6 +5,8 @@ import com.bluedot.framework.simplespring.core.BeanContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static javafx.scene.input.KeyCode.L;
+
 /**
  * @author JDsen99
  * @description
@@ -40,7 +42,7 @@ public class QueueMonitor implements Runnable {
     /**
      * 排序阈值 % 默认 75%
      */
-    private int orderingThreshold = 75;
+    private double orderingThreshold = 0.75;
 
     /**
      * 监听器监听队列的频率 单位 毫秒
@@ -110,9 +112,11 @@ public class QueueMonitor implements Runnable {
                         service.doService(data);
                         logger.info("处理请求结束--- 请求路径: {}", data.getRequest().getPathInfo());
                         upBlockQueue.put(data);
+                        // 请求处理完成后，线程礼让，让监听向上队列的线程拿到资源
                         Thread.yield();
                     }
                 }else {
+                    //队列为空时，将睡眠
                     Thread.sleep(sleepTime);
                 }
             } catch (InterruptedException e) {
@@ -122,23 +126,11 @@ public class QueueMonitor implements Runnable {
     }
 
     /**
-     * 获取阈值
-     * @return
-     */
-    private double getThreshold() {
-        if (orderingThreshold < MIN_PARAM_PRICE || orderingThreshold > 100) {
-            logger.error("orderingThreshold illegal : {}", orderingThreshold);
-            throw new RuntimeException("orderingThreshold illegal error");
-        }
-        return ((double) orderingThreshold) / 100L;
-    }
-
-    /**
      * 是否需要排序
-     * @return
+     * @return 是否排序
      */
     private Boolean isSort() {
-        return (downBlockQueue.size() / capacity) >= getThreshold();
+        return (downBlockQueue.size() / capacity) >= this.orderingThreshold;
     }
 
     public void setRunning(Boolean running) {
@@ -157,10 +149,13 @@ public class QueueMonitor implements Runnable {
     }
 
     public void setOrderingThreshold(String property) {
-        if(isNull(property)) {
-            this.orderingThreshold = 75;
-        } else {
-            this.orderingThreshold = Integer.parseInt(property);
+        if(!isNull(property)) {
+            int num = Integer.parseInt(property);
+            if (num < MIN_PARAM_PRICE || num > 100) {
+                logger.error("orderingThreshold illegal : {}", num);
+                throw new RuntimeException("orderingThreshold illegal error");
+            }
+            this.orderingThreshold = ((double) num) / 100L;
         }
     }
 
@@ -192,7 +187,7 @@ public class QueueMonitor implements Runnable {
         return capacity;
     }
 
-    public int getOrderingThreshold() {
+    public double getOrderingThreshold() {
         return orderingThreshold;
     }
 
