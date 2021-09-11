@@ -1,23 +1,14 @@
 package com.bluedot.framework.simplespring.mvc;
 
-
-import com.bluedot.electrochemistry.dao.base.BaseMapper;
-import com.bluedot.electrochemistry.factory.MapperFactory;
-import com.bluedot.electrochemistry.pojo.domain.User;
-import com.bluedot.electrochemistry.service.FileService;
-import com.bluedot.electrochemistry.service.SearchService;
 import com.bluedot.framework.simplemybatis.pool.MyDataSourceImpl;
 import com.bluedot.framework.simplemybatis.session.SqlSessionFactoryBuilder;
 import com.bluedot.framework.simplespring.aop.AspectWeaver;
 import com.bluedot.framework.simplespring.core.BeanContainer;
-import com.bluedot.framework.simplespring.core.annotation.Bean;
 import com.bluedot.framework.simplespring.inject.DependencyInject;
-import com.bluedot.framework.simplespring.mvc.cache.ResultCache;
 import com.bluedot.framework.simplespring.mvc.processor.RequestProcessor;
 import com.bluedot.framework.simplespring.mvc.processor.impl.MQRequestProcessor;
 import com.bluedot.framework.simplespring.mvc.processor.impl.PreRequestProcessor;
 import com.bluedot.framework.simplespring.mvc.processor.impl.StaticResourceRequestProcessor;
-import com.bluedot.framework.simplespring.util.JsonUtil;
 import com.bluedot.framework.simplespring.util.LogUtil;
 import javafx.util.Pair;
 import org.dom4j.Document;
@@ -26,7 +17,6 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -58,6 +48,9 @@ public class DispatcherServlet extends HttpServlet {
      */
     List<RequestProcessor> PROCESSORS = new ArrayList<>();
 
+    /**
+     * Service 映射字典
+     */
     private Map<String, Pair<Class,String>> xmlMap;
 
     /**
@@ -85,8 +78,6 @@ public class DispatcherServlet extends HttpServlet {
         PROCESSORS.add(new PreRequestProcessor());
         PROCESSORS.add(new StaticResourceRequestProcessor(servletConfig.getServletContext()));
         PROCESSORS.add(new MQRequestProcessor(xmlMap,contextConfig));
-//        PROCESSORS.add(new JspRequestProcessor(servletConfig.getServletContext()));
-//        PROCESSORS.add(new ControllerRequestProcessor());
     }
 
     public void doParsingXmlMappings(Properties contextConfig) {
@@ -171,8 +162,6 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     public void destroy() {
-        //关闭线程池
-        ResultCache.pool.shutdown();
         //关闭连接池
         MyDataSourceImpl.getInstance().close();
         //注销驱动

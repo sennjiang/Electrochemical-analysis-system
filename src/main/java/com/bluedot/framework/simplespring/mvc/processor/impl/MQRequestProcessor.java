@@ -78,7 +78,7 @@ public class MQRequestProcessor implements RequestProcessor{
             String boundary = (String) data.get("boundary");
             if (baseBoundary != null || boundary == null) {
                 boundary = baseBoundary;
-                data.put("boundary",boundary);
+                data.put("boundary", boundary);
             }
 
             if (requestProcessorChain.getRequestPath().endsWith("/")) {
@@ -110,7 +110,7 @@ public class MQRequestProcessor implements RequestProcessor{
                         hadFind = upBlockQueue.hadOne(threadName);
                         if (hadFind) {
                             newData = upBlockQueue.take();
-                            logger.debug("json --- data: {}",JsonUtil.getJson(newData));
+                            logger.debug("json --- data: {}",JsonUtil.toJson(newData));
                             requestProcessorChain.setResultRender(new JsonResultRender(newData));
                         }
                     Thread.sleep(25);
