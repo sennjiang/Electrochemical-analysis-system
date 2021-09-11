@@ -1,10 +1,13 @@
 package com.bluedot.electrochemistry.service;
 
+import com.bluedot.framework.simplespring.core.annotation.Service;
+
 import java.util.Map;
 
 /**
  * @author 万梓豪
  */
+@Service
 public class UnfreezeService {
 
     /**

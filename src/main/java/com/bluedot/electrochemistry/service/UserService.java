@@ -1,5 +1,7 @@
 package com.bluedot.electrochemistry.service;
 
+import com.bluedot.framework.simplespring.core.annotation.Service;
+
 import java.util.Map;
 
 /**
@@ -9,6 +11,7 @@ import java.util.Map;
  * @Author KangLongPing
  * @Date 2021/9/4 17:07
  **/
+@Service
 public class UserService {
 	/**
 	 * @Description 登录方法

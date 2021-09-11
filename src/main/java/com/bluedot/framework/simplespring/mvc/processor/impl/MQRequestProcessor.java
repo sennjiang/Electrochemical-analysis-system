@@ -52,6 +52,8 @@ public class MQRequestProcessor implements RequestProcessor{
      */
     private QueueMonitor queueMonitor;
 
+    private String baseBoundary;
+
 
     /**
      * 处理器线程
@@ -80,8 +82,10 @@ public class MQRequestProcessor implements RequestProcessor{
             HttpServletRequest request = requestProcessorChain.getReq();
             Map<String, String[]> parameterMap = request.getParameterMap();
             Data data = new Data(parameterMap,Thread.currentThread().getName());
-            data.put("boundary","0101");
             String boundary = (String) data.get("boundary");
+            if (baseBoundary != null || boundary == null)
+                boundary = baseBoundary;
+                data.put("boundary",boundary);
 
             if (requestProcessorChain.getRequestPath().endsWith("/")) {
                 requestProcessorChain.setResultRender(new DefaultResultRender());
@@ -96,8 +100,10 @@ public class MQRequestProcessor implements RequestProcessor{
             }
             logger.info("数据为-----{}",data.getClass());
             data.setRequest(request);
-            data.put("service",SearchService.class);
-            data.put("serviceMethod","list");
+            Pair<Class, String> classStringPair = xmlMap.get(boundary);
+
+            data.put("service",classStringPair.getKey());
+            data.put("serviceMethod",classStringPair.getValue());
 
             try {
                 downBlockQueue.put(data);
@@ -133,6 +139,7 @@ public class MQRequestProcessor implements RequestProcessor{
      */
     private void initQueueMonitor(Properties config) {
         try {
+            this.baseBoundary = config.getProperty("boundary");
             String capacity = config.getProperty("monitor.queue.capacity");
             if ("".equals(capacity) || capacity == null) {
                 queueMonitor = new QueueMonitor(10);
