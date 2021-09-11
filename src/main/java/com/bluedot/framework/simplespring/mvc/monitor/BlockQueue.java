@@ -4,7 +4,6 @@ import com.bluedot.framework.simplemybatis.utils.LogUtils;
 import org.slf4j.Logger;
 
 import java.util.Arrays;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 

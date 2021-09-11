@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * 分页
+ * @author
  * @param <T> 数据类型
  */
 public class PageInfo<T> {
@@ -88,5 +89,4 @@ public class PageInfo<T> {
                 ", totalSize=" + totalSize + ", totalPage=" + totalPage + ", list=" +
                 list + "]";
     }
-
 }

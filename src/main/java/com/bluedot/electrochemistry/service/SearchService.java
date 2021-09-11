@@ -29,7 +29,9 @@ public class SearchService extends BaseService  {
      * 所有查询入口
      * @param map
      */
-    private void search(Map map) {}
+    private void search(Map map) {
+
+    }
 
     /**
      * 所有列表入口
