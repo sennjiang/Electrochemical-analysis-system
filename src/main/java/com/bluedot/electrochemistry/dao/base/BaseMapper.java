@@ -259,6 +259,6 @@ public interface BaseMapper {
 //     * @param pageSize 一页的数据量
 //     * @return 算法申请集合
 //     */
-//    List<AlgorithmSend> getAlgorithmSendsByQueryCondition(String queryCondition,int type,int timeOrder,int pageStart, int pageSize);
-//    long getAlgorithmSendsCountByQueryCondition(String queryCondition,int type,int timeOrder);
+//    List<AlgorithmSend> getAlgorithmSendsByQueryConditionAndDropdown(String queryCondition,int type,int timeOrder,int pageStart, int pageSize);
+//    long getAlgorithmSendsCountByQueryConditionAndDropdown(String queryCondition,int type,int timeOrder);
 }

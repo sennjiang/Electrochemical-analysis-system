@@ -1,5 +1,8 @@
 package com.bluedot.electrochemistry.service.base;
 
+import com.bluedot.electrochemistry.dao.base.BaseMapper;
+import com.bluedot.electrochemistry.factory.MapperFactory;
+import com.bluedot.electrochemistry.pojo.PageInfo;
 import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.service.FileService;
 import com.bluedot.electrochemistry.service.SearchService;
@@ -7,6 +10,7 @@ import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.BeanContainer;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,13 +24,34 @@ public class BaseService {
 
     /**
      * 查询数据列表的方法
-     *
      * @param map             请求参数map
      * @param serviceCallback 具体查询操作的回调接口
      * @param <T>             泛型
      */
     protected <T> void doSimpleQueryListTemplate(Map<String, Object> map, ServiceCallback<T> serviceCallback) {
+        BaseMapper baseMapper =((MapperFactory) beanContainer.getBean(MapperFactory.class)).createMapper();
+        int pageNo = (int) map.get("pageNo");
+        int page = (int) map.get("page");
+        int pageSize = (int) map.get("pageSize");
+        String dropdownType1 = (String) map.get("dropdownType1");
+        int dropdownValue1 = (int) map.get("dropdownValue1");
+        String dropdownType2 = (String) map.get("dropdownType2");
+        int dropdownValue2 = (int) map.get("dropdownValue2");
+        String queryCondition = (String) map.get("queryCondition");
+        List<T> list;
+        Long totalSize;
+        try {
+            list = serviceCallback.doListExecutor(baseMapper, page, pageSize, dropdownType1, dropdownType2, dropdownValue1, dropdownValue2, queryCondition);
+            totalSize = serviceCallback.doCountExecutor(baseMapper, dropdownType1, dropdownType2, dropdownValue1, dropdownValue2, queryCondition);
 
+            //页面大小、页码、数据总数、数据列表，注意顺序
+            PageInfo<T> pageInfo = new PageInfo<>(pageSize, pageNo, totalSize, list);
+            //单独计算总页数
+            pageInfo.setTotalPage(totalSize, pageSize);
+            map.put("pageInfo", pageInfo);
+        } catch (Exception e) {
+            map.put("error", "数据查询出错");
+        }
     }
 
     /**
