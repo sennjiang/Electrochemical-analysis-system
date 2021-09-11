@@ -1,7 +1,5 @@
 package com.bluedot.framework.simplespring.mvc.processor.impl;
 
-import com.bluedot.electrochemistry.service.SearchService;
-import com.bluedot.framework.simplespring.core.BeanContainer;
 import com.bluedot.framework.simplespring.mvc.RequestProcessorChain;
 import com.bluedot.framework.simplespring.mvc.monitor.BlockQueue;
 import com.bluedot.framework.simplespring.mvc.monitor.Data;
@@ -11,15 +9,10 @@ import com.bluedot.framework.simplespring.mvc.render.impl.DefaultResultRender;
 import com.bluedot.framework.simplespring.mvc.render.impl.JsonResultRender;
 import com.bluedot.framework.simplespring.util.JsonUtil;
 import com.bluedot.framework.simplespring.util.LogUtil;
-import com.sun.org.apache.regexp.internal.RE;
 import javafx.util.Pair;
 import org.slf4j.Logger;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
