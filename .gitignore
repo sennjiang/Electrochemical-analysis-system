@@ -27,4 +27,4 @@ target/
 *.iml
 logs/
 test/
-/vue-admin-template/node_modules/
+vue-admin-template/node_modules/
