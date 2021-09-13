@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Iterator;
 
 /**
- * @author xxbb
+ * @author 1
  */
 public class RequestProcessorChain {
     /**

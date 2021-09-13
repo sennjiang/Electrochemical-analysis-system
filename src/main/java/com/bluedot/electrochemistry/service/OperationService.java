@@ -12,5 +12,7 @@ import java.util.Map;
  */
 @Service
 public class OperationService extends BaseService {
-    private void uploadOperation(Map map) {}
+    private void uploadOperation(Map map) {
+
+    }
 }

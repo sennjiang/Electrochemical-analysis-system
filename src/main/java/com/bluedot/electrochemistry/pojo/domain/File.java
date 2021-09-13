@@ -11,7 +11,7 @@ public class File {
     /**
      * 文件id
      */
-    private int id;
+    private Integer id;
     /**
      * 文件名
      */
@@ -23,11 +23,11 @@ public class File {
     /**
      * 文件owner
      */
-    private int owner;
+    private Integer owner;
     /**
      * 文件大小
      */
-    private double size;
+    private Double size;
     /**
      * 文件hash值
      */
@@ -35,11 +35,11 @@ public class File {
     /**
      * 文件类型
      */
-    private short type;
+    private Short type;
     /**
      * 文件状态
      */
-    private short status;
+    private Short status;
     /**
      * 文件创建时间
      */
@@ -82,6 +82,31 @@ public class File {
     private double dataResult;
 
     public File() {
+    }
+
+    public File(Integer id, String name, String url, Integer owner, Double size, Short type, Short status) {
+        this.id = id;
+        this.name = name;
+        this.url = url;
+        this.owner = owner;
+        this.size = size;
+        this.type = type;
+        this.status = status;
+    }
+
+    public File(Integer id, Double size, String hash, Timestamp modifiedTime, double dataStart, double dataEnd, double dataBottom, double dataPeak, double dataPrecision, double dataCycle, double dataRate, double dataResult) {
+        this.id = id;
+        this.size = size;
+        this.hash = hash;
+        this.modifiedTime = modifiedTime;
+        this.dataStart = dataStart;
+        this.dataEnd = dataEnd;
+        this.dataBottom = dataBottom;
+        this.dataPeak = dataPeak;
+        this.dataPrecision = dataPrecision;
+        this.dataCycle = dataCycle;
+        this.dataRate = dataRate;
+        this.dataResult = dataResult;
     }
 
     public File(int id, String name, String url, int owner, double size, String hash, short type, short status, Timestamp produceTime, Timestamp modifiedTime, double dataStart, double dataEnd, double dataBottom, double dataPeak, double dataPrecision, double dataCycle, double dataRate, double dataResult) {
