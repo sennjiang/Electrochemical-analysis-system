@@ -8,11 +8,10 @@ import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 import java.util.Map;
 
 /**
- * @ClassName UserService
- * @Description 用户业务
- * @Version 1.0
- * @Author KangLongPing
- * @Date 2021/9/4 17:07
+ * 用户业务
+ * @version 1.0
+ * @author KangLongPing
+ * @date 2021/9/4 17:07
  **/
 @Service
 public class UserService extends BaseService {
