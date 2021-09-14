@@ -69,8 +69,9 @@ public class ClassUtil {
         }
         //依据不同的资源类型，采用不同的方式获取资源的集合
         Set<Class<?>> classSet=null;
-            //判断文件协议
+        //判断url是否为文件协议
         if(FILE_PROTOCOL.equalsIgnoreCase(url.getProtocol())){
+            // 将当前url下的所有的Class文件装载至classSet
             classSet=new HashSet<>();
             File packageDirectory=new File(url.getFile());
             extractClassFile(classSet,packageDirectory,packageName);
@@ -107,6 +108,7 @@ public class ClassUtil {
             }
             //获取类class对象载入set中
             private void addToClassSet(String absoluteFilePath) {
+                //将绝对路径转换为全限定名，并且去掉.class后缀
                 absoluteFilePath=absoluteFilePath.replace(File.separator,".");
                 String className=absoluteFilePath.substring(absoluteFilePath.indexOf(packageName))
                         .replace(SUFFIX,"");

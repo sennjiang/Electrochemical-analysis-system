@@ -60,7 +60,7 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig servletConfig) {
-        //读取配置文件
+        //读取配置文件，保存属性到contextConfig
         doLoadConfig(servletConfig.getInitParameter("contextConfigLocation"));
         //初始化容器
         BeanContainer beanContainer = BeanContainer.getInstance();
