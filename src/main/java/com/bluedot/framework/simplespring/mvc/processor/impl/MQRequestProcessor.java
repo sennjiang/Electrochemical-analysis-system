@@ -165,6 +165,8 @@ public class MQRequestProcessor implements RequestProcessor{
             return false;
         }
 
+        // 这里应该需要设置render为JsonResultRender （wan-zihao注）
+
         Adapter adapter = new Adapter(requestProcessorChain,xmlMap);
         adapter.run();
 
