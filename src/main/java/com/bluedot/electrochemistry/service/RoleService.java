@@ -3,6 +3,7 @@ package com.bluedot.electrochemistry.service;
 import com.bluedot.electrochemistry.dao.base.BaseDao;
 import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.pojo.domain.Role;
+import com.bluedot.electrochemistry.pojo.domain.RoleRight;
 import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.annotation.Service;
@@ -65,13 +66,21 @@ public class RoleService extends BaseService {
     }
 
     //添加角色，为角色赋予相应的权限
-    private int addRole(Map map){
-        return 1;
+    private void addRole(Map<String , Object> map){
+        doSimpleModifyTemplate(map , new ServiceCallback<Role>(){
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                Role role = packagingRole(map);
+                int addRoleRight = baseDao.insert(new RoleRight());
+                int addRole = baseDao.insert(role);
+                return addRole+addRoleRight;
+            }
+        });
     }
 
     //删除角色
-    private int deleteRole(Map map){
-        return 1;
+    private void deleteRole(Map map){
+
     }
 
     private Role packagingRole(Map<String , Object> map){
@@ -81,5 +90,9 @@ public class RoleService extends BaseService {
         Integer rightType = Integer.valueOf((String) map.get("rightType"));
 
         return new Role(roleName , genTime , description , rightType);
+    }
+
+    private RoleRight packagingRoleRight(Map<String , Object> map){
+        return new RoleRight();
     }
 }
