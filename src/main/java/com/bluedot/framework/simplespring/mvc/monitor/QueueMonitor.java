@@ -110,7 +110,7 @@ public class QueueMonitor implements Runnable {
                         Class clazz = data.getService();
                         BaseService service = (BaseService) beanContainer.getBean(clazz);
                         service.doService(data);
-                        logger.info("处理请求结束--- 请求路径: {}", data.getRequest().getPathInfo());
+                        logger.info("处理请求结束--- 请求id: {}", data.get("requestId"));
                         upBlockQueue.put(data);
                         // 请求处理完成后，线程礼让，让监听向上队列的线程拿到资源
                         Thread.yield();

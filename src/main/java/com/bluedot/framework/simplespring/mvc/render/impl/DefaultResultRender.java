@@ -13,7 +13,8 @@ import java.io.IOException;
 public class DefaultResultRender implements ResultRender {
     @Override
     public void render(RequestProcessorChain requestProcessorChain) throws IOException {
-        if (requestProcessorChain.getRequestPath().endsWith("/")) {
+        String requestPath = requestProcessorChain.getRequestPath();
+        if (requestPath.endsWith("/") || requestPath == null || "".equals(requestPath)) {
              requestProcessorChain.getResp().sendRedirect("index.jsp");
         }
         requestProcessorChain.getResp().setStatus(requestProcessorChain.getResponseCode());

@@ -45,6 +45,11 @@ QueueMonitor 实现 Runnable 接口
 ### 说明：
 BlockQueue 的使用 参考了MQ消息队列，实现了MQ的基本功能，因为BlockQueue集成于项目内部，异步的特点 无法完全体现，且消耗性能，于是使用IOP进行异步操作
 
+引用java线程池，将每一个请求封装为Adapter(task任务)将其交给线程池并发处理，速度提升，线程池会默认回收task，adapter对象处理问题解决。
+
+
+使用requestId 来标识唯一request 进行线程提取 解决之前 使用线程名做标识时重复的问题，requestId为线程安全的自增Long
+
 ### 优势：
 1.将controller与service解耦，在此项目中 service 无直接操作
 

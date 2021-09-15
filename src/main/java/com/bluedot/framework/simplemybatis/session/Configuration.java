@@ -1,7 +1,6 @@
 package com.bluedot.framework.simplemybatis.session;
 
 
-
 import com.bluedot.framework.simplemybatis.bean.TableInfo;
 import com.bluedot.framework.simplemybatis.binding.MapperRegistry;
 import com.bluedot.framework.simplemybatis.mapping.MappedStatement;
