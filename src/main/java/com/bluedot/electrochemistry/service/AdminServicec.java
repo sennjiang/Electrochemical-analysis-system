@@ -8,6 +8,7 @@ import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.annotation.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -86,7 +87,18 @@ public class AdminServicec extends BaseService {
      * @return
      */
     private User packagingUser(Map<String , Object> map){
-        return new User();
+        Integer username = (Integer) map.get("username");
+        String password = (String) map.get("password");
+        String nickname  = (String) map.get("nickname");
+        Integer gender = (Integer) map.get("gender");
+        Integer age = (Integer) map.get("age");
+        String email = (String) map.get("email");
+        Timestamp birth = (Timestamp) map.get("birth");
+        Integer status = (Integer) map.get("status");
+        String portrait = (String) map.get("portrait");
+        Timestamp gmtCreated = (Timestamp) map.get("gmtCreated");
+        return new User(username,password,nickname,gender,age,email,birth,status,portrait,gmtCreated);
+
     }
 
 
@@ -97,6 +109,8 @@ public class AdminServicec extends BaseService {
      * @return
      */
     private UserRole packagingUserRole(Map<String , Object> map){
-        return new UserRole();
+        Integer username = (Integer) map.get("username");
+        Integer roleId = (Integer) map.get("roleId");
+        return new UserRole(username,roleId);
     }
 }
