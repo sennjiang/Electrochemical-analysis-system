@@ -6,28 +6,50 @@ package com.bluedot.electrochemistry.pojo.domain;
  * @date 2021/9/3 19:22
  */
 public class UserRole {
-    //权限名称
-    private Integer rightName;
+
+    private Integer userRoleId;
+
+
     //用户名称
     private Integer username;
 
-    private Integer trId;
+    //角色名称
+    private Integer roleId;
+
+
+
 
     public UserRole() {
     }
 
-    public UserRole(Integer rightName, Integer username, Integer trId) {
-        this.rightName = rightName;
+    public UserRole(Integer username, Integer roleId) {
         this.username = username;
-        this.trId = trId;
+        this.roleId = roleId;
     }
 
-    public Integer getRightName() {
-        return rightName;
+    @Override
+    public String toString() {
+        return "UserRole{" +
+                "userRoleId=" + userRoleId +
+                ", roleId=" + roleId +
+                ", username=" + username +
+                '}';
     }
 
-    public void setRightName(Integer rightName) {
-        this.rightName = rightName;
+    public Integer getUserRoleId() {
+        return userRoleId;
+    }
+
+    public void setUserRoleId(Integer userRoleId) {
+        this.userRoleId = userRoleId;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
     public Integer getUsername() {
@@ -36,13 +58,5 @@ public class UserRole {
 
     public void setUsername(Integer username) {
         this.username = username;
-    }
-
-    public Integer getTrId() {
-        return trId;
-    }
-
-    public void setTrId(Integer trId) {
-        this.trId = trId;
     }
 }

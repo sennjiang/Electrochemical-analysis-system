@@ -60,7 +60,7 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig servletConfig) {
-        //读取配置文件
+        //读取配置文件，保存属性到contextConfig
         doLoadConfig(servletConfig.getInitParameter("contextConfigLocation"));
         //初始化容器
         BeanContainer beanContainer = BeanContainer.getInstance();
@@ -75,8 +75,11 @@ public class DispatcherServlet extends HttpServlet {
         doParsingXmlMappings(contextConfig);
 
         //初始化请求处理器责任链
+        // 预处理的请求处理器
         PROCESSORS.add(new PreRequestProcessor());
+        // 静态资源的请求处理器（如果是静态资源让RequestDispatcher自己处理）
         PROCESSORS.add(new StaticResourceRequestProcessor(servletConfig.getServletContext()));
+        // 根据业务需要自定义的请求处理器
         PROCESSORS.add(new MQRequestProcessor(xmlMap,contextConfig));
     }
 

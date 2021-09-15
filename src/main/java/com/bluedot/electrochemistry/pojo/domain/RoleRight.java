@@ -13,7 +13,7 @@ public class RoleRight {
     public RoleRight() {
     }
 
-    public RoleRight(Integer rrId, Integer roleId, Integer rightId, Integer rightType) {
+    public RoleRight(Integer roleId, Integer rightId, Integer rightType) {
         this.rrId = rrId;
         this.roleId = roleId;
         this.rightId = rightId;

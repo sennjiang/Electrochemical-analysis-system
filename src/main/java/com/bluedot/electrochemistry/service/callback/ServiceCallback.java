@@ -37,7 +37,7 @@ public interface ServiceCallback<T> extends Callback {
      * @param queryCondition 查询条件
      * @return 数据列表
      */
-    default List<T> doListExecutorByQueryCondition(BaseMapper baseMapper, int pageStart, int pageSize, String queryCondition) {
+    default List<T> doListExecutorByQueryCondition(BaseMapper baseMapper, int pageStart, int pageSize, String queryCondition, String queryValue) {
         return null;
     }
 
@@ -87,9 +87,7 @@ public interface ServiceCallback<T> extends Callback {
      * @param queryCondition 查询条件
      * @return 数据条数
      */
-    default Long doCountExecutorByQueryCondition(BaseMapper baseMapper, String queryCondition) {
-        return null;
-    }
+    default Long doCountExecutorByQueryCondition(BaseMapper baseMapper, String queryCondition, String queryValue) { return null; }
 
     /**
      * 根据查询条件查询数据条数的方法
