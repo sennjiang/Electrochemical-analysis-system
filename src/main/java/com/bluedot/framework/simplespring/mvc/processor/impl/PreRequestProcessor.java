@@ -3,17 +3,20 @@ package com.bluedot.framework.simplespring.mvc.processor.impl;
 
 import com.bluedot.framework.simplespring.mvc.RequestProcessorChain;
 import com.bluedot.framework.simplespring.mvc.processor.RequestProcessor;
+import com.bluedot.framework.simplespring.mvc.render.impl.DefaultResultRender;
 import com.bluedot.framework.simplespring.util.LogUtil;
 import org.slf4j.Logger;
 
 
 /**
  * 请求预处理，包括编码以及路径处理
+ *
  * @author xxbb
  */
 public class PreRequestProcessor implements RequestProcessor {
-    private final Logger log= LogUtil.getLogger();
-    private static final String REQUEST_PATH_END="/";
+    private final Logger log = LogUtil.getLogger();
+    private static final String REQUEST_PATH_END = "/";
+
     @Override
     public boolean process(RequestProcessorChain requestProcessorChain) throws Exception {
 
@@ -22,10 +25,14 @@ public class PreRequestProcessor implements RequestProcessor {
 
         //将请求路径末尾的/删除，为后续匹配Controller请求路径做准备
         // （一般Controller的处理路径是/aaa/bbb，所以如果传入的路径结尾是/aaa/bbb/，就需要处理成/aaa/bbb）
-        String requestPath=requestProcessorChain.getRequestPath();
-        log.debug("original requestPath: {}",requestPath);
-        if(requestPath.length()>1&&requestPath.endsWith(REQUEST_PATH_END)){
-            requestProcessorChain.setRequestPath(requestPath.substring(0,requestPath.length()-1));
+        String requestPath = requestProcessorChain.getRequestPath();
+        log.debug("original requestPath: {}", requestPath);
+        if (requestPath.length() > 1 && requestPath.endsWith(REQUEST_PATH_END)) {
+            requestProcessorChain.setRequestPath(requestPath.substring(0, requestPath.length() - 1));
+        }
+        if (requestPath.endsWith(REQUEST_PATH_END) || requestPath == null || "".equals(requestPath)) {
+            requestProcessorChain.setResultRender(new DefaultResultRender());
+            return false;
         }
         log.debug("preprocess requestMethod: {}, requestPath: {}", requestProcessorChain.getRequestMethod(), requestProcessorChain.getRequestPath());
         return true;

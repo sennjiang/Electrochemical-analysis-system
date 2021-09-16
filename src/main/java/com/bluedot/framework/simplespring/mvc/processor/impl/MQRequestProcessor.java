@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author JDsen99
@@ -45,75 +48,57 @@ public class MQRequestProcessor implements RequestProcessor{
      */
     private QueueMonitor queueMonitor;
 
+
     private String baseBoundary;
+
+    /**
+     * 线程池对象
+     */
+    private ExecutorService executors = Executors.newFixedThreadPool(10);
+
+    private AtomicLong requestId = new AtomicLong(1);
 
 
     /**
      * 处理器线程
-     * 将前端的数据进行处理后 存入队列 并监听向上队列 取得数据返回
+     * 监听向上队列 取得数据返回
      */
     class Adapter implements Runnable{
 
-        private Map<String, Pair<Class,String>> xmlMap;
+        private RequestProcessorChain requestProcessorChain;
 
-        RequestProcessorChain requestProcessorChain;
+        private Long requestId;
 
-        public Adapter(RequestProcessorChain requestProcessorChain, Map<String, Pair<Class, String>> xmlMap) {
-            this.xmlMap = xmlMap;
+        private Boolean hadFind = false;
+
+        public Adapter(RequestProcessorChain requestProcessorChain,Long requestId) {
             this.requestProcessorChain = requestProcessorChain;
+            this.requestId = requestId;
+        }
+
+        public Boolean getHadFind() {
+            return hadFind;
         }
 
         @Override
         public void run() {
-            Boolean hadFind = false;
 
             if (queueMonitor.getRunning() == false) {
-                queueMonitor.setRunning(true);
-                new Thread(queueMonitor).start();
+                logger.error("queueMonitor not running ...");
+                throw new RuntimeException();
             }
-
-            HttpServletRequest request = requestProcessorChain.getReq();
-            Map<String, String[]> parameterMap = request.getParameterMap();
-            Data data = new Data(parameterMap,Thread.currentThread().getName());
-            String boundary = (String) data.get("boundary");
-            if (baseBoundary != null || boundary == null) {
-                boundary = baseBoundary;
-                data.put("boundary", boundary);
-            }
-
-            if (requestProcessorChain.getRequestPath().endsWith("/")) {
-                requestProcessorChain.setResultRender(new DefaultResultRender());
-            }
-
-            if ("".equals(boundary) || boundary == null) {
-                try {
-                    requestProcessorChain.getResp().sendRedirect("index.jsp");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            logger.info("数据为-----{}",data.getClass());
-            data.setRequest(request);
-            Pair<Class, String> classStringPair = xmlMap.get(boundary);
-
-            data.put("service",classStringPair.getKey());
-            data.put("serviceMethod",classStringPair.getValue());
-
             try {
-                downBlockQueue.put(data);
-
-                String threadName = Thread.currentThread().getName();
 
                 Data newData = null;
-
+                logger.debug("Adapter ---> start listening   hadFind: {}   requestId {}",hadFind,requestId);
                 while (!hadFind) {
-                        hadFind = upBlockQueue.hadOne(threadName);
+                        hadFind = upBlockQueue.hadOne(requestId);
                         if (hadFind) {
                             newData = upBlockQueue.take();
-                            logger.debug("json --- data: {}",JsonUtil.toJson(newData));
+                            logger.debug("请求结果 --- requestId: {}",newData.get("requestId"));
                             requestProcessorChain.setResultRender(new JsonResultRender(newData));
                         }
-                    Thread.sleep(25);
+                        Thread.sleep(50);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -122,16 +107,19 @@ public class MQRequestProcessor implements RequestProcessor{
     }
 
 
+
     public MQRequestProcessor(Map<String, Pair<Class, String>> xmlMap, Properties config) {
-        initQueueMonitor(config);
+        QueueMonitor queueMonitor = initQueueMonitor(config);
         this.xmlMap = xmlMap;
+        queueMonitor.setRunning(true);
+        executors.execute(queueMonitor);
     }
 
     /**
      * 队列的初始化
      * @param config
      */
-    private void initQueueMonitor(Properties config) {
+    private QueueMonitor initQueueMonitor(Properties config) {
         try {
             this.baseBoundary = config.getProperty("boundary");
             String capacity = config.getProperty("monitor.queue.capacity");
@@ -156,19 +144,57 @@ public class MQRequestProcessor implements RequestProcessor{
 
         downBlockQueue = queueMonitor.getDownBlockQueue();
         upBlockQueue = queueMonitor.getUpBlockQueue();
+        return queueMonitor;
     }
 
     @Override
     public boolean process(RequestProcessorChain requestProcessorChain) throws Exception {
 
-        if (requestProcessorChain.getRequestPath().endsWith("/")) {
-            return false;
+        Data data = doRequest(requestProcessorChain);
+
+        downBlockQueue.put(data);
+
+        Adapter adapter = new Adapter(requestProcessorChain, (Long) data.get("requestId"));
+        //交给线程池处理
+        executors.submit(adapter);
+
+
+        while (!adapter.getHadFind()) {
+            Thread.sleep(50);
+        }
+        return false;
+    }
+
+    /**
+     * 对request进行处理封装
+     * @param requestProcessorChain 责任链
+     * @return Data
+     */
+    private Data doRequest(RequestProcessorChain requestProcessorChain) {
+        HttpServletRequest request = requestProcessorChain.getReq();
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        Data data = new Data(parameterMap,Thread.currentThread().getName());
+        String boundary = (String) data.get("boundary");
+        if (baseBoundary != null || boundary == null) {
+            boundary = baseBoundary;
+            data.put("boundary", boundary);
         }
 
-        Adapter adapter = new Adapter(requestProcessorChain,xmlMap);
-        adapter.run();
+        if ("".equals(boundary) || boundary == null) {
+            try {
+                requestProcessorChain.getResp().sendRedirect("index.jsp");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        logger.info("数据为-----{}",data.getClass());
+        data.setRequest(request);
+        Pair<Class, String> classStringPair = xmlMap.get(boundary);
 
-        return false;
+        data.put("service",classStringPair.getKey());
+        data.put("serviceMethod",classStringPair.getValue());
+        data.put("requestId",requestId.getAndIncrement());
+        return data;
     }
 }
 

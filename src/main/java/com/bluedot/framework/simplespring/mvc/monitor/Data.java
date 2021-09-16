@@ -19,13 +19,11 @@ public class Data implements Comparable<Data>, Map {
 
     private HttpServletRequest request;
 
-    private String threadName;
-
     public Data(Map<String, String[]> requestData, String threadName) {
-        this(requestData, 5, threadName);
+        this(requestData, 5);
     }
 
-    public Data(Map<String, String[]> requestData, Integer priority, String threadName) {
+    public Data(Map<String, String[]> requestData, Integer priority) {
         data = new HashMap<>();
         Set<Entry<String, String[]>> entries = requestData.entrySet();
         for (Entry<String, String[]> entry : entries) {
@@ -34,7 +32,6 @@ public class Data implements Comparable<Data>, Map {
         if (priority != null) {
             this.priority = priority;
         }
-        this.threadName = threadName;
     }
 
     public Class getService() {
@@ -151,7 +148,4 @@ public class Data implements Comparable<Data>, Map {
         return this.data.entrySet();
     }
 
-    public String getThreadName() {
-        return this.threadName;
-    }
 }

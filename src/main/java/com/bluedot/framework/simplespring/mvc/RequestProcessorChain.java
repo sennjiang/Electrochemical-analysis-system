@@ -2,6 +2,7 @@ package com.bluedot.framework.simplespring.mvc;
 
 
 import com.bluedot.framework.simplespring.mvc.processor.RequestProcessor;
+import com.bluedot.framework.simplespring.mvc.processor.impl.MQRequestProcessor;
 import com.bluedot.framework.simplespring.mvc.render.ResultRender;
 import com.bluedot.framework.simplespring.mvc.render.impl.DefaultResultRender;
 import com.bluedot.framework.simplespring.mvc.render.impl.InternalErrorResultRender;
