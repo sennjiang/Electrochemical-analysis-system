@@ -15,8 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -26,12 +25,12 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class MQRequestProcessor implements RequestProcessor{
 
+    private Logger logger = LogUtil.getLogger();
+
     /**
      * service映射map
      */
     private Map<String, Pair<Class,String>> xmlMap;
-
-    private Logger logger = LogUtil.getLogger();
 
     /**
      * 向下队列
@@ -49,13 +48,27 @@ public class MQRequestProcessor implements RequestProcessor{
     private QueueMonitor queueMonitor;
 
 
+    /**
+     * test baseBoundary
+     */
     private String baseBoundary;
 
     /**
-     * 线程池对象
+     * 获取到当前运行环境的可用处理器数量
      */
-    private ExecutorService executors = Executors.newFixedThreadPool(10);
+    private final static int POLLER_THREAD_COUNT = Runtime.getRuntime().availableProcessors();
 
+    /**
+     * 线程池对象 核心线程2 一个 monitor 一个预留线程
+     * 最大线程数 POLLER_THREAD_COUNT * 8 按照机器而定
+     * 空闲线程存活时间2s 可视为最大响应时间
+     * 数组容量 64 可视为一时间最大请求，再来请求进行阻塞 待处理
+     */
+    private ExecutorService executors = new ThreadPoolExecutor(2,POLLER_THREAD_COUNT * 8,2,TimeUnit.SECONDS,new ArrayBlockingQueue<>(64));
+
+    /**
+     * 标识request 唯一id 并线程安全，自增
+     */
     private AtomicLong requestId = new AtomicLong(1);
 
 
@@ -63,7 +76,7 @@ public class MQRequestProcessor implements RequestProcessor{
      * 处理器线程
      * 监听向上队列 取得数据返回
      */
-    class Adapter implements Runnable{
+    class Adapter implements Callable<Data> {
 
         private RequestProcessorChain requestProcessorChain;
 
@@ -80,7 +93,6 @@ public class MQRequestProcessor implements RequestProcessor{
             return hadFind;
         }
 
-        @Override
         public void run() {
 
             if (queueMonitor.getRunning() == false) {
@@ -92,17 +104,41 @@ public class MQRequestProcessor implements RequestProcessor{
                 Data newData = null;
                 logger.debug("Adapter ---> start listening   hadFind: {}   requestId {}",hadFind,requestId);
                 while (!hadFind) {
-                        hadFind = upBlockQueue.hadOne(requestId);
-                        if (hadFind) {
-                            newData = upBlockQueue.take();
-                            logger.debug("请求结果 --- requestId: {}",newData.get("requestId"));
-                            requestProcessorChain.setResultRender(new JsonResultRender(newData));
-                        }
-                        Thread.sleep(50);
+                    hadFind = upBlockQueue.hadOne(requestId);
+                    if (hadFind) {
+                        newData = upBlockQueue.take();
+                        logger.debug("请求结果 --- requestId: {}",newData.get("requestId"));
+                        requestProcessorChain.setResultRender(new JsonResultRender(newData));
+                    }
+                    Thread.sleep(50);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+
+        @Override
+        public Data call() throws Exception {
+            if (queueMonitor.getRunning() == false) {
+                logger.error("queueMonitor not running ...");
+                throw new RuntimeException();
+            }
+            Data newData = null;
+            try {
+                logger.debug("Adapter ---> start listening   hadFind: {}   requestId {}",hadFind,requestId);
+                while (!hadFind) {
+                    hadFind = upBlockQueue.hadOne(requestId);
+                    if (hadFind) {
+                        newData = upBlockQueue.take();
+                        logger.debug("请求结果 --- requestId: {}",newData.get("requestId"));
+                        requestProcessorChain.setResultRender(new JsonResultRender(newData));
+                    }
+                    Thread.sleep(50);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return newData;
         }
     }
 
@@ -156,12 +192,13 @@ public class MQRequestProcessor implements RequestProcessor{
 
         Adapter adapter = new Adapter(requestProcessorChain, (Long) data.get("requestId"));
         //交给线程池处理
-        executors.submit(adapter);
+        FutureTask<Data> task = new FutureTask<>(adapter);
 
+        Future<?> submit = executors.submit(task);
 
-        while (!adapter.getHadFind()) {
-            Thread.sleep(50);
-        }
+        submit.get();
+        //TODO 日志处理 多线程处理 并发处理
+
         return false;
     }
 
