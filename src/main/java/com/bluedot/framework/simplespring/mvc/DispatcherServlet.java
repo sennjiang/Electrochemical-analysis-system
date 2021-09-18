@@ -51,7 +51,7 @@ public class DispatcherServlet extends HttpServlet {
     /**
      * Service 映射字典
      */
-    private Map<String, Pair<Class,String>> xmlMap;
+    private Map<String, Pair<Class, String>> xmlMap;
 
     /**
      * 日志
@@ -80,7 +80,7 @@ public class DispatcherServlet extends HttpServlet {
         // 静态资源的请求处理器（如果是静态资源让RequestDispatcher自己处理）
         PROCESSORS.add(new StaticResourceRequestProcessor(servletConfig.getServletContext()));
         // 根据业务需要自定义的请求处理器
-        PROCESSORS.add(new MQRequestProcessor(xmlMap,contextConfig));
+        PROCESSORS.add(new MQRequestProcessor(xmlMap, contextConfig));
     }
 
     public void doParsingXmlMappings(Properties contextConfig) {
@@ -111,16 +111,16 @@ public class DispatcherServlet extends HttpServlet {
                 method = (String) node.element("method").getData();
 
                 Class<?> clazz = classLoader.loadClass(serviceXmlPath + "." + service1);
-                xmlMap.put(number, new Pair<Class,String>(clazz, method));
+                xmlMap.put(number, new Pair<Class, String>(clazz, method));
             }
 
-            log.debug("parsingXmlMappings had complete ---> name: {}","xmlMap");
+            log.debug("parsingXmlMappings had complete ---> name: {}", "xmlMap");
 
         } catch (DocumentException e) {
-            log.error("service.xml parse error",e);
+            log.error("service.xml parse error", e);
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            log.error("service.xml load Class error",e);
+            log.error("service.xml load Class error", e);
             e.printStackTrace();
         }
     }
@@ -174,9 +174,9 @@ public class DispatcherServlet extends HttpServlet {
             try {
                 driver = drivers.nextElement();
                 DriverManager.deregisterDriver(driver);
-                LogUtil.getLogger().debug("deregister success : driver {}" ,driver);
+                LogUtil.getLogger().debug("deregister success : driver {}", driver);
             } catch (SQLException e) {
-                LogUtil.getLogger().error("deregister failed : driver {}" ,driver);
+                LogUtil.getLogger().error("deregister failed : driver {}", driver);
             }
         }
 

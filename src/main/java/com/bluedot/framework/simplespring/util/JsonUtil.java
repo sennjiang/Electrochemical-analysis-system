@@ -17,13 +17,14 @@ public class JsonUtil {
 
     /**
      * 准确的多线程 的 单例模式
+     *
      * @param ojb 数据
      * @return String json
      */
     public static String toJson(Object ojb) {
         if (null == gson) { //为了避免开销 先检查是否为空
             synchronized (JsonUtil.class) {
-                if(null == gson){
+                if (null == gson) {
                     GsonBuilder gsonBuilder = new GsonBuilder();
                     gson = gsonBuilder.create();
                 }
@@ -31,7 +32,7 @@ public class JsonUtil {
         }
         //剔除 service 因为service是Class对象 不需要输出Json
         //TODO 使用更优秀的方式 或设计模式
-        ((Data)ojb).remove("service");
+        ((Data) ojb).remove("service");
         return gson.toJson(ojb);
     }
 }
