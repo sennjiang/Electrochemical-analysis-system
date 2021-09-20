@@ -1,7 +1,6 @@
 package com.bluedot.framework.simplespring.inject;
 
 
-
 import com.bluedot.framework.simplespring.core.BeanContainer;
 import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 import com.bluedot.framework.simplespring.util.ClassUtil;
@@ -18,7 +17,8 @@ import java.util.Set;
  */
 public class DependencyInject {
     private BeanContainer beanContainer;
-    private static final Logger LOGGER= LogUtil.getLogger();
+    private static final Logger LOGGER = LogUtil.getLogger();
+
     public DependencyInject() {
         beanContainer = BeanContainer.getInstance();
     }
@@ -52,7 +52,7 @@ public class DependencyInject {
                     }
                     //通过反射将对应的成员变量实例注入到成员变量中
                     Object targetBean = beanContainer.getBean(clazz);
-                    LogUtil.getLogger().debug("Dependency inject for class: "+clazz.getName()+";injected value："+fieldClass.getName());
+                    LogUtil.getLogger().debug("Dependency inject for class: " + clazz.getName() + ";injected value：" + fieldClass.getName());
                     ClassUtil.setField(targetBean, field, fieldValue, true);
 
                 }
@@ -105,8 +105,8 @@ public class DependencyInject {
             } else {
                 //这里获取的是该接口的实现类，我们给autowired命名时需要指定实现类名（首字母小写）
                 for (Class<?> clazz : classSet) {
-                    String classSimpleName= StringUtil.firstCharToLowerCase(clazz.getSimpleName());
-                    if(classSimpleName.equals(autowiredValue)){
+                    String classSimpleName = StringUtil.firstCharToLowerCase(clazz.getSimpleName());
+                    if (classSimpleName.equals(autowiredValue)) {
                         return clazz;
                     }
                 }

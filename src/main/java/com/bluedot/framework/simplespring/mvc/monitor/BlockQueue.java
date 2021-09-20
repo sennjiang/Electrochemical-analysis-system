@@ -89,7 +89,7 @@ public class BlockQueue<E> {
         try {
             while (count == items.length)
                 notFull.await();
-            logger.info("数据 [{}] ---放入队列",e);
+            logger.info("数据 ---> 放入队列: {}",e);
             enqueue(e);
         } finally {
             lock.unlock();
@@ -107,7 +107,7 @@ public class BlockQueue<E> {
         try {
             while (count == 0)
                 notEmpty.await();
-            logger.info("数据 --- 取出队列");
+            logger.info("数据 ---> 取出队列");
             return dequeue();
         } finally {
             lock.unlock();
@@ -166,12 +166,12 @@ public class BlockQueue<E> {
         return this.count;
     }
 
-    public boolean hadOne(String threadName) {
+    public boolean hadOne(Long requestId) {
         if (this.count == 0) {
             return false;
         }
-        String name = ((Data) items[takeIndex]).getThreadName();
-        if (threadName.equals(name) && name != null) {
+        Long id = (Long) ((Data) items[takeIndex]).get("requestId");
+        if (id == requestId) {
             return true;
         }
         return false;

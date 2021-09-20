@@ -24,7 +24,7 @@ BlockQueue<Data> downBlockQueue;
 
 BlockQueue<Data> upBlockQueue;
 数据向上传递的队列，由MQRequestProcessor.Adapter接收并处理返回
-数据处理后，选择JsonResultRender 进行处理
+数据处理后，按照是否有error 进行选择后置处理器进行处理
 
 ### 数据 Data
 Data 实现java.util.Map接口
@@ -43,22 +43,36 @@ QueueMonitor 实现 Runnable 接口
 
 
 ### 说明：
-BlockQueue 的使用 参考了MQ消息队列，实现了MQ的基本功能，因为BlockQueue集成于项目内部，异步的特点 无法完全体现，且消耗性能，于是使用IOP进行异步操作
+1.BlockQueue 的使用 参考了MQ消息队列，实现了MQ的基本功能，因为BlockQueue集成于项目内部，异步的特点 无法完全体现，且消耗性能，于是使用IOP进行异步操作
+
+2.引用java线程池，将每一个请求封装为Adapter(task任务)将其交给线程池并发处理，速度提升，线程池会默认回收task，adapter对象处理问题解决。
+
+
+
+
+使用requestId 来标识唯一request 进行线程提取 解决之前 使用线程名做标识时重复的问题，requestId为线程安全的自增Long
 
 ### 优势：
 1.将controller与service解耦，在此项目中 service 无直接操作
 
-2.采用多线程，遇到高并发时，将阻塞，完成削峰功能，网站不会直接boom
+2.采用多线程，遇到高并发时，将阻塞请求，完成削峰功能，网站不会直接boom
+
+3.采用线程池技术，future异步技术，进一步实现速度优化。
 
 
 ### 运用：
 运用 java多线程、封装。 设计模式：责任链，门面。
 
 ### 缺点：
-目前MQRequestProcessor.Adapter 每个请求一个线程，待使用缓存,多线程的使用，尚未成熟
+1.目前MQRequestProcessor.Adapter 每个请求一个线程，待使用缓存（已解决）,
+2. 多线程的使用，尚未成熟
 
-### 优化：
-采用更优秀的NIO模型处理多并发、使用缓存，将类重复使用。
+### 待优化：
+1. 采用更优秀的NIO模型处理多并发、使用缓存，将类重复使用。
+2. BlockQueue 采用循环数组队列，Adapter监听时，监听头数据。浪费时间
+
+### 已实现提升：
+1. MQRequestProcessor.Adapter 从实现runnable 接口--->提升为实现callable接口 实现异步操作，解决，主线程响应速度快于队列问题，没有处理完直接交给默认后置处理器问题。
 
 ### 配置：
 application.properties
