@@ -53,7 +53,9 @@ public class MQRequestProcessor implements RequestProcessor {
     private ExecutorService executors = new ThreadPoolExecutor(2,
             POLLER_THREAD_COUNT * 8,
             2, TimeUnit.SECONDS,
-            new BlockQueue<Runnable>(10));
+            new BlockQueue<Runnable>(10),
+            Executors.defaultThreadFactory(),
+            new ThreadPoolExecutor.CallerRunsPolicy());
 
     /**
      * 标识request 唯一id 并线程安全，自增
