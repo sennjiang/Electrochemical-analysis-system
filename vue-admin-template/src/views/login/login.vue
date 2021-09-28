@@ -4,11 +4,11 @@
     <hr class="hr-line"/>
     <div class="login-wrapper">
       <div class="header">登录</div>
-      <div class="form-wrapper">
+      <el-form class="form-wrapper" ref="loginForm" :rules="loginRules" :model="loginForm">
         <input type="text" name="username" placeholder="账号/邮箱" class="input-item">
         <input type="password" name="password" placeholder="密码" class="input-item">
         <div class="btn btn-login">登录</div>
-      </div>
+      </el-form>
 
       <div class="msg">
         没有账号?
@@ -29,7 +29,31 @@
 </template>
 
 <script>
-
+// 重置表单
+resetLoginForm () {
+  this.$refs.loginFormRef.resetFields()
+},
+//  登陆
+login () {
+  // valid: 校验规则, 符合规则, true, 不符合, false
+  this.$refs.loginFormRef.validate(async valid => {
+    if (!valid) return // 不成功, 终止
+    //  提交表单, 成功会返回信息,
+    const { data: res } = await this.$http.post('http://localhost:9000/login', this.loginForm)
+    if (res.flag === 'ok') {
+      this.$message.success('登陆成功')
+      await this.$router.push('/home') // 页面路由
+      window.sessionStorage.setItem('user', res.user) // 存储user的session对象
+      console.log(res.user)
+      // 进入首页
+      await this.$router.push({ path: '/home' })
+    } else {
+      this.$message.error('操作失败')
+    }
+  })
+}
+}
+}
 </script>
 
 <style lang="scss" scoped>
