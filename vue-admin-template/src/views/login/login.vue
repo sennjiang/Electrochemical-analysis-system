@@ -32,7 +32,7 @@
 
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 * {
   margin: 0;
   padding: 0;
@@ -75,7 +75,7 @@ body {
 
 .login-wrapper {
   background-color: #fff;
-  width: 358px;
+  width: 450px;
   height: 588px;
   border-radius: 15px;
   padding: 0 50px;
@@ -172,7 +172,7 @@ a {
   cursor: pointer;
 }
 
-//动画效果
+/*动画效果*/
 .transition-box {
   margin-bottom: 10px;
   width: 200px;
