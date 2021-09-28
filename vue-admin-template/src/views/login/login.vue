@@ -29,31 +29,7 @@
 </template>
 
 <script>
-// 重置表单
-resetLoginForm () {
-  this.$refs.loginFormRef.resetFields()
-},
-//  登陆
-login () {
-  // valid: 校验规则, 符合规则, true, 不符合, false
-  this.$refs.loginFormRef.validate(async valid => {
-    if (!valid) return // 不成功, 终止
-    //  提交表单, 成功会返回信息,
-    const { data: res } = await this.$http.post('http://localhost:9000/login', this.loginForm)
-    if (res.flag === 'ok') {
-      this.$message.success('登陆成功')
-      await this.$router.push('/home') // 页面路由
-      window.sessionStorage.setItem('user', res.user) // 存储user的session对象
-      console.log(res.user)
-      // 进入首页
-      await this.$router.push({ path: '/home' })
-    } else {
-      this.$message.error('操作失败')
-    }
-  })
-}
-}
-}
+
 </script>
 
 <style lang="scss" scoped>
@@ -78,12 +54,12 @@ body {
 }
 
 .container .index-title {
-  font-family:"Microsoft YaHei";
+  font-family: "Microsoft YaHei";
   font-style: oblique;
   font-size: 50px;
   /*字间距*/
   letter-spacing: 10px;
-  color:#ffffff;
+  color: #ffffff;
   /*text-shadow: 5px 5px 5px #ffaa4b;*/
   text-shadow: 1px 20px 20px #03a9f4;
   margin-top: 7%;
