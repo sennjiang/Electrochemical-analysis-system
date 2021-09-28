@@ -31,21 +31,10 @@ Data 实现java.util.Map接口
 Data 采用 **门面模式** 将request及其parameter进行封装，
 
 
-### QueueMonitor 队列监听
-QueueMonitor 实现 Runnable 接口
-监听向下队列,发现有数据就进行处理，处理完成以后，放入向上队列
-每次处理数据，默认间隔50ms tomcat底层 每次获取请求 处理间隔时间为50ms 当队列为空时，默认睡眠500ms
-
-
-
-队列初始化，将初始化 BlockQueue capacity
-
-
-
 ### 说明：
-1.BlockQueue 的使用 参考了MQ消息队列，实现了MQ的基本功能，因为BlockQueue集成于项目内部，异步的特点 无法完全体现，且消耗性能，于是使用IOP进行异步操作
+1.BlockQueue 的使用 继承与BlockQueue 将其重写，作为线程池的队列对象，待实现排序功能
 
-2.引用java线程池，将每一个请求封装为Adapter(task任务)将其交给线程池并发处理，速度提升，线程池会默认回收task，adapter对象处理问题解决。
+2.引用java线程池，将每一个请求封装为Adapter(task任务)将其交给线程池并发处理，速度提升，线程池会默认回收task。
 
 
 
@@ -61,28 +50,11 @@ QueueMonitor 实现 Runnable 接口
 
 
 ### 运用：
-运用 java多线程、封装。 设计模式：责任链，门面。
+运用 java多线程、线程池、封装。 设计模式：责任链，门面。
 
-### 缺点：
-1.目前MQRequestProcessor.Adapter 每个请求一个线程，待使用缓存（已解决）,
-2. 多线程的使用，尚未成熟
-
-### 待优化：
-1. 采用更优秀的NIO模型处理多并发、使用缓存，将类重复使用。
-2. BlockQueue 采用循环数组队列，Adapter监听时，监听头数据。浪费时间
 
 ### 已实现提升：
-1. MQRequestProcessor.Adapter 从实现runnable 接口--->提升为实现callable接口 实现异步操作，解决，主线程响应速度快于队列问题，没有处理完直接交给默认后置处理器问题。
+1. MQRequestProcessor.Adapter 从实现runnable 接口--->提升为实现callable接口 实现异步操作。
 
 ### 配置：
 application.properties
-
-monitor
-//队列排序阈值 % 默认75%
-monitor.thread.orderingThreshold=75
-
-//监听数据队列间隔 ms 默认50ms
-monitor.thread.frequency=50
-
-//监听数据队列 没有数据时 默认睡眠时间 500ms
-monitor.thread.sleepTime=500

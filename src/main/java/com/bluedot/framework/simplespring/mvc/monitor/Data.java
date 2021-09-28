@@ -19,7 +19,7 @@ public class Data implements Comparable<Data>, Map {
 
     private HttpServletRequest request;
 
-    public Data(Map<String, String[]> requestData, String threadName) {
+    public Data(Map<String, String[]> requestData) {
         this(requestData, 5);
     }
 
@@ -106,7 +106,6 @@ public class Data implements Comparable<Data>, Map {
 
     @Override
     public Object get(Object key) {
-//        return data.get(key)[0];
         return data.get(key);
     }
 
