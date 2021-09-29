@@ -4,11 +4,11 @@
     <hr class="hr-line"/>
     <div class="login-wrapper">
       <div class="header">登录</div>
-      <div class="form-wrapper">
-        <input type="text" name="username" placeholder="账号/邮箱" class="input-item">
-        <input type="password" name="password" placeholder="密码" class="input-item">
+      <el-form class="form-wrapper" ref="loginForm" :rules="loginRules" :model="loginForm">
+        <el-input type="text" name="username" placeholder="账号/邮箱" class="input-item"/>
+        <el-input type="password" name="password" placeholder="密码" class="input-item"/>
         <div class="btn btn-login">登录</div>
-      </div>
+      </el-form>
 
       <div class="msg">
         没有账号?
@@ -17,7 +17,11 @@
       <div>
         <div class="btn-forget-password">
           <a href="#">忘记密码</a>
+          &nbsp;
           <a href="#">申请解冻</a>
+        </div>
+        <div>
+
         </div>
       </div>
     </div>
@@ -25,12 +29,10 @@
 </template>
 
 <script>
-export default {
-  name: 'Login'
-}
+
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 * {
   margin: 0;
   padding: 0;
@@ -45,19 +47,19 @@ body {
 }
 
 .container {
-  background-image: url("../../../assets/login/背景7.jpg");
+  background-image: url("../../../assets/login/login-background.jpg");
   background-size: 100%;
   height: 100%;
   /*background-image: linear-gradient(to right, #fbc2eb, #a6c1ee);*/
 }
 
 .container .index-title {
-  font-family:"Microsoft YaHei";
+  font-family: "Microsoft YaHei";
   font-style: oblique;
   font-size: 50px;
   /*字间距*/
   letter-spacing: 10px;
-  color:#ffffff;
+  color: #ffffff;
   /*text-shadow: 5px 5px 5px #ffaa4b;*/
   text-shadow: 1px 20px 20px #03a9f4;
   margin-top: 7%;
@@ -73,7 +75,7 @@ body {
 
 .login-wrapper {
   background-color: #fff;
-  width: 358px;
+  width: 450px;
   height: 588px;
   border-radius: 15px;
   padding: 0 50px;
@@ -102,20 +104,20 @@ body {
   font-size: 12px;
 }
 
-.input-item {
-  display: block;
-  width: 100%;
-  margin-bottom: 20px;
-  border: 0;
-  padding: 10px;
-  border-bottom: 1px solid rgb(128, 125, 125);
-  font-size: 15px;
-  outline: none;
-}
-
-.input-item::placeholder {
-  text-transform: uppercase;
-}
+//.input-item {
+//  display: block;
+//  width: 100%;
+//  margin-bottom: 20px;
+//  border: 0;
+//  padding: 10px;
+//  border-bottom: 1px solid rgb(128, 125, 125);
+//  font-size: 15px;
+//  outline: none;
+//}
+//
+//.input-item::placeholder {
+//  text-transform: uppercase;
+//}
 
 .btn {
   text-align: center;
@@ -168,5 +170,19 @@ a {
 .btn-unfreeze-application {
   color: #4cc9f0;
   cursor: pointer;
+}
+
+/*动画效果*/
+.transition-box {
+  margin-bottom: 10px;
+  width: 200px;
+  height: 100px;
+  border-radius: 4px;
+  background-color: #409EFF;
+  text-align: center;
+  color: #fff;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  margin-right: 20px;
 }
 </style>
