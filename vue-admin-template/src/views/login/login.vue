@@ -5,8 +5,8 @@
     <div class="login-wrapper">
       <div class="header">登录</div>
       <el-form class="form-wrapper" ref="loginForm" :rules="loginRules" :model="loginForm">
-        <input type="text" name="username" placeholder="账号/邮箱" class="input-item">
-        <input type="password" name="password" placeholder="密码" class="input-item">
+        <el-input type="text" name="username" placeholder="账号/邮箱" class="input-item"/>
+        <el-input type="password" name="password" placeholder="密码" class="input-item"/>
         <div class="btn btn-login">登录</div>
       </el-form>
 
@@ -104,20 +104,20 @@ body {
   font-size: 12px;
 }
 
-.input-item {
-  display: block;
-  width: 100%;
-  margin-bottom: 20px;
-  border: 0;
-  padding: 10px;
-  border-bottom: 1px solid rgb(128, 125, 125);
-  font-size: 15px;
-  outline: none;
-}
-
-.input-item::placeholder {
-  text-transform: uppercase;
-}
+//.input-item {
+//  display: block;
+//  width: 100%;
+//  margin-bottom: 20px;
+//  border: 0;
+//  padding: 10px;
+//  border-bottom: 1px solid rgb(128, 125, 125);
+//  font-size: 15px;
+//  outline: none;
+//}
+//
+//.input-item::placeholder {
+//  text-transform: uppercase;
+//}
 
 .btn {
   text-align: center;
