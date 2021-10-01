@@ -27,7 +27,6 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      @sort-change="sortChange"
     >
       <el-table-column label="ID" prop="id" align="center" width="80">
         <template slot-scope="{row}">
@@ -70,8 +69,8 @@
         </template>
       </el-table-column>
     </el-table>
- 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+ <!-- @pagination="getList" -->
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"  />
     <!-- 弹框 详情页面 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
@@ -112,14 +111,14 @@
 
 <script>
 // 查询引入的
-import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import { fetchList, createArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const calendarTypeOptions = [
-  { key: '最近三天'},
-  { key: '最近一周'}
+  { key: '最近三天' },
+  { key: '最近一周' }
 ]
 
 export default {
@@ -135,8 +134,8 @@ export default {
   data() {
     return {
       tableKey: 0,
-      list: [{id: 1,name: "11",timestamp:"11111111111",}],
-      total: 0,
+      list: [{id: 1,name: "11",timestamp:"11111111111",status:"1",author:"111"}],
+      total: 1,
       listLoading: true,
       listQuery: {
         page: 1,
@@ -179,20 +178,21 @@ export default {
   },
   methods: {
     getList() {
-      // this.listLoading = true
+      this.listLoading = false
+      this.list = [{id: 1,name: "11",timestamp:"11111111111",status:"1",author:"111"}]
+      this.total = 1
       // fetchList(this.listQuery).then(response => {
-      //   this.list = response.data.items
-      //   this.total = response.data.total
-
-      //   // Just to simulate the time of the request
-      //   setTimeout(() => {
-      //     this.listLoading = false
-      //   }, 1.5 * 1000)
+        // this.list = response.data.items
+        // this.total = response.data.total
+        // Just to simulate the time of the request
+        // setTimeout(() => {
+        //   this.listLoading = false
+        // }, 1.5 * 1000)
       // })
     },
     handleFilter() {
       this.listQuery.page = 1
-      this.getList()
+       this.getList()
     },
     handleModifyStatus(row, status) {
       this.$message({
@@ -210,22 +210,22 @@ export default {
       })
     },
     createData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
-          createArticle(this.temp).then(() => {
-            this.list.unshift(this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: 'Success',
-              message: 'Created Successfully',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
+      // this.$refs['dataForm'].validate((valid) => {
+      //   if (valid) {
+      //     this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
+      //     this.temp.author = 'vue-element-admin'
+      //     createArticle(this.temp).then(() => {
+      //       this.list.unshift(this.temp)
+      //       this.dialogFormVisible = false
+      //       this.$notify({
+      //         title: 'Success',
+      //         message: 'Created Successfully',
+      //         type: 'success',
+      //         duration: 2000
+      //       })
+      //     })
+      //   }
+      // })
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
