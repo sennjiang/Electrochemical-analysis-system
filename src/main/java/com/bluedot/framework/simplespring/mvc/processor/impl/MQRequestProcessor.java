@@ -89,7 +89,7 @@ public class MQRequestProcessor implements RequestProcessor {
 
             logger.info("开始处理请求--- 请求路径: {}", newData.getRequest().getPathInfo());
             Class clazz = newData.getService();
-
+            //这里调用了baseservice的doservice方法执行具体业务
             BaseService service = (BaseService) beanContainer.getBean(clazz);
             service.doService(newData);
             logger.info("处理请求结束--- 请求id: {}", newData.get("requestId"));
