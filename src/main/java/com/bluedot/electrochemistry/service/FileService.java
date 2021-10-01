@@ -1,12 +1,25 @@
 package com.bluedot.electrochemistry.service;
 
 import com.bluedot.electrochemistry.dao.base.BaseDao;
+import com.bluedot.electrochemistry.dao.base.BaseMapper;
+import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
+import com.bluedot.framework.simplemybatis.session.SqlSessionFactoryBuilder;
 import com.bluedot.framework.simplespring.core.annotation.Service;
+import com.bluedot.framework.simplespring.inject.annotation.Autowired;
+import com.bluedot.framework.simplespring.mvc.monitor.Data;
+import javafx.scene.control.TableRow;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @description
@@ -15,6 +28,8 @@ import java.util.Map;
 @Service
 public class FileService extends BaseService {
 
+    @Autowired
+    MapperFactory mapperFactory;
     /**
      * 导出文件
      *
@@ -37,8 +52,26 @@ public class FileService extends BaseService {
      *
      * @param map 数据
      */
-    private void uploadFile(Map<String,Object> map) {
-
+    private void uploadFile(Map<String,Object> map) throws Exception {
+        HttpServletRequest request = ((Data) map).getRequest();
+        String realPath = request.getSession().getServletContext().getRealPath("/uploads");
+        java.io.File file = new java.io.File(realPath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        List<FileItem> items = upload.parseRequest(request);
+        for (FileItem item : items) {
+            if (item.isFormField()) {
+                //普通表单
+            } else {
+                String uuid = UUID.randomUUID().toString().replace("-", "");
+                String filename = uuid + "_" + item.getName();
+                item.write(new java.io.File(realPath, filename));
+                item.delete();
+            }
+        }
     }
 
     /**
@@ -121,10 +154,11 @@ public class FileService extends BaseService {
     /**
      * 比较文件hash值
      *
-     * @param fileId 数据
+     * @param fileHash 文件hash值
      */
-    private void contrast(int fileId) {
-
+    private boolean contrast(String fileHash,int username) {
+        long l = mapperFactory.createMapper().contrastFile(fileHash, username);
+        return l >= 1;
     }
 
     /**

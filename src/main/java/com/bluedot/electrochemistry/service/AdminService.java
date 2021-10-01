@@ -18,7 +18,7 @@ import java.util.Map;
  * @date 2021/9/11 19:18
  */
 @Service
-public class AdminServicec extends BaseService {
+public class AdminService extends BaseService {
 
     /**
      * 查询管理员信息
