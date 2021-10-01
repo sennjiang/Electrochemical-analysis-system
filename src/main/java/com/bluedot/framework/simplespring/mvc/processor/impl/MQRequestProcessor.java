@@ -9,6 +9,7 @@ import com.bluedot.framework.simplespring.mvc.processor.RequestProcessor;
 import com.bluedot.framework.simplespring.mvc.render.impl.InternalErrorResultRender;
 import com.bluedot.framework.simplespring.mvc.render.impl.JsonResultRender;
 import com.bluedot.framework.simplespring.util.LogUtil;
+import com.sun.org.apache.regexp.internal.RE;
 import javafx.util.Pair;
 import org.slf4j.Logger;
 
@@ -135,9 +136,9 @@ public class MQRequestProcessor implements RequestProcessor {
     private Data doRequest(RequestProcessorChain requestProcessorChain) {
 
         HttpServletRequest request = requestProcessorChain.getReq();
-        Map<String, String[]> parameterMap = request.getParameterMap();
 
-        Data data = new Data(parameterMap);
+
+        Data data = new Data(request);
         logger.info("parameterMap ---> data : {}",data);
         String boundary = (String) data.get("boundary");
         if (baseBoundary != null && boundary == null) {
