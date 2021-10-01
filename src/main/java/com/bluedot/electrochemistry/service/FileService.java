@@ -45,8 +45,10 @@ public class FileService extends BaseService {
      */
     private void findFile(Map<String,Object> map) {
         Integer fileId = (Integer) map.get("fileId");
+        Integer pageStart = (Integer) map.get("pageStart");
+        Integer pageSize = (Integer) map.get("pageSize");
         BaseMapper mapper = mapperFactory.createMapper();
-        File file = mapper.getFileById(fileId);
+        File file = mapper.getFileById(fileId,pageStart,pageSize);
         map.put("data",file);
     }
 

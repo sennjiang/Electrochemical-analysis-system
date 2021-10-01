@@ -26,29 +26,29 @@ public class RoleService extends BaseService {
      *
      * @param map
      */
-    private void queryRoles(Map<String , Object> map){
-        doSimpleQueryListTemplate(map, new ServiceCallback<Role>() {
-            @Override
-            public List<Role> doListExecutor(BaseMapper baseMapper, int pageStart, int pageSize) {
-                return baseMapper.getRoles(pageStart , pageSize);
-            }
-
-            @Override
-            public List<Role> doListExecutorByQueryCondition(BaseMapper baseMapper, int pageStart, int pageSize, String queryCondition, String queryValue) {
-                return baseMapper.getRoleByQueryCondition(queryCondition, queryValue, pageStart, pageSize);
-            }
-
-            @Override
-            public Long doCountExecutor(BaseMapper baseMapper) {
-                return baseMapper.getRoleCount();
-            }
-
-            @Override
-            public Long doCountExecutorByQueryCondition(BaseMapper baseMapper, String queryCondition, String queryValue) {
-                return baseMapper.getRoleCountByQueryCondition(queryCondition, queryValue);
-            }
-        });
-    }
+//    private void queryRoles(Map<String , Object> map){
+//        doSimpleQueryListTemplate(map, new ServiceCallback<Role>() {
+//            @Override
+//            public List<Role> doListExecutor(BaseMapper baseMapper, int pageStart, int pageSize) {
+//                return baseMapper.getRoles(pageStart , pageSize);
+//            }
+//
+//            @Override
+//            public List<Role> doListExecutorByQueryCondition(BaseMapper baseMapper, int pageStart, int pageSize, String queryCondition, String queryValue) {
+//                return baseMapper.getRoleByQueryCondition(queryCondition, queryValue, pageStart, pageSize);
+//            }
+//
+//            @Override
+//            public Long doCountExecutor(BaseMapper baseMapper) {
+//                return baseMapper.getRoleCount();
+//            }
+//
+//            @Override
+//            public Long doCountExecutorByQueryCondition(BaseMapper baseMapper, String queryCondition, String queryValue) {
+//                return baseMapper.getRoleCountByQueryCondition(queryCondition, queryValue);
+//            }
+//        });
+//    }
 
     /**
      * 修改角色以及该角色拥有的菜单权限
@@ -65,7 +65,12 @@ public class RoleService extends BaseService {
         });
     }
 
-    //添加角色，为角色赋予相应的权限
+    /**
+     * 添加角色，为角色赋予相应的权限
+     *
+     *
+     */
+
     private void addRole(Map<String , Object> map){
         doSimpleModifyTemplate(map , new ServiceCallback<Role>(){
             @Override

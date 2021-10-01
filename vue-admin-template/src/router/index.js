@@ -149,7 +149,7 @@ export const constantRoutes = [
   },
 
   {
-    path: 'superAdmin/systemBackup',
+    path: '/superAdmin/systemBackup',
     component: Layout,
     children: [
       {
@@ -162,7 +162,7 @@ export const constantRoutes = [
   },
 
   {
-    path: 'superAdmin/systemRestore',
+    path: '/superAdmin/systemRestore',
     component: Layout,
     children: [
       {
@@ -175,7 +175,7 @@ export const constantRoutes = [
   },
 
   {
-    path: 'superAdmin/algorithmAudit',
+    path: '/superAdmin/algorithmAudit',
     component: Layout,
     children: [
       {
@@ -188,7 +188,7 @@ export const constantRoutes = [
   },
 
   {
-    path: 'superAdmin/roleManage',
+    path: '/superAdmin/roleManage',
     component: Layout,
     children: [
       {
