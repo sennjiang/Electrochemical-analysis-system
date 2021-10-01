@@ -6,11 +6,9 @@ import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
-import com.bluedot.framework.simplemybatis.session.SqlSessionFactoryBuilder;
 import com.bluedot.framework.simplespring.core.annotation.Service;
 import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 import com.bluedot.framework.simplespring.mvc.monitor.Data;
-import javafx.scene.control.TableRow;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -36,7 +34,8 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void export(Map<String,Object> map) {
-        System.out.println("你好啊");
+        //TODO 前端做导出excel
+        map.put("data","你好啊");
     }
 
     /**
@@ -45,6 +44,10 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void findFile(Map<String,Object> map) {
+        Integer fileId = (Integer) map.get("fileId");
+        BaseMapper mapper = mapperFactory.createMapper();
+        File file = mapper.getFileById(fileId);
+        map.put("data",file);
     }
 
     /**
