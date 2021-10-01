@@ -1,14 +1,14 @@
 import router from './router'
 import store from './store'
 import { Message } from 'element-ui'
-import NProgress from 'nprogress' // progress bar
-import 'nprogress/nprogress.css' // progress bar style
+import NProgress from 'nprogress' // progress bar（加载进度条控件）
+import 'nprogress/nprogress.css' // progress bar style （进度条样式）
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 
-NProgress.configure({ showSpinner: false }) // NProgress Configuration
+NProgress.configure({ showSpinner: false }) // NProgress配置
 
-const whiteList = ['/login'] // no redirect whitelist
+const whiteList = ['/login'] // no redirect whitelist （白名单）
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -31,7 +31,7 @@ router.beforeEach(async(to, from, next) => {
         next()
       } else {
         try {
-          // get user info
+          // 尝试重新获取用户信息
           await store.dispatch('user/getInfo')
 
           next()
@@ -47,6 +47,7 @@ router.beforeEach(async(to, from, next) => {
   } else {
     /* has no token*/
 
+    // 判断是否为白名单路径
     if (whiteList.indexOf(to.path) !== -1) {
       // in the free login whitelist, go directly
       next()
@@ -59,6 +60,6 @@ router.beforeEach(async(to, from, next) => {
 })
 
 router.afterEach(() => {
-  // finish progress bar
+  // finish progress bar （进度条结束加载）
   NProgress.done()
 })

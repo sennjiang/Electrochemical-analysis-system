@@ -5,6 +5,7 @@ export function login(data) {
     url: '/vue-admin-template/user/login',
     method: 'post',
     data
+    // params: data (为什么这样会报错)
   })
 }
 

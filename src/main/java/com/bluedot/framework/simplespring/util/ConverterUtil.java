@@ -6,7 +6,8 @@ package com.bluedot.framework.simplespring.util;
 public class ConverterUtil {
     /**
      * 返回基本数据类型的空值
-     *需要特殊处理的基本类型即int\double\short\long\byte\float\boolean
+     * 需要特殊处理的基本类型即int\double\short\long\byte\float\boolean
+     *
      * @param type 参数类型
      * @return 对应的空值
      */
@@ -15,21 +16,22 @@ public class ConverterUtil {
                 type == short.class || type == long.class ||
                 type == byte.class || type == float.class) {
             return 0;
-        } else if(type == boolean.class){
+        } else if (type == boolean.class) {
             return false;
         }
         return null;
     }
+
     /**
      * String类型转换成对应的参数类型
      *
-     * @param type  参数类型
+     * @param type         参数类型
      * @param requestValue 值
      * @return 转换后的Object
      */
     public static Object convert(Class<?> type, String requestValue) {
-        if(isPrimitive(type)){
-            if(ValidationUtil.isEmpty(requestValue)){
+        if (isPrimitive(type)) {
+            if (ValidationUtil.isEmpty(requestValue)) {
                 return primitiveNull(type);
             }
             if (type.equals(int.class) || type.equals(Integer.class)) {
@@ -54,6 +56,7 @@ public class ConverterUtil {
             throw new RuntimeException("count not support non primitive type conversion yet");
         }
     }
+
     /**
      * 判定是否基本数据类型(包括包装类以及String)
      *

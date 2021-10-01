@@ -60,6 +60,7 @@ public class BeanContainer {
 
         return ContainerHolder.HOLDER.instance;
     }
+
     public Map getBeanContainer() {
         return this.beanMap;
     }

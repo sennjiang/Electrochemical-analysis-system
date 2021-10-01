@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapper namespace="com.bluedot.electrochemistry.dao.base.BaseMapper">
 
+    <!--    用户模块相关-->
     <select id="listUser" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user;
     </select>
-<!--超级管理员相关-->
+    <select id="listUser" resultType="com.bluedot.electrochemistry.pojo.domain.User">
+        select * from user limit #{currentPage},#{pageSize}
+    </select>
+    <select id="queryUserByUsername" resultType="com.bluedot.electrochemistry.pojo.domain.User">
+        select * from user where username = #{username};
+    </select>
+    <select id="queryUserByEmail" resultType="com.bluedot.electrochemistry.pojo.domain.User">
+        select * from user where email = #{email};
+    </select>
+    <!--超级管理员相关-->
     <!--查询管理员相关-->
     <select id="getAdmins" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user limit #{pageStart},#{pageSize}

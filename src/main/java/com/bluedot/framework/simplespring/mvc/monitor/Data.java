@@ -19,16 +19,20 @@ public class Data implements Comparable<Data>, Map {
 
     private HttpServletRequest request;
 
-    public Data(Map<String, String[]> requestData, String threadName) {
-        this(requestData, 5);
+    public Data(HttpServletRequest request) {
+        this(request, 5);
     }
 
-    public Data(Map<String, String[]> requestData, Integer priority) {
+    public Data(HttpServletRequest request, Integer priority) {
+        this.request = request;
         data = new HashMap<>();
-        Set<Entry<String, String[]>> entries = requestData.entrySet();
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        Set<Entry<String, String[]>> entries = parameterMap.entrySet();
         for (Entry<String, String[]> entry : entries) {
             this.data.put(entry.getKey(), entry.getValue()[0]);
         }
+        //重新将boundary 取出 并放入
+        data.put("boundary",request.getParameter("boundary"));
         if (priority != null) {
             this.priority = priority;
         }
@@ -106,7 +110,6 @@ public class Data implements Comparable<Data>, Map {
 
     @Override
     public Object get(Object key) {
-//        return data.get(key)[0];
         return data.get(key);
     }
 

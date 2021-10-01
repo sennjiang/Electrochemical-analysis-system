@@ -33,7 +33,8 @@ import Layout from '@/layout'
 export const constantRoutes = [
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    // component: () => import('@/views/ea/login/index'),
+    component: () => import('@/views/login'),
     hidden: true
   },
 
@@ -46,116 +47,77 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/info',
+    hidden: true,
     children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      path: 'info',
+      name: 'Info',
+      component: () => import('@/views/ea/admin/info/index'),
+      meta: { title: '个人信息', icon: 'user' }
     }]
   },
 
   {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-
-  {
-    path: '/form',
+    path: '/admin/userManage',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        name: 'UserManage',
+        component: () => import('@/views/ea/admin/userManage/index'),
+        meta: { title: '用户管理', icon: 'user' }
       }
     ]
   },
 
   {
-    path: '/nested',
+    path: '/admin/unfreezeAudit',
     component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
     children: [
       {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
-      },
-      {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        name: 'Menu2',
-        meta: { title: 'menu2' }
+        path: 'index',
+        name: 'UnfreezeAudit',
+        component: () => import('@/views/ea/admin/unfreezeAudit/index'),
+        meta: { title: '解冻审核', icon: 'user' }
       }
     ]
   },
 
   {
-    path: 'external-link',
+    path: '/admin/fileManage',
     component: Layout,
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        path: 'index',
+        name: 'FileManage',
+        component: () => import('@/views/ea/admin/fileManage/index'),
+        meta: { title: '文件管理', icon: 'user' }
+      }
+    ]
+  },
+
+  {
+    path: '/admin/operatingRecord',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'OperatingRecord',
+        component: () => import('@/views/ea/admin/operatingRecord/index'),
+        meta: { title: '操作记录', icon: 'user' }
+      }
+    ]
+  },
+
+  {
+    path: '/admin/algorithmManage',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'AlgorithmManage',
+        component: () => import('@/views/ea/admin/algorithmManage/index'),
+        meta: { title: '算法管理', icon: 'user' }
       }
     ]
   },
