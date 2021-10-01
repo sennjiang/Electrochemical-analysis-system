@@ -25,29 +25,29 @@ public class AdminService extends BaseService {
      *
      * @param map
      */
-    private void queryAdmins(Map<String , Object> map){
-        doSimpleQueryListTemplate(map, new ServiceCallback<User>() {
-            @Override
-            public List<User> doListExecutor(BaseMapper baseMapper, int pageStart, int pageSize) {
-                return baseMapper.getAdmins(pageStart,pageSize);
-            }
-
-            @Override
-            public List<User> doListExecutorByQueryCondition(BaseMapper baseMapper, int pageStart, int pageSize, String queryCondition, String queryValue) {
-                return baseMapper.getAdminByQueryCondition(queryCondition , queryValue , pageStart , pageSize);
-            }
-
-            @Override
-            public Long doCountExecutor(BaseMapper baseMapper) {
-                return baseMapper.getAdminCount();
-            }
-
-            @Override
-            public Long doCountExecutorByQueryCondition(BaseMapper baseMapper, String queryCondition, String queryValue) {
-                return baseMapper.getAdminCountByQueryCondition(queryCondition , queryValue);
-            }
-        });
-    }
+//    private void queryAdmins(Map<String , Object> map){
+//        doSimpleQueryListTemplate(map, new ServiceCallback<User>() {
+//            @Override
+//            public List<User> doListExecutor(BaseMapper baseMapper, int pageStart, int pageSize) {
+//                return baseMapper.getAdmins(pageStart,pageSize);
+//            }
+//
+//            @Override
+//            public List<User> doListExecutorByQueryCondition(BaseMapper baseMapper, int pageStart, int pageSize, String queryCondition, String queryValue) {
+//                return baseMapper.getAdminByQueryCondition(queryCondition , queryValue , pageStart , pageSize);
+//            }
+//
+//            @Override
+//            public Long doCountExecutor(BaseMapper baseMapper) {
+//                return baseMapper.getAdminCount();
+//            }
+//
+//            @Override
+//            public Long doCountExecutorByQueryCondition(BaseMapper baseMapper, String queryCondition, String queryValue) {
+//                return baseMapper.getAdminCountByQueryCondition(queryCondition , queryValue);
+//            }
+//        });
+//    }
 
     /**
      * 修改管理员的状态
