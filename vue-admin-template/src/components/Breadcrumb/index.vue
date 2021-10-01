@@ -11,6 +11,7 @@
 
 <script>
 import pathToRegexp from 'path-to-regexp'
+import store from '../../store'
 
 export default {
   data() {
@@ -31,9 +32,10 @@ export default {
       // only show routes with meta.title
       let matched = this.$route.matched.filter(item => item.meta && item.meta.title)
       const first = matched[0]
+      const username = store.getters.name
 
       if (!this.isDashboard(first)) {
-        matched = [{ path: '/dashboard', meta: { title: 'Dashboard' }}].concat(matched)
+        matched = [{ path: '/', meta: { title: username }}].concat(matched)
       }
 
       this.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false)
