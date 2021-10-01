@@ -1,6 +1,7 @@
 package com.bluedot.electrochemistry.service;
 
 import com.bluedot.electrochemistry.dao.base.BaseDao;
+import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.service.base.BaseService;
@@ -33,6 +34,7 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void export(Map<String,Object> map) {
+        //TODO 前端做导出excel
         map.put("data","你好啊");
     }
 
@@ -42,6 +44,10 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void findFile(Map<String,Object> map) {
+        Integer fileId = (Integer) map.get("fileId");
+        BaseMapper mapper = mapperFactory.createMapper();
+        File file = mapper.getFileById(fileId);
+        map.put("data",file);
     }
 
     /**

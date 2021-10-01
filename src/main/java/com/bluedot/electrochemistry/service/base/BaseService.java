@@ -3,11 +3,14 @@ package com.bluedot.electrochemistry.service.base;
 import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.PageInfo;
+import com.bluedot.electrochemistry.dao.base.BaseDao;
+import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.service.FileService;
 import com.bluedot.electrochemistry.service.SearchService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.BeanContainer;
+import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -62,7 +65,11 @@ public class BaseService {
      * @param <T>             泛型
      */
     protected <T> void doSimpleModifyTemplate(Map<String, Object> map, ServiceCallback<T> serviceCallback){
-
+        BaseDao baseDao = (BaseDao) beanContainer.getBean(BaseDao.class);
+        int affectedRows = serviceCallback.doDataModifyExecutor(baseDao);
+        if (affectedRows == 0) {
+            map.put("error", "数据库信息操作失败！受影响的行数为0");
+        }
     }
 
     /**
