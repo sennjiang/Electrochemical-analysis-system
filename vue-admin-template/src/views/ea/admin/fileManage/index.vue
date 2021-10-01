@@ -53,14 +53,14 @@
             <span>{{ row.status }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="所属者" align="center" width="95">
+      <el-table-column label="所属者" align="center" width="120px">
         <template slot-scope="{row}">
           <span>{{ row.author }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <el-button type="primary" size="mini" @click="handleDetail(row)">
             详情
           </el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
@@ -72,37 +72,17 @@
  <!-- @pagination="getList" -->
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"  />
     <!-- 弹框 详情页面 -->
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Type" prop="type">
-          <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Date" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
-        </el-form-item>
-        <el-form-item label="Title" prop="title">
-          <el-input v-model="temp.title" />
-        </el-form-item>
-        <el-form-item label="Status">
-          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Imp">
-          <el-rate v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />
-        </el-form-item>
-        <el-form-item label="Remark">
-          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
-        </el-form-item>
-      </el-form>
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogDetailVisible">
+      <div>{{ temp.id }}</div>
+      <div>{{ temp.name }}</div>
+      <div>{{ temp.timestamp }}</div>
+      <div>{{ temp.status }}</div>
+      <div>{{ temp.author }}</div>
+      <div>{{  }}</div>
+          
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
-          Cancel
-        </el-button>
-        <el-button type="primary">
-          Confirm
+        <el-button type="primary" @click="dialogDetailVisible = false">
+          确认
         </el-button>
       </div>
     </el-dialog>
@@ -111,7 +91,6 @@
 
 <script>
 // 查询引入的
-import { fetchList, createArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -134,7 +113,7 @@ export default {
   data() {
     return {
       tableKey: 0,
-      list: [{id: 1,name: "11",timestamp:"11111111111",status:"1",author:"111"}],
+      list: [{id: 1,name: "a.txt",timestamp:"2021:10:01:15:00",status:"1",author:"1234567890"}],
       total: 1,
       listLoading: true,
       listQuery: {
@@ -149,15 +128,13 @@ export default {
       statusOptions: ['正常', '删除'],
 
       temp: {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        type: '',
-        status: 'published'
+        id: 1,
+        name: "a.txt",
+        timestamp:"2021:10:01:15:00",
+        status:"1",
+        author:"1234567890"
       },
-      dialogFormVisible: false,
+      dialogDetailVisible: false,
       dialogStatus: '',
       textMap: {
         update: 'Edit',
@@ -179,7 +156,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = false
-      this.list = [{id: 1,name: "11",timestamp:"11111111111",status:"1",author:"111"}]
+      this.list = [{id: 1,name: "a.txt",timestamp:"2021:10:01:15:00",status:"1",author:"1234567890"}]
       this.total = 1
       // fetchList(this.listQuery).then(response => {
         // this.list = response.data.items
@@ -227,11 +204,14 @@ export default {
       //   }
       // })
     },
+    handleDetail(row) {
+      this.dialogDetailVisible = true
+    },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
       this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
-      this.dialogFormVisible = true
+      this.dialogDetailVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
