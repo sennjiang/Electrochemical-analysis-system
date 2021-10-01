@@ -122,6 +122,19 @@ export const constantRoutes = [
     ]
   },
 
+  {
+    path: '/superadmin/adminManage',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'AdminManage',
+        component: () => import('@/views/ea/superAdmin/adminManage/index'),
+        meta: { title: '超管算法管理', icon: 'user' }
+      }
+    ]
+  },
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
