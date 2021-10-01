@@ -123,17 +123,84 @@ export const constantRoutes = [
   },
 
   {
-    path: '/superadmin/adminManage',
+    path: '/superAdmin/adminManage',
     component: Layout,
     children: [
       {
         path: 'index',
         name: 'AdminManage',
         component: () => import('@/views/ea/superAdmin/adminManage/index'),
-        meta: { title: '超管算法管理', icon: 'user' }
+        meta: { title: '管理员管理', icon: 'user' }
       }
     ]
   },
+
+  {
+    path: '/superAdmin/operationRecord',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'OperationRecord',
+        component: () => import('@/views/ea/superAdmin/operationRecord/index'),
+        meta: { title: '操作记录管理', icon: 'user'}
+      }
+    ]
+  },
+
+  {
+    path: 'superAdmin/systemBackup',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'SystemBackup',
+        component: () => import('@/views/ea/superAdmin/systemBackup/index'),
+        meta: {title: '系统备份', icon: 'user'}
+      }
+    ]
+  },
+
+  {
+    path: 'superAdmin/systemRestore',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'SystemRestore',
+        component: () => import('@/views/ea/superAdmin/systemRestore/index'),
+        meta: {title: '系统还原', icon: 'user'}
+      }
+    ]
+  },
+
+  {
+    path: 'superAdmin/algorithmAudit',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'AlgorithmAudit',
+        component: () => import('@/views/ea/superAdmin/algorithmAudit/index'),
+        meta: {title: '算法审核', icon: 'user'}
+      }
+    ]
+  },
+
+  {
+    path: 'superAdmin/roleManage',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'RoleManage',
+        component: () => import('@/views/ea/superAdmin/roleManage/index'),
+        meta: {title: '角色管理', icon: 'user'}
+      }
+    ]
+  },
+
+
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

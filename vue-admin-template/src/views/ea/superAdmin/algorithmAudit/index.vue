@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div>管理员管理</div>
+    <div>算法审核</div>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'AdminManage'
-}
+    export default {
+        name: "AlgorithmAudit"
+    }
 </script>
 
 <style scoped>

@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div>管理员管理</div>
+    <div>角色管理</div>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'AdminManage'
-}
+    export default {
+        name: "RoleManage"
+    }
 </script>
 
 <style scoped>
