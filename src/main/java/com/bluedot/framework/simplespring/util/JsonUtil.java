@@ -4,6 +4,8 @@ import com.bluedot.framework.simplespring.mvc.monitor.Data;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.Map;
+
 /**
  * @author JDsen99
  * @description 解析成json对象
@@ -32,7 +34,8 @@ public class JsonUtil {
         }
         //剔除 service 因为service是Class对象 不需要输出Json
         //TODO 使用更优秀的方式 或设计模式
-        ((Data) ojb).remove("service");
+        ((Map) ojb).remove("service");
+        ((Map) ojb).remove("file");
         return gson.toJson(ojb);
     }
 }

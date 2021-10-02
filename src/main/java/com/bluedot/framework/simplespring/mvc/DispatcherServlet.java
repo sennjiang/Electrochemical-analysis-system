@@ -5,6 +5,7 @@ import com.bluedot.framework.simplemybatis.session.SqlSessionFactoryBuilder;
 import com.bluedot.framework.simplespring.aop.AspectWeaver;
 import com.bluedot.framework.simplespring.core.BeanContainer;
 import com.bluedot.framework.simplespring.inject.DependencyInject;
+import com.bluedot.framework.simplespring.mvc.mapper.CommonMapper;
 import com.bluedot.framework.simplespring.mvc.processor.RequestProcessor;
 import com.bluedot.framework.simplespring.mvc.processor.impl.MQRequestProcessor;
 import com.bluedot.framework.simplespring.mvc.processor.impl.PreRequestProcessor;
@@ -49,11 +50,6 @@ public class DispatcherServlet extends HttpServlet {
     List<RequestProcessor> PROCESSORS = new ArrayList<>();
 
     /**
-     * Service 映射字典
-     */
-    private Map<String, Pair<Class, String>> xmlMap;
-
-    /**
      * 日志
      */
     private final Logger log = LogUtil.getLogger();
@@ -71,8 +67,8 @@ public class DispatcherServlet extends HttpServlet {
         new SqlSessionFactoryBuilder().build(servletConfig.getInitParameter("contextConfigLocation"));
         //依赖注入
         new DependencyInject().doDependencyInject();
-        // xml字典映射 处理
-        doParsingXmlMappings(contextConfig);
+        //映射初始化
+        new CommonMapper().initMapper(contextConfig);
 
         //初始化请求处理器责任链
         // 预处理的请求处理器
@@ -80,50 +76,10 @@ public class DispatcherServlet extends HttpServlet {
         // 静态资源的请求处理器（如果是静态资源让RequestDispatcher自己处理）
         PROCESSORS.add(new StaticResourceRequestProcessor(servletConfig.getServletContext()));
         // 根据业务需要自定义的请求处理器
-        PROCESSORS.add(new MQRequestProcessor(xmlMap, contextConfig));
+        PROCESSORS.add(new MQRequestProcessor(contextConfig));
     }
 
-    public void doParsingXmlMappings(Properties contextConfig) {
 
-        ClassLoader classLoader = this.getClass().getClassLoader();
-        String serviceXmlName = contextConfig.getProperty("serviceMapper.name");
-        String serviceXmlPath = contextConfig.getProperty("serviceMapper.path");
-
-        log.info("Loading parsingXmlMappings --->name:{} ", serviceXmlName);
-        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(serviceXmlName);
-        Document doc = null;
-        try {
-            SAXReader reader = new SAXReader();
-            xmlMap = new HashMap();
-            doc = reader.read(resourceAsStream);
-            Element service = doc.getRootElement();
-            Iterator nodes = service.elementIterator();
-
-            String number = null;
-            String service1 = null;
-            String method = null;
-
-            while (nodes.hasNext()) {
-                Element node = (Element) nodes.next();
-                //取节点的值
-                number = (String) node.element("number").getData();
-                service1 = (String) node.element("service").getData();
-                method = (String) node.element("method").getData();
-
-                Class<?> clazz = classLoader.loadClass(serviceXmlPath + "." + service1);
-                xmlMap.put(number, new Pair<Class, String>(clazz, method));
-            }
-
-            log.debug("parsingXmlMappings had complete ---> name: {}", "xmlMap");
-
-        } catch (DocumentException e) {
-            log.error("service.xml parse error", e);
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            log.error("service.xml load Class error", e);
-            e.printStackTrace();
-        }
-    }
 
 
     @Override
