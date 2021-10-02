@@ -49,11 +49,10 @@ public interface BaseMapper {
     /**
      * 获取管理员信息列表
      *
-     * @param pageStart 页码
-     * @param pageSize  每页大小
+     *
      * @return 管理员列表
      */
-    List<User> getAdmins(int pageStart, int pageSize);
+    List<User> getAdmins();
 
     /**
      * 获取管理员数据总数
@@ -89,7 +88,7 @@ public interface BaseMapper {
      * @param pageSize  每页大小
      * @return 备份文件列表
      */
-    List<File> getBackupFiles(int pageStart, int pageSize);
+    List<File> getBackupFiles();
 
     /**
      * 获取备份文件数据总数
@@ -125,7 +124,7 @@ public interface BaseMapper {
      * @param pageSize  每页大小
      * @return 角色列表
      */
-    List<Role> getRoles(int pageStart, int pageSize);
+    List<Role> getRoles();
 
     /**
      * 获取角色数量
