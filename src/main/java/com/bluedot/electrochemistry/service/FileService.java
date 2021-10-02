@@ -15,6 +15,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -34,8 +35,19 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void export(Map<String,Object> map) {
-        //TODO 前端做导出excel
-        map.put("data","你好啊");
+        File file = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
+        File file1 = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
+        File file2 = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
+        File file3 = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
+        List<File> list = new ArrayList<>();
+        list.add(file);
+        list.add(file1);
+        list.add(file2);
+        list.add(file3);
+        file.setModifiedTime(new Timestamp(System.currentTimeMillis()));
+        map.put("data",list);
+        map.put("code",404);
+        map.put("message","true");
     }
 
     /**
@@ -48,8 +60,8 @@ public class FileService extends BaseService {
         Integer pageStart = (Integer) map.get("pageStart");
         Integer pageSize = (Integer) map.get("pageSize");
         BaseMapper mapper = mapperFactory.createMapper();
-        File file = mapper.getFileById(fileId,pageStart,pageSize);
-        map.put("data",file);
+//        File file = mapper.getFileById(fileId,pageStart,pageSize);
+//        map.put("data",file);
     }
 
     /**

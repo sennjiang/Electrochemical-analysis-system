@@ -64,6 +64,19 @@ public class MQRequestProcessor implements RequestProcessor {
     private AtomicLong requestId = new AtomicLong(1);
 
 
+    class LogTask implements Runnable {
+        private Data data;
+
+        public LogTask(Data data) {
+            this.data = data;
+        }
+
+        @Override
+        public void run() {
+
+        }
+    }
+
     /**
      * 处理器线程
      * 监听向上队列 取得数据返回
@@ -114,15 +127,11 @@ public class MQRequestProcessor implements RequestProcessor {
 
         Data newData = submit.get();
 
-        //TODO 日志处理 多线程处理 并发处理
+        LogTask task = new LogTask(newData);
 
-        //判断是否异常
-        if (newData.containsKey("error")) {
-            Exception error = (Exception) newData.get("error");
-            requestProcessorChain.setResultRender(new InternalErrorResultRender(error.getMessage()));
-        }else {
-            requestProcessorChain.setResultRender(new JsonResultRender(newData));
-        }
+        executors.submit(task);
+
+        requestProcessorChain.setResultRender(new JsonResultRender(newData));
 
         return false;
     }
@@ -162,4 +171,5 @@ public class MQRequestProcessor implements RequestProcessor {
         return data;
     }
 }
+
 

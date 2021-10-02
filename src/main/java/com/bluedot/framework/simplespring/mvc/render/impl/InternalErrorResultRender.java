@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 public class InternalErrorResultRender implements ResultRender {
     private String errorMsg;
     public InternalErrorResultRender(String errorMsg){
-        this.errorMsg=errorMsg;
+        this.errorMsg = errorMsg;
     }
     @Override
     public void render(RequestProcessorChain requestProcessorChain) throws Exception {
