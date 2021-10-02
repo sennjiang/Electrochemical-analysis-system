@@ -68,6 +68,9 @@
     <select id="listOperations" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
         select * from operation where type = #{type}
     </select>
+    <select id="listFiles" resultType="com.bluedot.electrochemistry.pojo.domain.File">
+        select * from file where type = #{type} and status = #{status} and owner = #{username} limit #{pageStart},#{pageSize};
+    </select>
     <!--有问题
     <select id="getAlgorithmsByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
         select * from t_algorithm where #{queryCondition}=#{queryValue} limit #{pageStart},#{pageSize}

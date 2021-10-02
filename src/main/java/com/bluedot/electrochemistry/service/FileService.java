@@ -8,17 +8,10 @@ import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.annotation.Service;
 import com.bluedot.framework.simplespring.inject.annotation.Autowired;
-import com.bluedot.framework.simplespring.mvc.monitor.Data;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-
-import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @description
@@ -48,6 +41,21 @@ public class FileService extends BaseService {
         map.put("data",list);
         map.put("code",404);
         map.put("message","true");
+    }
+
+    /**
+     * 查询文件
+     * @param map 数据集合
+     */
+    private void listFiles(Map<String,Object> map) {
+        int username = (Integer) map.get("username");
+        Integer pageStart = (Integer) map.get("pageStart");
+        Integer pageSize = (Integer) map.get("pageSize");
+        short type = (short) map.get("type");
+        short status = (short) map.get("status");
+        BaseMapper mapper = mapperFactory.createMapper();
+        List<File> files = mapper.listFiles(username,type, status,pageStart,pageSize);
+        map.put("data",files);
     }
 
     /**

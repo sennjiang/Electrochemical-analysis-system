@@ -2,12 +2,9 @@ package com.bluedot.electrochemistry.dao.base;
 
 import com.bluedot.electrochemistry.pojo.domain.*;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import com.bluedot.electrochemistry.pojo.domain.File;
-
-import java.util.List;
 
 /**
  * @author zero
@@ -81,13 +78,13 @@ public interface BaseMapper {
      */
     Long getAdminCountByQueryCondition(String queryCondition, String queryValue);
 
-    /**
-     * 获取备份文件信息列表
-     *
-     * @param pageStart 页码
-     * @param pageSize  每页大小
-     * @return 备份文件列表
-     */
+//    /**
+//     * 获取备份文件信息列表
+//     *
+//     * @param pageStart 页码
+//     * @param pageSize  每页大小
+//     * @return 备份文件列表
+//     */
     List<File> getBackupFiles();
 
     /**
@@ -108,22 +105,22 @@ public interface BaseMapper {
 //     */
 //    List<File> getBackupFileByQueryCondition(String queryCondition, String queryValue, int pageStart, int pageSize);
 
-    /**
-     * 根据查询条件获取备份文件数据总数
-     *
-     * @param queryCondition 查询条件（字段）
-     * @param queryValue     要查询的值
-     * @return 备份文件数据总数
-     */
+//    /**
+//     * 根据查询条件获取备份文件数据总数
+//     *
+//     * @param queryCondition 查询条件（字段）
+//     * @param queryValue     要查询的值
+//     * @return 备份文件数据总数
+//     */
 //    Long getBackupFileCountByQueryCondition(String queryCondition, String queryValue);
 
-    /**
-     * 获取角色信息列表
-     *
-     * @param pageStart 页码
-     * @param pageSize  每页大小
-     * @return 角色列表
-     */
+//    /**
+//     * 获取角色信息列表
+//     *
+//     * @param pageStart 页码
+//     * @param pageSize  每页大小
+//     * @return 角色列表
+//     */
     List<Role> getRoles();
 
     /**
@@ -268,4 +265,14 @@ public interface BaseMapper {
 //    long getAlgorithmSendsCountByQueryCondition(String queryCondition, int type, int timeOrder);
 
     List<Operation> listOperations(short type);
+
+    /**
+     *  listFiles
+     * @param username
+     * @param type 1 用户文件 2 系统文件
+     * @param status 1 正常 2 已移除
+     * @param pageStart
+     * @param pageSize
+     */
+    List<File> listFiles(int username, short type, short status, Integer pageStart, Integer pageSize);
 }
