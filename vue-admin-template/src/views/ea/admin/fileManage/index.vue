@@ -91,6 +91,7 @@
 
 <script>
 // 查询引入的
+import { fetchList } from '@/api/file'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -117,6 +118,7 @@ export default {
       total: 1,
       listLoading: true,
       listQuery: {
+        boundary: '0207',
         page: 1,
         limit: 20,
         importance: undefined,
@@ -158,14 +160,15 @@ export default {
       this.listLoading = false
       this.list = [{id: 1,name: "a.txt",timestamp:"2021:10:01:15:00",status:"1",author:"1234567890"}]
       this.total = 1
-      // fetchList(this.listQuery).then(response => {
-        // this.list = response.data.items
-        // this.total = response.data.total
-        // Just to simulate the time of the request
-        // setTimeout(() => {
-        //   this.listLoading = false
-        // }, 1.5 * 1000)
-      // })
+      fetchList(this.listQuery).then(response => {
+        console.log(response.data)
+        console.log(response)
+        this.list = response.data.data
+        this.total = 1
+        setTimeout(() => {
+          this.listLoading = false
+        }, 1.5 * 1000)
+      })
     },
     handleFilter() {
       this.listQuery.page = 1
