@@ -17,7 +17,7 @@
     <!--超级管理员相关-->
     <!--查询管理员相关-->
     <select id="getAdmins" resultType="com.bluedot.electrochemistry.pojo.domain.User">
-        select * from user limit #{pageStart},#{pageSize}
+        select * from user
     </select>
     <select id="getAdminByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user where #{queryCondition}=#{queryValue} limit #{pageStart},#{pageSize}
