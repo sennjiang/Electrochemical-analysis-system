@@ -31,10 +31,16 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const constantRoutes = [
+  // 登录
   {
     path: '/login',
-    // component: () => import('@/views/ea/login/index'),
-    component: () => import('@/views/login'),
+    component: () => import('@/views/ea/login/login'),
+    hidden: true
+  },
+  // 注册
+  {
+    path: '/admin/userManage/register',
+    component: () => import('@/views/ea/admin/userManage/register'),
     hidden: true
   },
 
@@ -58,13 +64,104 @@ export const constantRoutes = [
   },
 
   {
+    path: '/forgetPasswordVerify',
+    component: () => import('@/views/ea/admin/userManage/forgetPasswordVerify'),
+    hidden: true
+  },
+
+  {
+    path: '/forgetPasswordInfo',
+    component: () => import('@/views/ea/admin/userManage/forgetPasswordInfo'),
+    hidden: true
+  },
+
+
+  {
+    path: '/admin/userManage',
+    component: Layout,
+    children: [
+      {
+        path: 'logoutUserVerify',
+        name: 'LogoutUserVerify',
+        component: () => import('@/views/ea/admin/userManage/logoutUserVerify'),
+        meta: { title: '注销账户验证', icon: 'user' }
+      }
+    ]
+  },
+
+  {
+    path: '/admin/userManage',
+    component: Layout,
+    children: [
+      {
+        path: 'logoutUserInfo',
+        name: 'LogoutUserInfo',
+        component: () => import('@/views/ea/admin/userManage/logoutUserInfo'),
+        meta: { title: '注销账户信息', icon: 'user' }
+      }
+    ]
+  },
+
+  {
+    path: '/admin/userManage',
+    component: Layout,
+    children: [
+      {
+        path: 'modifyEmailVerify',
+        name: 'ModifyEmailVerify',
+        component: () => import('@/views/ea/admin/userManage/modifyEmailVerify'),
+        meta: { title: '修改email验证', icon: 'user' }
+      }
+    ]
+  },
+
+  {
+    path: '/admin/userManage',
+    component: Layout,
+    children: [
+      {
+        path: 'modifyEmailInfo',
+        name: 'ModifyEmailInfo',
+        component: () => import('@/views/ea/admin/userManage/modifyEmailInfo'),
+        meta: { title: '修改email信息', icon: 'user' }
+      }
+    ]
+  },
+
+  {
+    path: '/admin/userManage',
+    component: Layout,
+    children: [
+      {
+        path: 'modifyPasswordVerify',
+        name: 'ModifyPasswordVerify',
+        component: () => import('@/views/ea/admin/userManage/modifyPasswordVerify'),
+        meta: { title: '修改密码验证', icon: 'user' }
+      }
+    ]
+  },
+
+  {
+    path: '/admin/userManage',
+    component: Layout,
+    children: [
+      {
+        path: 'modifyPasswordInfo',
+        name: 'ModifyPasswordInfo',
+        component: () => import('@/views/ea/admin/userManage/modifyPasswordInfo'),
+        meta: { title: '修改密码信息', icon: 'user' }
+      }
+    ]
+  },
+
+  {
     path: '/admin/userManage',
     component: Layout,
     children: [
       {
         path: 'index',
         name: 'UserManage',
-        component: () => import('@/views/ea/admin/userManage/index'),
+        component: () => import('@/views/ea/admin/userManage/register'),
         meta: { title: '用户管理', icon: 'user' }
       }
     ]
@@ -81,6 +178,20 @@ export const constantRoutes = [
         meta: { title: '解冻审核', icon: 'user' }
       }
     ]
+  },
+
+  //申请验证
+  {
+    path: 'unfreezeApplicationVerify',
+    component: () => import('@/views/ea/admin/unfreezeAudit/unfreezeApplicationVerify'),
+    hidden: true
+  },
+
+  //申请解冻信息
+  {
+    path: 'unfreezeApplicationInfo',
+    component: () => import('@/views/ea/admin/unfreezeAudit/unfreezeApplicationInfo'),
+    hidden: true
   },
 
   {
