@@ -58,3 +58,7 @@ Data 采用 **门面模式** 将request及其parameter进行封装，
 
 ### 配置：
 application.properties
+
+## CommonMapper
+对DispatcherServlet 进行解耦, 将所有的映射关系，提取到 CommonMapper 提供初始化方法 initMapper() 
+
