@@ -70,25 +70,7 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void uploadFile(Map<String,Object> map) throws Exception {
-        HttpServletRequest request = ((Data) map).getRequest();
-        String realPath = request.getSession().getServletContext().getRealPath("/uploads");
-        java.io.File file = new java.io.File(realPath);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        DiskFileItemFactory factory = new DiskFileItemFactory();
-        ServletFileUpload upload = new ServletFileUpload(factory);
-        List<FileItem> items = upload.parseRequest(request);
-        for (FileItem item : items) {
-            if (item.isFormField()) {
-                //普通表单
-            } else {
-                String uuid = UUID.randomUUID().toString().replace("-", "");
-                String filename = uuid + "_" + item.getName();
-                item.write(new java.io.File(realPath, filename));
-                item.delete();
-            }
-        }
+        map.put("data","你好啊");
     }
 
     /**
@@ -174,8 +156,8 @@ public class FileService extends BaseService {
      * @param fileHash 文件hash值
      */
     private boolean contrast(String fileHash,int username) {
-        long l = mapperFactory.createMapper().contrastFile(fileHash, username);
-        return l >= 1;
+//        long l = mapperFactory.createMapper().contrastFile(fileHash, username);
+        return 2 >= 1;
     }
 
     /**
