@@ -114,7 +114,7 @@ public interface BaseMapper {
      * @param queryValue     要查询的值
      * @param pageStart      页码
      * @param pageSize       每页大小
-     * @return 备份文件列表
+     * @return 备份文件列表fi
      */
     List<File> getBackupFileByQueryCondition(String queryCondition, String queryValue, int pageStart, int pageSize);
 
