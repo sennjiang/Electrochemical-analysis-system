@@ -44,7 +44,7 @@
       </el-table-column>
       <el-table-column label="所属" width="120px">
         <template slot-scope="{row}">
-            <span>{{ row.type }}</span>
+            <span>{{ row.type | typeFilter}}</span>
         </template>
       </el-table-column>
       <el-table-column label="日志信息" align="center" min-width="180px">
@@ -63,65 +63,27 @@
  <!-- @pagination="getList" -->
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"  />
     <!-- 弹框 详情页面 -->
-   <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogDetail">
-      <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
-      border
+  <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogDetailVisible">
+      <table  
       fit
       highlight-current-row
-      style="width: 100%;"
-    >
-      <el-table-column label="ID" prop="id" align="center" width="80">
-        <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="时间" min-width="110px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.time }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作者" width="100px" align="center">
-        <template slot-scope="{row}">
-          <span >{{ row.user }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="级别" width="150px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.level }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="所属" width="120px">
-        <template slot-scope="{row}">
-            <span>{{ row.type }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="日志信息" align="center" min-width="180px">
-        <template slot-scope="{row}">
-          <span>{{ row.message }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="文件操作" align="center" min-width="180px">
-        <template slot-scope="{row}">
-          <span>{{ row.isFile }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="文件操作类型" align="center" min-width="180px">
-        <template slot-scope="{row}">
-          <span>{{ row.fileType }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="方法编号" align="center" min-width="180px">
-        <template slot-scope="{row}">
-          <span>{{ row.boundary }}</span>
-        </template>
-      </el-table-column>
-      </el-table>
+      style="width: 100%;" class="file_table">
+        <tr align="center"><td>属性名</td> <td>属性值</td></tr>
+        <tr  align="center"><td>id</td><td>{{ data.id }}</td></tr>
+        <tr align="center"><td>message</td> <td>{{ data.message }}</td></tr>
+        <tr align="center"><td>level</td> <td>{{ data.level }}</td></tr>
+        <tr align="center"><td>user</td> <td>{{ data.user }}</td></tr>
+        <tr align="center"><td>recorder</td> <td>{{ data.recorder }}</td></tr>
+        <tr align="center"><td>type</td> <td>{{ data.type | typeFilter}}</td></tr>  
+        <tr align="center"><td>time</td> <td>{{data.time }}</td></tr>
+        <tr align="center"><td>isFile</td> <td>{{ data.isFile | fileFilter}}</td></tr>
+        <tr align="center"><td>fileType</td> <td>{{ data.fileType | fileTypeFilter}}</td></tr>
+        <tr align="center"><td>boundary</td> <td>{{ data.boundary }}</td></tr>
+        </table>
+      
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogDetail = false">
-          确定
+        <el-button type="primary" @click="dialogDetailVisible = false">
+          确认
         </el-button>
       </div>
     </el-dialog>
@@ -130,6 +92,7 @@
 
 <script>
 // 查询引入的
+import { fetchList } from '@/api/operation'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -139,20 +102,47 @@ const calendarTypeOptions = [
   { key: '最近一周' }
 ]
 
+const typeOptions = [
+  { key: '系统日志' },
+  { key: '研究员日志' },
+  { key: '管理员日志' },
+  { key: '超级管理员日志' }
+]
+
+const fileOptions = [
+  { key : '否' },
+  { key : '是' }
+]
+
+const fileTypeOptions = [
+  { key : '上传' },
+  { key : '移除' },
+  { key : '还原' },
+  { key : '删除' },
+  { key : '导出' }
+]
+
 export default {
   name: 'FileManage',
   components: { Pagination },
   directives: { waves },
   filters: {
     //类型过滤
-    typeFilter(type) {
-      return calendarTypeOptions[type]
+     //类型过滤
+    typeFilter:function (type) {
+      return typeOptions[type].key
+    },
+    fileFilter:function (type) {
+      return fileOptions[type].key
+    },
+    fileTypeFilter:function (type) {
+      return fileTypeOptions[type].key
     }
   },
   data() {
     return {
       tableKey: 0,
-      list: [{id: 1, message: "下载文件", level:"INFO", user:"1234567890", recorder: "SearchService.download", type: "普通用户", time: "2021:10:01:15:00"}],
+      list: [{id: 1,message: "下载文件", level:"INFO", user:"1234567890", recorder: "SearchService.download", type: 1, time: "2021:10:01:15:00",isFile: 1,fileType: 1,boundary: "0101"}],
       total: 1,
       listLoading: true,
       listQuery: {
@@ -166,30 +156,23 @@ export default {
       calendarTypeOptions,
       statusOptions: ['正常', '删除'],
 
-      temp: {
-        id: undefined,
+      data: {
+        id: 1,
         message: "下载文件", 
         level:"INFO", 
         user:"1234567890", 
         recorder: "SearchService.download", 
-        type: "普通用户", 
+        type: 1, 
         time: "2021:10:01:15:00",
         isFile: 1,
-        fileType: "下载",
+        fileType: 1,
         boundary: "0101"
       },
-      dialogDetail: false,
+      dialogDetailVisible: false,
       dialogStatus: '',
       textMap: {
         update: 'Edit',
         create: 'Create'
-      },
-      dialogPvVisible: false,
-      pvData: [],
-      rules: {
-        type: [{ required: true, message: 'type is required', trigger: 'change' }],
-        timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-        title: [{ required: true, message: 'title is required', trigger: 'blur' }]
       },
       downloadLoading: false
     }
@@ -200,7 +183,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = false
-      this.list = [{id: 1, message: "下载文件", level:"INFO", user:"1234567890", recorder: "SearchService.download", type: "普通用户", time: "2021:10:01:15:00", isFile: 1, fileType: "下载", boundary: "0101"}]
+      this.list = [{id: 1,message: "下载文件", level:"INFO", user:"1234567890", recorder: "SearchService.download", type: 1, time: "2021:10:01:15:00",isFile: 1,fileType: 1,boundary: "0101"}]
       this.total = 1
       // fetchList(this.listQuery).then(response => {
         // this.list = response.data.items
@@ -222,43 +205,9 @@ export default {
       })
       row.status = status
     },
-    handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    createData() {
-      // this.$refs['dataForm'].validate((valid) => {
-      //   if (valid) {
-      //     this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-      //     this.temp.author = 'vue-element-admin'
-      //     createArticle(this.temp).then(() => {
-      //       this.list.unshift(this.temp)
-      //       this.dialogFormVisible = false
-      //       this.$notify({
-      //         title: 'Success',
-      //         message: 'Created Successfully',
-      //         type: 'success',
-      //         duration: 2000
-      //       })
-      //     })
-      //   }
-      // })
-    },
     handledetail(row, index) {
-       this.dialogDetail = true
-    },
-    handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
-      this.dialogStatus = 'update'
-      this.dialogDetail = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
+       this.data.data = row
+       this.dialogDetailVisible = true
     },
     handleDelete(row, index) {
       this.$notify({
@@ -268,20 +217,6 @@ export default {
         duration: 2000
       })
       this.list.splice(index, 1)
-    },
-    handleDownload() {
-      // this.downloadLoading = true
-      // import('@/vendor/Export2Excel').then(excel => {
-      //   const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-      //   const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-      //   const data = this.formatJson(filterVal)
-      //   excel.export_json_to_excel({
-      //     header: tHeader,
-      //     data,
-      //     filename: 'table-list'
-      //   })
-      //   this.downloadLoading = false
-      // })
     },
     formatJson(filterVal) {
       return this.list.map(v => filterVal.map(j => {
@@ -295,3 +230,12 @@ export default {
   }
 }
 </script>
+<style>
+.file_table td{
+  height: 30px;
+  /* background-color: beige; */
+  border-style:none none solid none;
+  border-color:#c5c5c5;
+  border-width:2px;
+}
+</style>

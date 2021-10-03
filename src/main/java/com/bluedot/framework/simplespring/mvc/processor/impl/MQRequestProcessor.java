@@ -234,7 +234,6 @@ public class MQRequestProcessor implements RequestProcessor {
         data.put("service", classStringPair.getKey());
         data.put("serviceMethod", classStringPair.getValue());
         data.put("requestId", requestId.getAndIncrement());
-        logger.debug("end parse file request ... !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! {}",data);
 
         return data;
     }

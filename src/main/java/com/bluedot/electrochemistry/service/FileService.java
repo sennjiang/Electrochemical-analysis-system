@@ -8,6 +8,8 @@ import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.annotation.Service;
 import com.bluedot.framework.simplespring.inject.annotation.Autowired;
+
+import java.io.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void export(Map<String,Object> map) {
+        //测试
         File file = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
         File file1 = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
         File file2 = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
@@ -64,12 +67,17 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void findFile(Map<String,Object> map) {
-        Integer fileId = (Integer) map.get("fileId");
-        Integer pageStart = (Integer) map.get("pageStart");
-        Integer pageSize = (Integer) map.get("pageSize");
-        BaseMapper mapper = mapperFactory.createMapper();
-//        File file = mapper.getFileById(fileId,pageStart,pageSize);
-//        map.put("data",file);
+        try {
+            Integer fileId = (Integer) map.get("fileId");
+            Integer pageStart = (Integer) map.get("pageStart");
+            Integer pageSize = (Integer) map.get("pageSize");
+            BaseMapper mapper = mapperFactory.createMapper();
+            File file = mapper.getFileById(fileId);
+            map.put("data",file);
+        }catch (Exception e){
+            map.put("message",e.getMessage());
+            map.put("code",404);
+        }
     }
 
     /**
@@ -77,8 +85,31 @@ public class FileService extends BaseService {
      *
      * @param map 数据
      */
-    private void uploadFile(Map<String,Object> map) throws Exception {
-        map.put("data","你好啊");
+    private void uploadFile(Map<String,Object> map){
+        java.io.File file = (java.io.File) map.get("file");
+        BufferedReader reader = null;
+        try {
+            reader = new  BufferedReader(new FileReader(file));
+            StringBuffer str = new StringBuffer();
+            String temp = "";
+            while ((temp = reader.readLine()) != null) {
+                str.append(temp);
+                //TODO 文件数据处理
+            }
+            System.out.println("file ---------------- " + str);
+        }catch (Exception e) {
+            map.put("message",e.getMessage());
+            map.put("code",404);
+        }finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    map.put("message",e.getMessage());
+                    map.put("code",404);
+                }
+            }
+        }
     }
 
     /**
