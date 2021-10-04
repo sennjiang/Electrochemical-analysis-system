@@ -30,7 +30,7 @@
     >
       <el-table-column label="ID" prop="id" align="center" width="80">
         <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
+          <span>{{ row.fileId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="文件名" width="150px" align="center">
@@ -38,24 +38,29 @@
           <span>{{ row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上传时间" min-width="150px">
+      <el-table-column label="文件大小" width="80px" align="center">
         <template slot-scope="{row}">
-          <span >{{ row.timestamp }}</span>
+          <span>{{ row.size }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="上传时间" min-width="110px" align="center">
+        <template slot-scope="{row}">
+          <span >{{ row.produceTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="处理时间" min-width="110px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.timestamp }}</span>
+          <span>{{ row.modifiedTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="文件状态" width="80px">
+      <el-table-column label="文件状态" width="80px" align="center">
         <template slot-scope="{row}">
-            <span>{{ row.status }}</span>
+        <span> {{ row.status | statusFilter }}</span>
         </template>
       </el-table-column>
       <el-table-column label="所属者" align="center" width="120px">
         <template slot-scope="{row}">
-          <span>{{ row.author }}</span>
+          <span>{{ row.owner}}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
@@ -73,13 +78,31 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"  />
     <!-- 弹框 详情页面 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogDetailVisible">
-      <div>{{ temp.id }}</div>
-      <div>{{ temp.name }}</div>
-      <div>{{ temp.timestamp }}</div>
-      <div>{{ temp.status }}</div>
-      <div>{{ temp.author }}</div>
-      <div>{{  }}</div>
-          
+      <table  
+      fit
+      highlight-current-row
+      style="width: 100%;" class="file_table">
+        <tr align="center"><td>属性名</td> <td>属性值</td></tr>
+        <tr  align="center"><td>fileId</td><td>{{ data.fileId }}</td></tr>
+        <tr align="center"><td>name</td> <td>{{ data.name }}</td></tr>
+        <tr align="center"><td>url</td> <td>{{ data.url }}</td></tr>
+        <tr align="center"><td>owner</td> <td>{{ data.owner }}</td></tr>
+        <tr align="center"><td>size</td> <td>{{ data.size }}</td></tr>
+        <tr align="center"><td>hash</td> <td>{{ data.hash }}</td></tr>  
+        <tr align="center"><td>type</td> <td>{{data.type | typeFilter }}</td></tr>
+        <tr align="center"><td>status</td> <td>{{ data.status }}</td></tr>
+        <tr align="center"><td>produceTime</td> <td>{{ data.produceTime }}</td></tr>
+        <tr align="center"><td>modifiedTime</td> <td>{{ data.modifiedTime }}</td></tr>
+        <tr align="center"><td>dataStart</td> <td>{{ data.dataStart }}</td></tr>
+        <tr align="center"><td>dataEnd </td> <td>{{ data.dataEnd }}</td></tr>
+        <tr align="center"><td>dataBottom </td><td>{{ data.dataBottom }}</td></tr>
+        <tr align="center"><td>dataPeak </td><td>{{ data.dataPeak }}</td></tr>
+        <tr align="center"><td>dataPrecision </td><td>{{ data.dataPrecision }}</td></tr>
+        <tr align="center"><td>dataCycle </td><td>{{ data.dataCycle }}</td></tr>
+        <tr align="center"><td>dataRate </td><td>{{ data.dataRate }}</td></tr>
+        <tr align="center"><td>dataResult </td><td>{{ data.dataResult }}</td></tr>
+        </table>
+      
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogDetailVisible = false">
           确认
@@ -91,14 +114,22 @@
 
 <script>
 // 查询引入的
+import { fetchList } from '@/api/file'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const calendarTypeOptions = [
-  { key: '最近三天' },
-  { key: '最近一周' }
+  { key: "最近三天" },
+  { key: "最近一周" }
 ]
+
+const statusOptions = [
+  { key: '正常' }, 
+  { key: '被删除' }
+]
+
+const typeOptions = [{key:'用户文件'},{key:'系统文件'}]
 
 export default {
   name: 'FileManage',
@@ -106,17 +137,42 @@ export default {
   directives: { waves },
   filters: {
     //类型过滤
-    typeFilter(type) {
-      return calendarTypeOptions[type]
+    typeFilter:function (type) {
+      return typeOptions[type].key
+    },
+    statusFilter:function (type) {
+      return statusOptions[type].key
     }
   },
   data() {
     return {
       tableKey: 0,
-      list: [{id: 1,name: "a.txt",timestamp:"2021:10:01:15:00",status:"1",author:"1234567890"}],
+      list: [{fileId: 1, name: "a.txt", url: "/aaa/bbb", owner: "1234567890", size: "100kb",hash:"qwer", type: 1, status: "1", produceTime:"2021:10:01:15:00", modifiedTime:"2021:10:01:15:00"}],
       total: 1,
+      // 懒加载的数据
+      data:{
+        fileId: 1,
+        name: "a.txt", 
+        url: "/aaa/bbb", 
+        owner: "1234567890", 
+        size: "100kb",
+        hash:"qwer", 
+        type: 1, 
+        status: "1",
+        produceTime:"2021:10:01:15:00", 
+        modifiedTime:"2021:10:01:15:00",
+        dataStart: 1 ,
+        dataEnd: 1,
+        dataBottom: 1,
+        dataPeak: 1,
+        dataPrecision: 1,
+        dataCycle: 1,
+        dataRate: 1,
+        dataResult: 1
+      },
       listLoading: true,
       listQuery: {
+        boundary: '0207',
         page: 1,
         limit: 20,
         importance: undefined,
@@ -125,8 +181,8 @@ export default {
       },
       importanceOptions: ['正常','已删除'],
       calendarTypeOptions,
-      statusOptions: ['正常', '删除'],
-
+      statusOptions,
+      statusOptions,
       temp: {
         id: 1,
         name: "a.txt",
@@ -140,8 +196,6 @@ export default {
         update: 'Edit',
         create: 'Create'
       },
-      dialogPvVisible: false,
-      pvData: [],
       rules: {
         type: [{ required: true, message: 'type is required', trigger: 'change' }],
         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
@@ -156,20 +210,21 @@ export default {
   methods: {
     getList() {
       this.listLoading = false
-      this.list = [{id: 1,name: "a.txt",timestamp:"2021:10:01:15:00",status:"1",author:"1234567890"}]
+      this.list = [{fileId: 1, name: "a.txt", url: "/aaa/bbb", owner: "1234567890", size: "100kb",hash:"qwer", type: 1, status: 0, produceTime:"2021:10:01:15:00", modifiedTime:"2021:10:01:15:00"}]
       this.total = 1
       // fetchList(this.listQuery).then(response => {
-        // this.list = response.data.items
-        // this.total = response.data.total
-        // Just to simulate the time of the request
-        // setTimeout(() => {
-        //   this.listLoading = false
-        // }, 1.5 * 1000)
+      //   console.log(response.data)
+      //   console.log(response)
+      //   this.list = response.data.data
+      //   this.total = 1
+      //   setTimeout(() => {
+      //     this.listLoading = false
+      //   }, 1.5 * 1000)
       // })
     },
     handleFilter() {
       this.listQuery.page = 1
-       this.getList()
+      this.getList()
     },
     handleModifyStatus(row, status) {
       this.$message({
@@ -186,35 +241,8 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    createData() {
-      // this.$refs['dataForm'].validate((valid) => {
-      //   if (valid) {
-      //     this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-      //     this.temp.author = 'vue-element-admin'
-      //     createArticle(this.temp).then(() => {
-      //       this.list.unshift(this.temp)
-      //       this.dialogFormVisible = false
-      //       this.$notify({
-      //         title: 'Success',
-      //         message: 'Created Successfully',
-      //         type: 'success',
-      //         duration: 2000
-      //       })
-      //     })
-      //   }
-      // })
-    },
     handleDetail(row) {
       this.dialogDetailVisible = true
-    },
-    handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
-      this.dialogStatus = 'update'
-      this.dialogDetailVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
     },
     handleDelete(row, index) {
       this.$notify({
@@ -251,3 +279,12 @@ export default {
   }
 }
 </script>
+<style>
+.file_table td{
+  height: 30px;
+  /* background-color: beige; */
+  border-style:none none solid none;
+  border-color:#c5c5c5;
+  border-width:2px;
+}
+</style>

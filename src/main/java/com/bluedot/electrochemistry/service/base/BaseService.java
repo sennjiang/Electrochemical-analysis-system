@@ -90,7 +90,6 @@ public class BaseService {
         } catch (Exception e) {
             e.printStackTrace();
             map.put("error", e.getMessage());
-            throw new RuntimeException(e.getMessage());
         }
     }
 }

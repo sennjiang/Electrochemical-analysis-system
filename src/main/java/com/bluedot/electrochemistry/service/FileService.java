@@ -8,16 +8,12 @@ import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.annotation.Service;
 import com.bluedot.framework.simplespring.inject.annotation.Autowired;
-import com.bluedot.framework.simplespring.mvc.monitor.Data;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @description
@@ -34,8 +30,35 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void export(Map<String,Object> map) {
-        //TODO 前端做导出excel
-        map.put("data","你好啊");
+        //测试
+        File file = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
+        File file1 = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
+        File file2 = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
+        File file3 = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
+        List<File> list = new ArrayList<>();
+        list.add(file);
+        list.add(file1);
+        list.add(file2);
+        list.add(file3);
+        file.setModifiedTime(new Timestamp(System.currentTimeMillis()));
+        map.put("data",list);
+        map.put("code",404);
+        map.put("message","true");
+    }
+
+    /**
+     * 查询文件
+     * @param map 数据集合
+     */
+    private void listFiles(Map<String,Object> map) {
+        int username = (Integer) map.get("username");
+        Integer pageStart = (Integer) map.get("pageStart");
+        Integer pageSize = (Integer) map.get("pageSize");
+        short type = (short) map.get("type");
+        short status = (short) map.get("status");
+        BaseMapper mapper = mapperFactory.createMapper();
+        List<File> files = mapper.listFiles(username,type, status,pageStart,pageSize);
+        map.put("data",files);
     }
 
     /**
@@ -44,12 +67,17 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void findFile(Map<String,Object> map) {
-        Integer fileId = (Integer) map.get("fileId");
-        Integer pageStart = (Integer) map.get("pageStart");
-        Integer pageSize = (Integer) map.get("pageSize");
-        BaseMapper mapper = mapperFactory.createMapper();
-        File file = mapper.getFileById(fileId,pageStart,pageSize);
-        map.put("data",file);
+        try {
+            Integer fileId = (Integer) map.get("fileId");
+            Integer pageStart = (Integer) map.get("pageStart");
+            Integer pageSize = (Integer) map.get("pageSize");
+            BaseMapper mapper = mapperFactory.createMapper();
+            File file = mapper.getFileById(fileId);
+            map.put("data",file);
+        }catch (Exception e){
+            map.put("message",e.getMessage());
+            map.put("code",404);
+        }
     }
 
     /**
@@ -57,24 +85,29 @@ public class FileService extends BaseService {
      *
      * @param map 数据
      */
-    private void uploadFile(Map<String,Object> map) throws Exception {
-        HttpServletRequest request = ((Data) map).getRequest();
-        String realPath = request.getSession().getServletContext().getRealPath("/uploads");
-        java.io.File file = new java.io.File(realPath);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        DiskFileItemFactory factory = new DiskFileItemFactory();
-        ServletFileUpload upload = new ServletFileUpload(factory);
-        List<FileItem> items = upload.parseRequest(request);
-        for (FileItem item : items) {
-            if (item.isFormField()) {
-                //普通表单
-            } else {
-                String uuid = UUID.randomUUID().toString().replace("-", "");
-                String filename = uuid + "_" + item.getName();
-                item.write(new java.io.File(realPath, filename));
-                item.delete();
+    private void uploadFile(Map<String,Object> map){
+        java.io.File file = (java.io.File) map.get("file");
+        BufferedReader reader = null;
+        try {
+            reader = new  BufferedReader(new FileReader(file));
+            StringBuffer str = new StringBuffer();
+            String temp = "";
+            while ((temp = reader.readLine()) != null) {
+                str.append(temp);
+                //TODO 文件数据处理
+            }
+            System.out.println("file ---------------- " + str);
+        }catch (Exception e) {
+            map.put("message",e.getMessage());
+            map.put("code",404);
+        }finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    map.put("message",e.getMessage());
+                    map.put("code",404);
+                }
             }
         }
     }
@@ -162,8 +195,8 @@ public class FileService extends BaseService {
      * @param fileHash 文件hash值
      */
     private boolean contrast(String fileHash,int username) {
-        long l = mapperFactory.createMapper().contrastFile(fileHash, username);
-        return l >= 1;
+//        long l = mapperFactory.createMapper().contrastFile(fileHash, username);
+        return 2 >= 1;
     }
 
     /**

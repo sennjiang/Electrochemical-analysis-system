@@ -2,9 +2,9 @@
 <mapper namespace="com.bluedot.electrochemistry.dao.base.BaseMapper">
 
     <!--    用户模块相关-->
-    <select id="listUser" resultType="com.bluedot.electrochemistry.pojo.domain.User">
-        select * from user;
-    </select>
+<!--    <select id="listUser" resultType="com.bluedot.electrochemistry.pojo.domain.User">-->
+<!--        select * from user;-->
+<!--    </select>-->
     <select id="listUser" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user limit #{currentPage},#{pageSize}
     </select>
@@ -17,7 +17,7 @@
     <!--超级管理员相关-->
     <!--查询管理员相关-->
     <select id="getAdmins" resultType="com.bluedot.electrochemistry.pojo.domain.User">
-        select * from user limit #{pageStart},#{pageSize}
+        select * from user
     </select>
     <select id="getAdminByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user where #{queryCondition}=#{queryValue} limit #{pageStart},#{pageSize}
@@ -61,6 +61,15 @@
     </select>
     <select id="getAlgorithmsCount" resultType="java.lang.Long">
         select count(*) from t_algorithm
+    </select>
+    <select id="getFileById" resultType="com.bluedot.electrochemistry.pojo.domain.File">
+        select * from file where id = #{id};
+    </select>
+    <select id="listOperations" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
+        select * from operation where type = #{type}
+    </select>
+    <select id="listFiles" resultType="com.bluedot.electrochemistry.pojo.domain.File">
+        select * from file where type = #{type} and status = #{status} and owner = #{username} limit #{pageStart},#{pageSize};
     </select>
     <!--有问题
     <select id="getAlgorithmsByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">

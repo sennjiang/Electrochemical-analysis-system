@@ -2,16 +2,17 @@ package com.bluedot.framework.simplespring.mvc;
 
 
 import com.bluedot.framework.simplespring.mvc.processor.RequestProcessor;
-import com.bluedot.framework.simplespring.mvc.processor.impl.MQRequestProcessor;
 import com.bluedot.framework.simplespring.mvc.render.ResultRender;
 import com.bluedot.framework.simplespring.mvc.render.impl.DefaultResultRender;
-import com.bluedot.framework.simplespring.mvc.render.impl.InternalErrorResultRender;
+import com.bluedot.framework.simplespring.mvc.render.impl.JsonResultRender;
 import com.bluedot.framework.simplespring.util.LogUtil;
 import org.slf4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author 1
@@ -75,15 +76,17 @@ public class RequestProcessorChain {
             while (requestProcessorIterator.hasNext()) {
                 RequestProcessor requestProcessor = requestProcessorIterator.next();
                 log.debug("this requestProcessor is {}", requestProcessor);
-                //直到某个请求处理器执行后返回为false为止
+                //直到某个请求处理器执行后返回为 false 为止
                 if (!requestProcessor.process(this)) {
                     break;
                 }
             }
         } catch (Exception e) {
-            //期间如果出现异常，则交由内部异常渲染处理器处理
-            log.error("doRequestProcessorChain error:", e);
-            this.resultRender = new InternalErrorResultRender(e.getMessage());
+            //执行报错 直接交给前端处理
+            Map<String,Object> map = new HashMap<>();
+            map.put("message",e.getMessage());
+            map.put("code",404);
+            setResultRender(new JsonResultRender(map));
         }
 
 
