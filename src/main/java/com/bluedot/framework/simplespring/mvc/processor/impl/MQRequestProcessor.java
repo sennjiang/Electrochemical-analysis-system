@@ -186,7 +186,7 @@ public class MQRequestProcessor implements RequestProcessor {
         String header = request.getHeader("Content-Type");
         Data data = new Data(request);
 
-        if (header.startsWith("application")){
+        if (header == null || header.startsWith("application")){
 
             logger.info("parameterMap ---> data : {}",data);
             String boundary = (String) data.get("boundary");
