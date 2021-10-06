@@ -5,20 +5,25 @@ import NProgress from 'nprogress' // progress bar（加载进度条控件）
 import 'nprogress/nprogress.css' // progress bar style （进度条样式）
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import { loadVuex } from '@/utils/index.js'
 
 NProgress.configure({ showSpinner: false }) // NProgress配置
 
 const whiteList = ['/login'] // no redirect whitelist （白名单）
 
+
+
 router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
+  loadVuex()
 
   // set page title
+  // 设置页面标题
   document.title = getPageTitle(to.meta.title)
 
   // determine whether the user has logged in
-  const hasToken = getToken()
+  const hasToken = window.sessionStorage.getItem('tokenStr')
 
   if (hasToken) {
     if (to.path === '/login') {
@@ -26,22 +31,15 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasGetUserInfo = store.getters.name
+      const hasGetUserInfo = store.state.currentUsername
       if (hasGetUserInfo) {
         next()
       } else {
-        try {
-          // 尝试重新获取用户信息
-          await store.dispatch('user/getInfo')
-
-          next()
-        } catch (error) {
-          // remove token and go to login page to re-login
-          await store.dispatch('user/resetToken')
-          Message.error(error || 'Has Error')
-          next(`/login?redirect=${to.path}`)
-          NProgress.done()
-        }
+        // 删除token存储
+        window.sessionStorage.removeItem('tokenStr')
+        Message.error('出现异常，请重新登录')
+        next(`/login?redirect=${to.path}`)
+        NProgress.done()
       }
     }
   } else {

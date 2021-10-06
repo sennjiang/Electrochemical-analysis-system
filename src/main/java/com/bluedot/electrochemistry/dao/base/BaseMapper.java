@@ -275,4 +275,5 @@ public interface BaseMapper {
      * @param pageSize
      */
     List<File> listFiles(int username, short type, short status, Integer pageStart, Integer pageSize);
+
 }

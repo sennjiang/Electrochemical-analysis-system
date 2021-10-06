@@ -82,6 +82,7 @@ public class RequestProcessorChain {
                 }
             }
         } catch (Exception e) {
+            log.debug("执行出错" + e.getMessage());
             //执行报错 直接交给前端处理
             Map<String,Object> map = new HashMap<>();
             map.put("message",e.getMessage());

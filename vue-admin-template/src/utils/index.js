@@ -2,6 +2,8 @@
  * Created by PanJiaChen on 16/11/18.
  */
 
+import store from "@/store";
+
 /**
  * Parse the time to string
  * @param {(Object|string|number)} time
@@ -114,4 +116,10 @@ export function param2Obj(url) {
     }
   })
   return obj
+}
+
+export function loadVuex() {
+  if (sessionStorage.getItem('store')) {
+    store.replaceState(Object.assign({}, store.state, JSON.parse(sessionStorage.getItem('store'))))
+  }
 }

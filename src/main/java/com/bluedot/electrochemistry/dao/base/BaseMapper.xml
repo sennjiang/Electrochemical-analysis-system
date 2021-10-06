@@ -78,4 +78,5 @@
     <select id="getAlgorithmsCountByQueryCondition" resultType="java.lang.Long">
         select count(*) from t_algorithm where #{queryCondition}=#{queryValue}
     </select>-->
+
 </mapper>

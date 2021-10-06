@@ -7,6 +7,8 @@ import com.bluedot.framework.simplespring.mvc.render.impl.DefaultResultRender;
 import com.bluedot.framework.simplespring.util.LogUtil;
 import org.slf4j.Logger;
 
+import javax.servlet.http.HttpServletResponse;
+
 
 /**
  * 请求预处理，包括编码以及路径处理
@@ -17,6 +19,23 @@ public class PreRequestProcessor implements RequestProcessor {
 
     @Override
     public boolean process(RequestProcessorChain requestProcessorChain) throws Exception {
+        HttpServletResponse response = requestProcessorChain.getResp();
+        //// 允许跨域访问的域名：若有端口需写全（协议+域名+端口），若没有端口末尾不用加'/'
+        //response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080/");
+        //// 允许前端带认证cookie：启用此项后，上面的域名不能为'*'，必须指定具体的域名，否则浏览器会提示
+        //response.setHeader("Access-Control-Allow-Credentials", "true");
+        //// 提示OPTIONS预检时，后端需要设置的两个常用自定义头
+        //response.setHeader("Access-Control-Allow-Headers", "Content-Type,X-Requested-With");
+
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, HEAD, PUT,PATCH, DELETE");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        // 接受跨域的cookie
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        log.info("请求设置允许跨域");
+
 
         //设置请求编码
         requestProcessorChain.getReq().setCharacterEncoding("UTF-8");
