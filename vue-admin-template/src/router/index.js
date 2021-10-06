@@ -5,6 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+import Register from '@/views/ea/admin/userManage/register'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -34,13 +35,13 @@ export const constantRoutes = [
   // 登录
   {
     path: '/login',
-    component: () => import('@/views/ea/login/login'),
+    component: () => import('@/views/login/index'),
     hidden: true
   },
   // 注册
   {
-    path: '/admin/userManage/register',
-    component: () => import('@/views/ea/admin/userManage/register'),
+    path: '/register',
+    component: Register,
     hidden: true
   },
 
@@ -75,84 +76,84 @@ export const constantRoutes = [
     hidden: true
   },
 
+  //
+  // {
+  //   path: '/admin/userManage',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'logoutUserVerify',
+  //       name: 'LogoutUserVerify',
+  //       component: () => import('@/views/ea/admin/userManage/logoutUserVerify'),
+  //       meta: { title: '注销账户验证', icon: 'user' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/admin/userManage',
-    component: Layout,
-    children: [
-      {
-        path: 'logoutUserVerify',
-        name: 'LogoutUserVerify',
-        component: () => import('@/views/ea/admin/userManage/logoutUserVerify'),
-        meta: { title: '注销账户验证', icon: 'user' }
-      }
-    ]
-  },
+  // {
+  //   path: '/admin/userManage',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'logoutUserInfo',
+  //       name: 'LogoutUserInfo',
+  //       component: () => import('@/views/ea/admin/userManage/logoutUserInfo'),
+  //       meta: { title: '注销账户信息', icon: 'user' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/admin/userManage',
-    component: Layout,
-    children: [
-      {
-        path: 'logoutUserInfo',
-        name: 'LogoutUserInfo',
-        component: () => import('@/views/ea/admin/userManage/logoutUserInfo'),
-        meta: { title: '注销账户信息', icon: 'user' }
-      }
-    ]
-  },
+  // {
+  //   path: '/admin/userManage',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'modifyEmailVerify',
+  //       name: 'ModifyEmailVerify',
+  //       component: () => import('@/views/ea/admin/userManage/modifyEmailVerify'),
+  //       meta: { title: '修改email验证', icon: 'user' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/admin/userManage',
-    component: Layout,
-    children: [
-      {
-        path: 'modifyEmailVerify',
-        name: 'ModifyEmailVerify',
-        component: () => import('@/views/ea/admin/userManage/modifyEmailVerify'),
-        meta: { title: '修改email验证', icon: 'user' }
-      }
-    ]
-  },
+  // {
+  //   path: '/admin/userManage',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'modifyEmailInfo',
+  //       name: 'ModifyEmailInfo',
+  //       component: () => import('@/views/ea/admin/userManage/modifyEmailInfo'),
+  //       meta: { title: '修改email信息', icon: 'user' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/admin/userManage',
-    component: Layout,
-    children: [
-      {
-        path: 'modifyEmailInfo',
-        name: 'ModifyEmailInfo',
-        component: () => import('@/views/ea/admin/userManage/modifyEmailInfo'),
-        meta: { title: '修改email信息', icon: 'user' }
-      }
-    ]
-  },
+  // {
+  //   path: '/admin/userManage',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'modifyPasswordVerify',
+  //       name: 'ModifyPasswordVerify',
+  //       component: () => import('@/views/ea/admin/userManage/modifyPasswordVerify'),
+  //       meta: { title: '修改密码验证', icon: 'user' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/admin/userManage',
-    component: Layout,
-    children: [
-      {
-        path: 'modifyPasswordVerify',
-        name: 'ModifyPasswordVerify',
-        component: () => import('@/views/ea/admin/userManage/modifyPasswordVerify'),
-        meta: { title: '修改密码验证', icon: 'user' }
-      }
-    ]
-  },
-
-  {
-    path: '/admin/userManage',
-    component: Layout,
-    children: [
-      {
-        path: 'modifyPasswordInfo',
-        name: 'ModifyPasswordInfo',
-        component: () => import('@/views/ea/admin/userManage/modifyPasswordInfo'),
-        meta: { title: '修改密码信息', icon: 'user' }
-      }
-    ]
-  },
+  // {
+  //   path: '/admin/userManage',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'modifyPasswordInfo',
+  //       name: 'ModifyPasswordInfo',
+  //       component: () => import('@/views/ea/admin/userManage/modifyPasswordInfo'),
+  //       meta: { title: '修改密码信息', icon: 'user' }
+  //     }
+  //   ]
+  // },
 
   {
     path: '/admin/userManage',
