@@ -1,7 +1,9 @@
 <template>
-  <div>
+  <div class="container">
     <div class="register-wrapper">
-      <div class="register-div" id="register">
+      <h1>电化学, 欢迎注册</h1>
+      <hr class="line-style"/>
+      <div class="register register-div">
         <p class="title">注册</p>
         <el-form
           :model="ruleForm2"
@@ -12,13 +14,16 @@
           class="demo-ruleForm"
 
         >
-            <el-form-item  prop="tel" >
-              <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="请输入手机号"></el-input>
+
+            <el-form-item prop="tel">
+              <label>昵称:&nbsp;&nbsp;&nbsp;&nbsp;  </label>
+              <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="请输入昵称" class="input-style-width"></el-input>
             </el-form-item>
+
 
           <el-form-item prop="smscode" class="code">
             <el-input v-model="ruleForm2.smscode" placeholder="验证码"></el-input>
-            <el-button type="primary" :disabled='isDisabled' @click="sendCode">{{buttonText}}</el-button>
+            <el-button type="primary" :disabled='isDisabled' @click="sendCode">{{ buttonText }}</el-button>
           </el-form-item>
           <el-form-item prop="pass">
             <el-input type="password" v-model="ruleForm2.pass" auto-complete="off" placeholder="输入密码"></el-input>
@@ -87,10 +92,10 @@ export default {
         smscode: ""
       },
       rules2: {
-        pass: [{ validator: validatePass, trigger: 'change' }],
-        checkPass: [{ validator: validatePass2, trigger: 'change' }],
-        tel: [{ validator: checkTel, trigger: 'change' }],
-        smscode: [{ validator: checkSmscode, trigger: 'change' }],
+        pass: [{validator: validatePass, trigger: 'change'}],
+        checkPass: [{validator: validatePass2, trigger: 'change'}],
+        tel: [{validator: checkTel, trigger: 'change'}],
+        smscode: [{validator: checkSmscode, trigger: 'change'}],
       },
       buttonText: '发送验证码',
       isDisabled: false, // 是否禁止点击发送验证码按钮
@@ -99,7 +104,7 @@ export default {
   },
   methods: {
     // <!--发送验证码-->
-    sendCode () {
+    sendCode() {
       let tel = this.ruleForm2.tel
       if (this.checkMobile(tel)) {
         console.log(tel)
@@ -154,6 +159,22 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  background-image: url("../../../assets/image/background1.jpg");
+  background-size: 100%;
+  height: 100%;
+  /*background-image: linear-gradient(to right, #fbc2eb, #a6c1ee);*/
+}
+
+/*水平线*/
+.line-style {
+  box-shadow: #1ab2ff;
+}
+
+.input-style-width {
+  width: 300px;
+}
+
 .loading-wrapper {
   position: fixed;
   top: 0;
@@ -166,13 +187,15 @@ export default {
   justify-content: center;
 }
 
-.register-div{
-  border:1px solid #1ab2ff;
+.register-div {
+  border: 1px solid #f2f2f2;
 }
+
 .register-wrapper img {
   position: absolute;
   z-index: 1;
 }
+
 .register-wrapper {
   position: fixed;
   top: 0;
@@ -180,8 +203,9 @@ export default {
   left: 0;
   bottom: 0;
 }
-#register {
-  max-width: 340px;
+
+.register {
+  max-width: 450px;
   margin: 60px auto;
   background: #fff;
   padding: 20px 40px;
@@ -189,6 +213,7 @@ export default {
   position: relative;
   z-index: 9;
 }
+
 .title {
   font-size: 26px;
   line-height: 50px;
@@ -196,9 +221,11 @@ export default {
   margin: 10px;
   text-align: center;
 }
+
 .el-form-item {
   text-align: center;
 }
+
 .login {
   margin-top: 10px;
   font-size: 14px;
@@ -209,19 +236,23 @@ export default {
   text-indent: 8px;
   width: 160px;
 }
+
 .login:hover {
   color: #2c2fd6;
 }
+
 .code >>> .el-form-item__content {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
 .code button {
   margin-left: 20px;
   width: 140px;
   text-align: center;
 }
+
 .el-button--primary:focus {
   background: #409EFF;
   border-color: #409EFF;
