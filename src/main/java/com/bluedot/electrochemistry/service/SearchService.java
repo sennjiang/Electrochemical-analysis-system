@@ -29,7 +29,9 @@ public class SearchService extends BaseService  {
      * 所有查询入口
      * @param map
      */
-    private void search(Map map) {}
+    private void search(Map map) {
+
+    }
 
     /**
      * 所有列表入口
@@ -39,7 +41,7 @@ public class SearchService extends BaseService  {
         MapperFactory mapperFactory = (MapperFactory) BeanContainer.getInstance().getBean(MapperFactory.class);
         BaseMapper baseMapper = mapperFactory.createMapper();
         List<User> users = baseMapper.listUser();
-        //map.put("list",users);
+        ((Data)map).put("list",users);
     }
     public MapperFactory getMapperFactory() {
         return mapperFactory;

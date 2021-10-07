@@ -1,23 +1,15 @@
 package com.bluedot.framework.simplespring.mvc;
 
-
-import com.bluedot.electrochemistry.dao.base.BaseMapper;
-import com.bluedot.electrochemistry.factory.MapperFactory;
-import com.bluedot.electrochemistry.pojo.domain.User;
-import com.bluedot.electrochemistry.service.FileService;
-import com.bluedot.electrochemistry.service.SearchService;
 import com.bluedot.framework.simplemybatis.pool.MyDataSourceImpl;
 import com.bluedot.framework.simplemybatis.session.SqlSessionFactoryBuilder;
 import com.bluedot.framework.simplespring.aop.AspectWeaver;
 import com.bluedot.framework.simplespring.core.BeanContainer;
-import com.bluedot.framework.simplespring.core.annotation.Bean;
 import com.bluedot.framework.simplespring.inject.DependencyInject;
-import com.bluedot.framework.simplespring.mvc.cache.ResultCache;
+import com.bluedot.framework.simplespring.mvc.mapper.CommonMapper;
 import com.bluedot.framework.simplespring.mvc.processor.RequestProcessor;
 import com.bluedot.framework.simplespring.mvc.processor.impl.MQRequestProcessor;
 import com.bluedot.framework.simplespring.mvc.processor.impl.PreRequestProcessor;
 import com.bluedot.framework.simplespring.mvc.processor.impl.StaticResourceRequestProcessor;
-import com.bluedot.framework.simplespring.util.JsonUtil;
 import com.bluedot.framework.simplespring.util.LogUtil;
 import javafx.util.Pair;
 import org.dom4j.Document;
@@ -26,7 +18,6 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -51,12 +42,13 @@ public class DispatcherServlet extends HttpServlet {
     /**
      * 保存application.properties配置文件中的内容
      */
-    private Properties contextCofig = new Properties();
+    private Properties contextConfig = new Properties();
 
     /**
      * 请求处理器
      */
     List<RequestProcessor> PROCESSORS = new ArrayList<>();
+
     /**
      * 日志
      */
@@ -64,65 +56,36 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig servletConfig) {
-        //读取配置文件
+        //读取配置文件，保存属性到contextConfig
         doLoadConfig(servletConfig.getInitParameter("contextConfigLocation"));
         //初始化容器
         BeanContainer beanContainer = BeanContainer.getInstance();
-        beanContainer.loadBeans(contextCofig.getProperty("scanPackage"));
+        beanContainer.loadBeans(contextConfig.getProperty("scanPackage"));
         //AOP织入
         new AspectWeaver().doAspectOrientedProgramming();
         //初始化简易mybatis框架，往IoC容器中注入SqlSessionFactory对象
         new SqlSessionFactoryBuilder().build(servletConfig.getInitParameter("contextConfigLocation"));
         //依赖注入
         new DependencyInject().doDependencyInject();
-        // xml字典映射 处理
-        doParsingXmlMappings("service.xml");
+        //映射初始化
+        new CommonMapper().initMapper(contextConfig);
 
         //初始化请求处理器责任链
+        // 预处理的请求处理器
         PROCESSORS.add(new PreRequestProcessor());
+        // 静态资源的请求处理器（如果是静态资源让RequestDispatcher自己处理）
         PROCESSORS.add(new StaticResourceRequestProcessor(servletConfig.getServletContext()));
-        PROCESSORS.add(new MQRequestProcessor());
-//        PROCESSORS.add(new JspRequestProcessor(servletConfig.getServletContext()));
-//        PROCESSORS.add(new ControllerRequestProcessor());
+        // 根据业务需要自定义的请求处理器
+        PROCESSORS.add(new MQRequestProcessor(contextConfig));
     }
 
-    public void doParsingXmlMappings(String serviceXmlName) {
-        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(serviceXmlName);
-        Document doc = null;
-        Map<String, Pair> xmlMap = null;
-        try {
-            SAXReader reader = new SAXReader();
-            xmlMap = new HashMap();
 
-            doc = reader.read(resourceAsStream);
-
-            Element service = doc.getRootElement();
-            Iterator nodes = service.elementIterator();
-
-            String number = null;
-            String service1 = null;
-            String method = null;
-
-            while (nodes.hasNext()) {
-                Element node = (Element) nodes.next();
-                //取节点的值
-                number = (String) node.element("number").getData();
-                service1 = (String) node.element("service").getData();
-                method = (String) node.element("method").getData();
-                xmlMap.put(number, new Pair(service1, method));
-            }
-
-            BeanContainer.getInstance().addBean(Map.class,xmlMap);
-        } catch (DocumentException e) {
-            log.error("service.xml parse error",e);
-            e.printStackTrace();
-        }
-
-    }
 
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+
         //1.创建责任链对象实例
         RequestProcessorChain requestProcessorChain = new RequestProcessorChain(PROCESSORS.iterator(), request, response);
         //2.通过责任链模式来一次调用请求处理器对请求进行处理
@@ -143,7 +106,7 @@ public class DispatcherServlet extends HttpServlet {
         InputStream is = null;
         try {
             is = this.getClass().getClassLoader().getResourceAsStream(contextConfigLocation);
-            contextCofig.load(is);
+            contextConfig.load(is);
         } catch (IOException e) {
             LogUtil.getLogger().error(e.getMessage());
             throw new RuntimeException(e);
@@ -160,8 +123,6 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     public void destroy() {
-        //关闭线程池
-        ResultCache.pool.shutdown();
         //关闭连接池
         MyDataSourceImpl.getInstance().close();
         //注销驱动
@@ -171,9 +132,9 @@ public class DispatcherServlet extends HttpServlet {
             try {
                 driver = drivers.nextElement();
                 DriverManager.deregisterDriver(driver);
-                LogUtil.getLogger().debug("deregister success : driver {}" ,driver);
+                LogUtil.getLogger().debug("deregister success : driver {}", driver);
             } catch (SQLException e) {
-                LogUtil.getLogger().error("deregister failed : driver {}" ,driver);
+                LogUtil.getLogger().error("deregister failed : driver {}", driver);
             }
         }
 

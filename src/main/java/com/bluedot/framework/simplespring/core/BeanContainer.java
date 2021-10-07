@@ -60,6 +60,7 @@ public class BeanContainer {
 
         return ContainerHolder.HOLDER.instance;
     }
+
     public Map getBeanContainer() {
         return this.beanMap;
     }
@@ -74,7 +75,9 @@ public class BeanContainer {
             LOGGER.warn("BeanContainer has been loaded");
             return;
         }
+        // 获得扫描路径下所有类的Class文件存放到HashSet中
         Set<Class<?>> classSet = ClassUtil.extractPackageClass(packageName);
+        // 判断Class集合是否非空
         if (ValidationUtil.isEmpty(classSet)) {
             LOGGER.warn("Extract nothing from packageName:" + packageName);
             return;
@@ -212,15 +215,18 @@ public class BeanContainer {
     private void loadConfigurationBean(Class<?> clazz) {
         Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
+            // 判断遍历到的方法是否有@Bean注解
             if (method.isAnnotationPresent(Bean.class)) {
                 Object configuration = beanMap.get(clazz);
                 Object bean = null;
                 try {
+                    // 直接执行方法获得bean
                     bean = method.invoke(configuration);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     LOGGER.error("load configuration bean error: {}", e.getMessage());
                     e.printStackTrace();
                 }
+                // bean不为空加入IOC容器
                 if (bean != null) {
                     Class<?> beanClazz = bean.getClass();
                     LOGGER.debug("load bean :{}", beanClazz.getName());

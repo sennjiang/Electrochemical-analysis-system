@@ -1,7 +1,12 @@
 package com.bluedot.framework.simplespring.mvc.monitor;
 
-import java.util.Arrays;
-import java.util.concurrent.ArrayBlockingQueue;
+import com.bluedot.framework.simplemybatis.utils.LogUtils;
+import org.slf4j.Logger;
+
+import java.util.*;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -10,9 +15,18 @@ import java.util.concurrent.locks.ReentrantLock;
  * @description 枷锁 阻塞数组队列
  * @createDate 2021/9/6-18:25
  */
-public class BlockQueue<E> {
+public class BlockQueue<E> extends AbstractQueue<E>
+        implements BlockingQueue<E> {
+
+    /**
+     * 排序大小
+     */
+    private final int threshold;
+
+    private Logger logger = LogUtils.getLogger();
 
     private Object[] items;
+
     private int count = 0;
 
     final ReentrantLock lock;
@@ -24,13 +38,6 @@ public class BlockQueue<E> {
      */
     private final Condition notFull;
 
-    /**
-     * 监听器监听队列的频率 单位 毫秒
-     *
-     * @param frequency
-     */
-    private int frequency;
-
     private int putIndex;
     private int takeIndex;
 
@@ -38,18 +45,25 @@ public class BlockQueue<E> {
         this(capacity, 50);
     }
 
-    public BlockQueue(Integer capacity, int frequency) {
+    public BlockQueue(Integer capacity, long frequency) {
         if (capacity <= 0)
             throw new IllegalArgumentException();
         this.items = new Object[capacity];
         lock = new ReentrantLock(false);
         notEmpty = lock.newCondition();
         notFull = lock.newCondition();
-        this.frequency = frequency;
+        this.threshold = (int) (capacity * (frequency / 100));
     }
 
     public void sort() {
-        Arrays.sort(items);
+        Object[] newItem = new Object[count];
+        for (int i = 0; i < count; i++) {
+            if (takeIndex + i >= items.length) {
+
+            }else {
+                newItem[i] = items[takeIndex + i];
+            }
+        }
     }
 
     /**
@@ -57,6 +71,7 @@ public class BlockQueue<E> {
      * @param e items
      * @return 成功 ture 失败 false
      */
+    @Override
     public boolean offer(E e) {
         checkNotNull(e);
         final ReentrantLock lock = this.lock;
@@ -73,22 +88,71 @@ public class BlockQueue<E> {
         }
     }
 
+    @Override
+    public E poll() {
+        final ReentrantLock lock = this.lock;
+        lock.lock();
+        try {
+            return (count == 0) ? null : dequeue();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public E peek() {
+        final ReentrantLock lock = this.lock;
+        lock.lock();
+        try {
+            return (E) items[takeIndex];
+        } finally {
+            lock.unlock();
+        }
+    }
+
     /**
      * 添加元素 已满则等待
      * @param e
      * @throws InterruptedException
      */
+    @Override
     public void put(E e) throws InterruptedException {
         checkNotNull(e);
+        checkSort();
         final ReentrantLock lock = this.lock;
         lock.lockInterruptibly();
         try {
             while (count == items.length)
                 notFull.await();
+            logger.info("数据 ---> 放入队列: {}",e);
             enqueue(e);
         } finally {
             lock.unlock();
         }
+    }
+
+    private void checkSort() {
+        if (count >= threshold)
+            sort();
+    }
+
+    @Override
+    public boolean offer(E e, long timeout, TimeUnit unit) throws InterruptedException {
+            checkNotNull(e);
+            long nanos = unit.toNanos(timeout);
+            final ReentrantLock lock = this.lock;
+            lock.lockInterruptibly();
+            try {
+                while (count == items.length) {
+                    if (nanos <= 0)
+                        return false;
+                    nanos = notFull.awaitNanos(nanos);
+                }
+                enqueue(e);
+                return true;
+            } finally {
+                lock.unlock();
+            }
     }
 
     /**
@@ -102,19 +166,56 @@ public class BlockQueue<E> {
         try {
             while (count == 0)
                 notEmpty.await();
+            logger.info("数据 ---> 取出队列");
             return dequeue();
         } finally {
             lock.unlock();
         }
     }
 
+    @Override
+    public E poll(long timeout, TimeUnit unit) throws InterruptedException {
+        long nanos = unit.toNanos(timeout);
+        final ReentrantLock lock = this.lock;
+        lock.lockInterruptibly();
+        try {
+            while (count == 0) {
+                if (nanos <= 0)
+                    return null;
+                nanos = notEmpty.awaitNanos(nanos);
+            }
+            return dequeue();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public int remainingCapacity() {
+        final ReentrantLock lock = this.lock;
+        lock.lock();
+        try {
+            return items.length - count;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public int drainTo(Collection<? super E> c) {
+        return drainTo(c, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public int drainTo(Collection<? super E> c, int maxElements) {
+        return 0;
+    }
+
     /**
      * 插入元素
-     * @param x
+     * @param x 对象
      */
     private void enqueue(E x) {
-        // assert lock.getHoldCount() == 1;
-        // assert items[putIndex] == null;
         final Object[] items = this.items;
         items[putIndex] = x;
         if (++putIndex == items.length)
@@ -125,7 +226,7 @@ public class BlockQueue<E> {
 
     /**
      * 取出元素
-     * @return
+     * @return E
      */
     private E dequeue() {
         // assert lock.getHoldCount() == 1;
@@ -144,12 +245,21 @@ public class BlockQueue<E> {
     /**
      * 判断是否为空
      *
-     * @param e
+     * @param e : E
      */
     private void checkNotNull(E e) {
         if (e == null || "".equals(e)) {
             throw new NullPointerException();
         }
+    }
+
+    /**
+     * not null
+     * @return Iterator
+     */
+    @Override
+    public Iterator<E> iterator() {
+        return null;
     }
 
     /**

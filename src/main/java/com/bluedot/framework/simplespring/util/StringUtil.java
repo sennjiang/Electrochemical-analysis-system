@@ -52,10 +52,11 @@ public class StringUtil {
      * @return 首字母大写的字符串
      */
     public static String firstCharToUpperCase(String str) {
-        char[] chars=str.toCharArray();
-        chars[0]-=32;
+        char[] chars = str.toCharArray();
+        chars[0] -= 32;
         return String.valueOf(chars);
     }
+
     /**
      * 将传入字符串的首字母大写
      *
@@ -63,8 +64,8 @@ public class StringUtil {
      * @return 首字母大写的字符串
      */
     public static String firstCharToLowerCase(String str) {
-        char[] chars=str.toCharArray();
-        chars[0]+=32;
+        char[] chars = str.toCharArray();
+        chars[0] += 32;
         return String.valueOf(chars);
 
     }
@@ -117,7 +118,6 @@ public class StringUtil {
     public static boolean isNotEmpty(String str) {
         return str != null && str.trim().length() > 0;
     }
-
 
 
     /**

@@ -43,12 +43,17 @@ public class Operation {
     /**
      * 文件类型
      */
-    private short FileType;
+    private int fileType;
+
+    /**
+     * 日志编号
+     */
+    private String boundary;
 
     public Operation() {
     }
 
-    public Operation(int id, String message, String level, int user, String recorder, short type, Timestamp time, Boolean isFile, short fileType) {
+    public Operation(int id, String message, String level, int user, String recorder, short type, Timestamp time, Boolean isFile, int fileType, String boundary) {
         this.id = id;
         this.message = message;
         this.level = level;
@@ -57,7 +62,8 @@ public class Operation {
         this.type = type;
         this.time = time;
         this.isFile = isFile;
-        FileType = fileType;
+        this.fileType = fileType;
+        this.boundary = boundary;
     }
 
     public int getId() {
@@ -124,11 +130,19 @@ public class Operation {
         isFile = file;
     }
 
-    public short getFileType() {
-        return FileType;
+    public int getFileType() {
+        return fileType;
     }
 
-    public void setFileType(short fileType) {
-        FileType = fileType;
+    public void setFileType(int fileType) {
+        this.fileType = fileType;
+    }
+
+    public String getBoundary() {
+        return boundary;
+    }
+
+    public void setBoundary(String boundary) {
+        this.boundary = boundary;
     }
 }

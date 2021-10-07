@@ -15,4 +15,82 @@ public class Algorithm {
     private Timestamp changeTime;           //最新修改时间
     private String url;                 //算法文件路径
     private Short isUsed;               //是否启用 1 ：启用 2 ：未启用
+
+    public Integer getAlgId() {
+        return algId;
+    }
+
+    public void setAlgId(Integer algId) {
+        this.algId = algId;
+    }
+
+    public String getAlgorithmName() {
+        return algorithmName;
+    }
+
+    public void setAlgorithmName(String algorithmName) {
+        this.algorithmName = algorithmName;
+    }
+
+    public Integer getUsername() {
+        return username;
+    }
+
+    public void setUsername(Integer username) {
+        this.username = username;
+    }
+
+    public Timestamp getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Timestamp createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Short getClassification() {
+        return classification;
+    }
+
+    public void setClassification(Short classification) {
+        this.classification = classification;
+    }
+
+    public Timestamp getChangeTime() {
+        return changeTime;
+    }
+
+    public void setChangeTime(Timestamp changeTime) {
+        this.changeTime = changeTime;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Short getIsUsed() {
+        return isUsed;
+    }
+
+    public void setIsUsed(Short isUsed) {
+        this.isUsed = isUsed;
+    }
+
+    @Override
+    public String toString() {
+        return "Algorithm{" +
+                "algId=" + algId +
+                ", algorithmName='" + algorithmName + '\'' +
+                ", username=" + username +
+                ", createdTime=" + createdTime +
+                ", classification=" + classification +
+                ", changeTime=" + changeTime +
+                ", url='" + url + '\'' +
+                ", isUsed=" + isUsed +
+                '}';
+    }
 }

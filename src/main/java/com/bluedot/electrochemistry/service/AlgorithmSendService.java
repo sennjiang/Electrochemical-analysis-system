@@ -1,11 +1,14 @@
 package com.bluedot.electrochemistry.service;
 
+import com.bluedot.framework.simplespring.core.annotation.Service;
+
 import java.util.Map;
 
 /**
  * 算法审核业务
  * @author zero
  */
+@Service
 public class AlgorithmSendService {
 
     /**

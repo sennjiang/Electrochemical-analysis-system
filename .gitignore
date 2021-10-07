@@ -24,6 +24,8 @@ hs_err_pid*
 
 .idea/
 target/
-*.iml 
+*.iml
 logs/
 test/
+vue-admin-template/node_modules/
+vue-admin-template/Develop/
