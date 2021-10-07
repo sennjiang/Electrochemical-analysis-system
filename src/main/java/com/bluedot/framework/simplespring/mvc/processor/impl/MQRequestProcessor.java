@@ -23,10 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -43,6 +40,8 @@ public class MQRequestProcessor implements RequestProcessor {
      * test baseBoundary
      */
     private String baseBoundary;
+
+    private static List<String> writeList = new ArrayList<>();
 
     /**
      * 获取到当前运行环境的可用处理器数量
@@ -67,6 +66,12 @@ public class MQRequestProcessor implements RequestProcessor {
      */
     private AtomicLong requestId = new AtomicLong(1);
 
+    /**
+     * 初始化白名单
+     */
+    static {
+        writeList.add("0101");
+    }
 
     /**
      * 日志线程处理对象
@@ -157,7 +162,7 @@ public class MQRequestProcessor implements RequestProcessor {
 
         Data data = doRequest(requestProcessorChain);
 
-        if (data.get("username") == null) {
+        if (data.get("username") == null && !writeList.contains(data.get("boundary"))) {
             return false;
         }
 
