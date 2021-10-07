@@ -147,7 +147,7 @@ export default {
   data() {
     return {
       tableKey: 0,
-      list: [{fileId: 1, name: "a.txt", url: "/aaa/bbb", owner: "1234567890", size: "100kb",hash:"qwer", type: 1, status: "1", produceTime:"2021:10:01:15:00", modifiedTime:"2021:10:01:15:00"}],
+      list: [],
       total: 1,
       // 懒加载的数据
       data:{
@@ -209,14 +209,28 @@ export default {
   },
   methods: {
     getList() {
-      this.listLoading = false
-      this.list = [{fileId: 1, name: "a.txt", url: "/aaa/bbb", owner: "1234567890", size: "100kb",hash:"qwer", type: 1, status: 0, produceTime:"2021:10:01:15:00", modifiedTime:"2021:10:01:15:00"}]
-      this.total = 1
+          this.loading = true
+          this.postRequest('/file/list', this.listQuery).then(response => {
+            if (response) {
+              console.log(response)
+              this.list = response.data
+              console.log(this.list)
+              this.total = 4
+              this.$router.push({ path: this.redirect || '/' })
+            }
+          })
+          this.loading = false
+          setTimeout(() => {
+            this.loading = false
+          }, 750)
+      // this.listLoading = false
+      // this.list = [{fileId: 1, name: "a.txt", url: "/aaa/bbb", owner: "1234567890", size: "100kb",hash:"qwer", type: 1, status: 0, produceTime:"2021:10:01:15:00", modifiedTime:"2021:10:01:15:00"}]
+      // this.total = 1
       // fetchList(this.listQuery).then(response => {
       //   console.log(response.data)
       //   console.log(response)
-      //   this.list = response.data.data
-      //   this.total = 1
+      //   this.list = response.data
+      //   this.total = response.data.size
       //   setTimeout(() => {
       //     this.listLoading = false
       //   }, 1.5 * 1000)

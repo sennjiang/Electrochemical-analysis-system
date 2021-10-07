@@ -157,6 +157,10 @@ public class MQRequestProcessor implements RequestProcessor {
 
         Data data = doRequest(requestProcessorChain);
 
+        if (data.get("username") == null) {
+            return false;
+        }
+
         Adapter adapter = new Adapter(data);
 
         Future<Data> submit = executors.submit(adapter);
@@ -184,8 +188,9 @@ public class MQRequestProcessor implements RequestProcessor {
         HttpServletRequest request = requestProcessorChain.getReq();
 
         String header = request.getHeader("Content-Type");
+        String username = request.getHeader("Authorization");
         Data data = new Data(request);
-
+        data.put("username",username);
         if (header == null || header.startsWith("application")){
 
             logger.info("parameterMap ---> data : {}",data);
@@ -220,8 +225,7 @@ public class MQRequestProcessor implements RequestProcessor {
                     String name = item.getFieldName();
                     data.put(name,value);
                 } else {
-                    String uuid = UUID.randomUUID().toString().replace("-", "");
-                    String filename = uuid + "_" + item.getName();
+                    String filename = item.getName();
                     File file1 = new File(realPath, filename);
                     data.put("file",file1);
                     item.write(file1);

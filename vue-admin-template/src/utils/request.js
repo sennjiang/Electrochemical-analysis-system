@@ -50,7 +50,7 @@ axios.interceptors.response.use(success => {
   }
 })
 
-const base = 'http://localhost:8080/Electrochemical_Analysis_System_war_exploded'
+const base = 'http://localhost:8080/Electrochemical_Analysis_System_war'
 
 const querystring = require('querystring')
 // 请求封装

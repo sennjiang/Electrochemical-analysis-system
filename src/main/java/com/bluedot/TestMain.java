@@ -2,11 +2,14 @@ package com.bluedot;
 
 
 import com.bluedot.framework.simplespring.core.BeanContainer;
+import com.bluedot.framework.simplespring.util.LogUtil;
 import javafx.util.Pair;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.*;
@@ -17,17 +20,9 @@ import java.util.*;
  * @createDate 2021/9/4-19:05
  */
 public class TestMain {
+    static Logger logger = LoggerFactory.getLogger("test");
     public static void main(String[] args) {
-        List list = new ArrayList();
-        list.add(1);
-        list.add(2);
-        list.add(5);
-        list.add(3);
-        list.add(2);
-        System.out.println(list.get(0));
-        list.remove(0);
-        list.add(2);
-        System.out.println(list.get(0));
+        logger.debug("你好啊");
     }
     /**
      *
