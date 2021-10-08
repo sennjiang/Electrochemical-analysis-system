@@ -31,22 +31,20 @@ public class FileService extends BaseService {
      */
     private void export(Map<String,Object> map) {
         //测试
-        File file = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
-        File file1 = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
-        File file2 = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
-        File file3 = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
+        File file = new File(1,"a.txt","/qwe",1234567890,100d,(short)1,(short)1);
         file.setModifiedTime(new Timestamp(System.currentTimeMillis()));
-        file1.setModifiedTime(new Timestamp(System.currentTimeMillis()));
-        file2.setModifiedTime(new Timestamp(System.currentTimeMillis()));
-        file3.setModifiedTime(new Timestamp(System.currentTimeMillis()));
+        file.setProduceTime(new Timestamp(System.currentTimeMillis()));
         List<File> list = new ArrayList<>();
-        list.add(file);
-        list.add(file1);
-        list.add(file2);
-        list.add(file3);
+
+        for (int i = 0; i < 60; i++) {
+            list.add(file);
+        }
+
         map.put("code", 200);
         map.put("message", "文件列表加载完成");
         map.put("data",list);
+        map.put("length",list.size());
+
     }
 
     /**

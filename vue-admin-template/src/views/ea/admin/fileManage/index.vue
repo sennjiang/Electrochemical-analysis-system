@@ -11,10 +11,10 @@
       <el-button v-waves class="filter-item" style="margin-left: 20px; "  type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-      <el-button class="filter-item" style="margin-left: 410px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+      <el-button class="filter-item" style="margin-left: 410px;" type="primary" icon="el-icon-edit" @click="handleImport">
         添加
       </el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleExport">
         导出
       </el-button>
     </div>
@@ -30,7 +30,7 @@
     >
       <el-table-column label="ID" prop="id" align="center" width="80">
         <template slot-scope="{row}">
-          <span>{{ row.fileId }}</span>
+          <span>{{ row.id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="文件名" width="150px" align="center">
@@ -45,7 +45,7 @@
       </el-table-column>
       <el-table-column label="上传时间" min-width="110px" align="center">
         <template slot-scope="{row}">
-          <span >{{ row.produceTime }}</span>
+          <span >{{ row.modifiedTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="处理时间" min-width="110px" align="center">
@@ -77,30 +77,30 @@
  <!-- @pagination="getList" -->
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"  />
     <!-- 弹框 详情页面 -->
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogDetailVisible">
+    <el-dialog :visible.sync="dialogDetailVisible">
       <table  
       fit
       highlight-current-row
       style="width: 100%;" class="file_table">
         <tr align="center"><td>属性名</td> <td>属性值</td></tr>
-        <tr  align="center"><td>fileId</td><td>{{ data.fileId }}</td></tr>
-        <tr align="center"><td>name</td> <td>{{ data.name }}</td></tr>
-        <tr align="center"><td>url</td> <td>{{ data.url }}</td></tr>
-        <tr align="center"><td>owner</td> <td>{{ data.owner }}</td></tr>
-        <tr align="center"><td>size</td> <td>{{ data.size }}</td></tr>
-        <tr align="center"><td>hash</td> <td>{{ data.hash }}</td></tr>  
-        <tr align="center"><td>type</td> <td>{{data.type | typeFilter }}</td></tr>
-        <tr align="center"><td>status</td> <td>{{ data.status }}</td></tr>
-        <tr align="center"><td>produceTime</td> <td>{{ data.produceTime }}</td></tr>
-        <tr align="center"><td>modifiedTime</td> <td>{{ data.modifiedTime }}</td></tr>
-        <tr align="center"><td>dataStart</td> <td>{{ data.dataStart }}</td></tr>
-        <tr align="center"><td>dataEnd </td> <td>{{ data.dataEnd }}</td></tr>
-        <tr align="center"><td>dataBottom </td><td>{{ data.dataBottom }}</td></tr>
-        <tr align="center"><td>dataPeak </td><td>{{ data.dataPeak }}</td></tr>
-        <tr align="center"><td>dataPrecision </td><td>{{ data.dataPrecision }}</td></tr>
-        <tr align="center"><td>dataCycle </td><td>{{ data.dataCycle }}</td></tr>
-        <tr align="center"><td>dataRate </td><td>{{ data.dataRate }}</td></tr>
-        <tr align="center"><td>dataResult </td><td>{{ data.dataResult }}</td></tr>
+        <tr  align="center"><td>fileId</td><td>{{ detail.id }}</td></tr>
+        <tr align="center"><td>name</td> <td>{{ detail.name }}</td></tr>
+        <tr align="center"><td>url</td> <td>{{ detail.url }}</td></tr>
+        <tr align="center"><td>owner</td> <td>{{ detail.owner }}</td></tr>
+        <tr align="center"><td>size</td> <td>{{ detail.size }}</td></tr>
+        <tr align="center"><td>hash</td> <td>{{ detail.hash }}</td></tr>  
+        <tr align="center"><td>type</td> <td>{{detail.type | typeFilter }}</td></tr>
+        <tr align="center"><td>status</td> <td>{{ detail.status }}</td></tr>
+        <tr align="center"><td>produceTime</td> <td>{{ detail.produceTime }}</td></tr>
+        <tr align="center"><td>modifiedTime</td> <td>{{ detail.modifiedTime }}</td></tr>
+        <tr align="center"><td>dataStart</td> <td>{{ detail.dataStart }}</td></tr>
+        <tr align="center"><td>dataEnd </td> <td>{{ detail.dataEnd }}</td></tr>
+        <tr align="center"><td>dataBottom </td><td>{{ detail.dataBottom }}</td></tr>
+        <tr align="center"><td>dataPeak </td><td>{{ detail.dataPeak }}</td></tr>
+        <tr align="center"><td>dataPrecision </td><td>{{ detail.dataPrecision }}</td></tr>
+        <tr align="center"><td>dataCycle </td><td>{{ detail.dataCycle }}</td></tr>
+        <tr align="center"><td>dataRate </td><td>{{ detail.dataRate }}</td></tr>
+        <tr align="center"><td>dataResult </td><td>{{ detail.dataResult }}</td></tr>
         </table>
       
       <div slot="footer" class="dialog-footer">
@@ -147,29 +147,11 @@ export default {
   data() {
     return {
       tableKey: 0,
-      list: [],
-      total: 1,
+      list: null,
+      total: 0,
       // 懒加载的数据
-      data:{
-        fileId: 1,
-        name: "a.txt", 
-        url: "/aaa/bbb", 
-        owner: "1234567890", 
-        size: "100kb",
-        hash:"qwer", 
-        type: 1, 
-        status: "1",
-        produceTime:"2021:10:01:15:00", 
-        modifiedTime:"2021:10:01:15:00",
-        dataStart: 1 ,
-        dataEnd: 1,
-        dataBottom: 1,
-        dataPeak: 1,
-        dataPrecision: 1,
-        dataCycle: 1,
-        dataRate: 1,
-        dataResult: 1
-      },
+      detail: {dataBottom: 0,dataCycle: 0,dataEnd: 0,dataPeak: 0,dataPrecision: 0,dataRate: 0,dataResult: 0,dataStart: 0,id: 1,modifiedTime: "Oct 8, 2021 4:38:09 PM",name: "a.txt",owner: 1234567890,produceTime: "Oct 8, 2021 4:38:09 PM",size: 100,status: 1,type: 1,url: "/qwe"},
+      
       listLoading: true,
       listQuery: {
         boundary: '0207',
@@ -192,10 +174,6 @@ export default {
       },
       dialogDetailVisible: false,
       dialogStatus: '',
-      textMap: {
-        update: 'Edit',
-        create: 'Create'
-      },
       rules: {
         type: [{ required: true, message: 'type is required', trigger: 'change' }],
         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
@@ -212,29 +190,15 @@ export default {
           this.loading = true
           this.postRequest('/file/list', this.listQuery).then(response => {
             if (response) {
-              console.log(response)
               this.list = response.data
               console.log(this.list)
-              this.total = 4
-              this.$router.push({ path: this.redirect || '/' })
+              this.total = response.length
             }
           })
-          this.loading = false
+          this.listLoading = false
           setTimeout(() => {
             this.loading = false
           }, 750)
-      // this.listLoading = false
-      // this.list = [{fileId: 1, name: "a.txt", url: "/aaa/bbb", owner: "1234567890", size: "100kb",hash:"qwer", type: 1, status: 0, produceTime:"2021:10:01:15:00", modifiedTime:"2021:10:01:15:00"}]
-      // this.total = 1
-      // fetchList(this.listQuery).then(response => {
-      //   console.log(response.data)
-      //   console.log(response)
-      //   this.list = response.data
-      //   this.total = response.data.size
-      //   setTimeout(() => {
-      //     this.listLoading = false
-      //   }, 1.5 * 1000)
-      // })
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -247,41 +211,29 @@ export default {
       })
       row.status = status
     },
-    handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+    handleImport() {
+      this.$message({
+        message: 'Import TODO',
+        type: 'success'
       })
     },
     handleDetail(row) {
       this.dialogDetailVisible = true
+      this.detail = row
+    },
+    handleExport(row, index) {
+      this.$message({
+        message: 'Export TODO',
+        type: 'success'
+      })
     },
     handleDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
+      this.$message({
+        message: 'Delete TODO',
+        type: 'success'
       })
-      this.list.splice(index, 1)
     },
-    handleDownload() {
-      // this.downloadLoading = true
-      // import('@/vendor/Export2Excel').then(excel => {
-      //   const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-      //   const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-      //   const data = this.formatJson(filterVal)
-      //   excel.export_json_to_excel({
-      //     header: tHeader,
-      //     data,
-      //     filename: 'table-list'
-      //   })
-      //   this.downloadLoading = false
-      // })
-    },
-    formatJson(filterVal) {
+    formatTime(filterVal) {
       return this.list.map(v => filterVal.map(j => {
         if (j === 'timestamp') {
           return parseTime(v[j])
