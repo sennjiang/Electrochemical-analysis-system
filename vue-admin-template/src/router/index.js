@@ -5,7 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-import Register from '@/views/ea/admin/userManage/register'
+import Register from '@/views/ea/user/register'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -66,13 +66,13 @@ export const constantRoutes = [
 
   {
     path: '/forgetPasswordVerify',
-    component: () => import('@/views/ea/admin/userManage/forgetPasswordVerify'),
+    component: () => import('@/views/ea/user/forgetPasswordVerify'),
     hidden: true
   },
 
   {
     path: '/forgetPasswordInfo',
-    component: () => import('@/views/ea/admin/userManage/forgetPasswordInfo'),
+    component: () => import('@/views/ea/user/forgetPasswordInfo'),
     hidden: true
   },
 
@@ -162,7 +162,7 @@ export const constantRoutes = [
       {
         path: 'index',
         name: 'UserManage',
-        component: () => import('@/views/ea/admin/userManage/register'),
+        component: () => import('@/views/ea/admin/userManage/index'),
         meta: { title: '用户管理', icon: 'user' }
       }
     ]
