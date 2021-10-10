@@ -78,7 +78,7 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"  />
     <!-- 弹框 详情页面 -->
     <el-dialog :visible.sync="dialogDetailVisible">
-      <table  
+      <table
       fit
       highlight-current-row
       style="width: 100%;" class="file_table">
@@ -88,7 +88,7 @@
         <tr align="center"><td>url</td> <td>{{ detail.url }}</td></tr>
         <tr align="center"><td>owner</td> <td>{{ detail.owner }}</td></tr>
         <tr align="center"><td>size</td> <td>{{ detail.size }}</td></tr>
-        <tr align="center"><td>hash</td> <td>{{ detail.hash }}</td></tr>  
+        <tr align="center"><td>hash</td> <td>{{ detail.hash }}</td></tr>
         <tr align="center"><td>type</td> <td>{{detail.type | typeFilter }}</td></tr>
         <tr align="center"><td>status</td> <td>{{ detail.status }}</td></tr>
         <tr align="center"><td>produceTime</td> <td>{{ detail.produceTime }}</td></tr>
@@ -102,7 +102,7 @@
         <tr align="center"><td>dataRate </td><td>{{ detail.dataRate }}</td></tr>
         <tr align="center"><td>dataResult </td><td>{{ detail.dataResult }}</td></tr>
         </table>
-      
+
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogDetailVisible = false">
           确认
@@ -125,7 +125,7 @@ const calendarTypeOptions = [
 ]
 
 const statusOptions = [
-  { key: '正常' }, 
+  { key: '正常' },
   { key: '被删除' }
 ]
 
@@ -151,7 +151,7 @@ export default {
       total: 0,
       // 懒加载的数据
       detail: {dataBottom: 0,dataCycle: 0,dataEnd: 0,dataPeak: 0,dataPrecision: 0,dataRate: 0,dataResult: 0,dataStart: 0,id: 1,modifiedTime: "Oct 8, 2021 4:38:09 PM",name: "a.txt",owner: 1234567890,produceTime: "Oct 8, 2021 4:38:09 PM",size: 100,status: 1,type: 1,url: "/qwe"},
-      
+
       listLoading: true,
       listQuery: {
         boundary: '0207',
@@ -163,7 +163,6 @@ export default {
       },
       importanceOptions: ['正常','已删除'],
       calendarTypeOptions,
-      statusOptions,
       statusOptions,
       temp: {
         id: 1,
