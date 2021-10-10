@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="register-wrapper">
-      <h1>电化学, 欢迎注册</h1>
+      <h1>电化学分析系统, 欢迎注册</h1>
       <hr class="line-style"/>
       <div class="register register-div">
         <p class="title">注册</p>
@@ -16,20 +16,48 @@
         >
 
             <el-form-item prop="tel">
-              <label>昵称:&nbsp;&nbsp;&nbsp;&nbsp;  </label>
-              <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="请输入昵称" class="input-style-width"></el-input>
+              <span class="demonstration">昵称：</span>
+              <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="请输入昵称 2-5位" class="input-style-width"></el-input>
             </el-form-item>
+
+          <el-form-item prop="email">
+            <span class="demonstration">密码：</span>
+            <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="6-18位字母+数字组合" class="input-style-width"></el-input>
+          </el-form-item>
+
+          <el-form-item prop="email">
+            <span class="demonstration">确认：</span>
+            <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="密码确认" class="input-style-width"></el-input>
+          </el-form-item>
+
+          <el-form-item prop="email" style="text-align: left">
+            <div style="margin-left: 15px">
+              <span class="demonstration">性别：</span>
+              <el-radio v-model="radio2" label="1" border size="medium">男</el-radio>
+              <el-radio v-model="radio2" label="2" border size="medium">女</el-radio>
+            </div>
+          </el-form-item>
+
+          <el-form-item prop="email" style="text-align: left">
+            <div class="block" style="margin-left: 15px">
+              <span class="demonstration">日期：</span>
+              <el-date-picker
+                v-model="value1"
+                type="date"
+                placeholder="选择日期">
+              </el-date-picker>
+            </div>
+          </el-form-item>
+
+          <el-form-item prop="email">
+            <span class="demonstration">邮箱：</span>
+            <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="请输入邮箱" class="input-style-width"></el-input>
+          </el-form-item>
 
 
           <el-form-item prop="smscode" class="code">
-            <el-input v-model="ruleForm2.smscode" placeholder="验证码"></el-input>
+            <el-input class="style-code-input" v-model="ruleForm2.smscode" placeholder="请输入验证码"></el-input>
             <el-button type="primary" :disabled='isDisabled' @click="sendCode">{{ buttonText }}</el-button>
-          </el-form-item>
-          <el-form-item prop="pass">
-            <el-input type="password" v-model="ruleForm2.pass" auto-complete="off" placeholder="输入密码"></el-input>
-          </el-form-item>
-          <el-form-item prop="checkPass">
-            <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="确认密码"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm2')" style="width:100%;">注册</el-button>
@@ -48,9 +76,9 @@ export default {
     // <!--验证手机号是否合法-->
     let checkTel = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入手机号码'))
+        callback(new Error('请输入昵称'))
       } else if (!this.checkMobile(value)) {
-        callback(new Error('手机号码不合法'))
+        callback(new Error('昵称不合法'))
       } else {
         callback()
       }
@@ -58,7 +86,7 @@ export default {
     //  <!--验证码是否为空-->
     let checkSmscode = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入手机验证码'))
+        callback(new Error('请输入邮箱验证码'))
       } else {
         callback()
       }
@@ -99,7 +127,17 @@ export default {
       },
       buttonText: '发送验证码',
       isDisabled: false, // 是否禁止点击发送验证码按钮
-      flag: true
+      flag: true,
+
+    //  日期
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        },
+      },
+      value1: '',
+      value2: '',
+
     }
   },
   methods: {
@@ -160,7 +198,7 @@ export default {
 
 <style scoped>
 .container {
-  background-image: url("../../../assets/image/background1.jpg");
+  background-image: url("../../../assets/image/backgroud-tree.jpg");
   background-size: 100%;
   height: 100%;
   /*background-image: linear-gradient(to right, #fbc2eb, #a6c1ee);*/
@@ -173,6 +211,10 @@ export default {
 
 .input-style-width {
   width: 300px;
+}
+
+.input-birth-width {
+  width: 275px;
 }
 
 .loading-wrapper {
@@ -247,9 +289,14 @@ export default {
   justify-content: space-between;
 }
 
+.style-code-input {
+  width: 200px;
+  margin-left: 55px;
+}
+
 .code button {
   margin-left: 20px;
-  width: 140px;
+  width: 100px;
   text-align: center;
 }
 
