@@ -11,7 +11,7 @@
       <el-button v-waves class="filter-item" style="margin-left: 20px; "  type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-      <el-button class="filter-item" style="margin-left: 410px;" type="primary" icon="el-icon-edit" @click="handleImport">
+      <el-button class="filter-item" style="margin-left: 380px;" type="primary" icon="el-icon-edit" @click="handleImport">
         添加
       </el-button>
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleExport">
@@ -74,11 +74,19 @@
         </template>
       </el-table-column>
     </el-table>
- <!-- @pagination="getList" -->
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"  />
-    <!-- 弹框 详情页面 -->
+      <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage4"
+      :page-sizes="[10, 20, 50, 100]"
+      :page-size="10"
+      background=true
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total">
+    </el-pagination>
+
     <el-dialog :visible.sync="dialogDetailVisible">
-      <table  
+      <table
       fit
       highlight-current-row
       style="width: 100%;" class="file_table">
@@ -88,7 +96,7 @@
         <tr align="center"><td>url</td> <td>{{ detail.url }}</td></tr>
         <tr align="center"><td>owner</td> <td>{{ detail.owner }}</td></tr>
         <tr align="center"><td>size</td> <td>{{ detail.size }}</td></tr>
-        <tr align="center"><td>hash</td> <td>{{ detail.hash }}</td></tr>  
+        <tr align="center"><td>hash</td> <td>{{ detail.hash }}</td></tr>
         <tr align="center"><td>type</td> <td>{{detail.type | typeFilter }}</td></tr>
         <tr align="center"><td>status</td> <td>{{ detail.status }}</td></tr>
         <tr align="center"><td>produceTime</td> <td>{{ detail.produceTime }}</td></tr>
@@ -102,7 +110,7 @@
         <tr align="center"><td>dataRate </td><td>{{ detail.dataRate }}</td></tr>
         <tr align="center"><td>dataResult </td><td>{{ detail.dataResult }}</td></tr>
         </table>
-      
+
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogDetailVisible = false">
           确认
@@ -125,7 +133,7 @@ const calendarTypeOptions = [
 ]
 
 const statusOptions = [
-  { key: '正常' }, 
+  { key: '正常' },
   { key: '被删除' }
 ]
 
@@ -151,34 +159,23 @@ export default {
       total: 0,
       // 懒加载的数据
       detail: {dataBottom: 0,dataCycle: 0,dataEnd: 0,dataPeak: 0,dataPrecision: 0,dataRate: 0,dataResult: 0,dataStart: 0,id: 1,modifiedTime: "Oct 8, 2021 4:38:09 PM",name: "a.txt",owner: 1234567890,produceTime: "Oct 8, 2021 4:38:09 PM",size: 100,status: 1,type: 1,url: "/qwe"},
-      
+
       listLoading: true,
       listQuery: {
-        boundary: '0207',
+        boundary: '0208',
         page: 1,
         limit: 20,
         importance: undefined,
         title: undefined,
         type: undefined,
+        kind: 1,
+        status: 1
       },
       importanceOptions: ['正常','已删除'],
       calendarTypeOptions,
       statusOptions,
-      statusOptions,
-      temp: {
-        id: 1,
-        name: "a.txt",
-        timestamp:"2021:10:01:15:00",
-        status:"1",
-        author:"1234567890"
-      },
       dialogDetailVisible: false,
       dialogStatus: '',
-      rules: {
-        type: [{ required: true, message: 'type is required', trigger: 'change' }],
-        timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-        title: [{ required: true, message: 'title is required', trigger: 'blur' }]
-      },
       downloadLoading: false
     }
   },
@@ -186,6 +183,14 @@ export default {
     this.getList()
   },
   methods: {
+    handleSizeChange(val) {
+        this.listQuery.limit=val,
+        this.getList()
+      },
+      handleCurrentChange(val) {
+      this.listQuery.page=val,
+        this.getList()
+    },
     getList() {
           this.loading = true
           this.postRequest('/file/list', this.listQuery).then(response => {

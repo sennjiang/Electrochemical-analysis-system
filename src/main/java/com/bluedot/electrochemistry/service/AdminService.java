@@ -1,9 +1,8 @@
 package com.bluedot.electrochemistry.service;
 
 import com.bluedot.electrochemistry.dao.base.BaseDao;
-import com.bluedot.electrochemistry.dao.base.BaseMapper;
+import com.bluedot.electrochemistry.dao.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
-import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.pojo.domain.User;
 import com.bluedot.electrochemistry.pojo.domain.UserRole;
 import com.bluedot.electrochemistry.service.base.BaseService;

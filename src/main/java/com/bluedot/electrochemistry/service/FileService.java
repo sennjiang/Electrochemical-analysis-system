@@ -1,7 +1,7 @@
 package com.bluedot.electrochemistry.service;
 
+import com.bluedot.electrochemistry.dao.BaseMapper;
 import com.bluedot.electrochemistry.dao.base.BaseDao;
-import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.service.base.BaseService;
@@ -52,14 +52,25 @@ public class FileService extends BaseService {
      * @param map 数据集合
      */
     private void listFiles(Map<String,Object> map) {
-        int username = (Integer) map.get("username");
-        Integer pageStart = (Integer) map.get("pageStart");
-        Integer pageSize = (Integer) map.get("pageSize");
-        short type = (short) map.get("type");
-        short status = (short) map.get("status");
-        BaseMapper mapper = mapperFactory.createMapper();
-        List<File> files = mapper.listFiles(username,type, status,pageStart,pageSize);
-        map.put("data",files);
+        try {
+            String str = (String) map.get("username");
+            int username = Integer.parseInt(str);
+            Integer pageStart = Integer.parseInt((String) map.get("page"));
+            Integer pageSize = Integer.parseInt((String)  map.get("limit"));
+            short type = Short.parseShort((String) map.get("kind"));
+            short status = Short.parseShort((String) map.get("status"));
+            BaseMapper mapper = mapperFactory.createMapper();
+            List<File> files = mapper.listFiles(username,type, status,pageStart - 1,pageSize * pageStart);
+            map.put("data",files);
+            map.put("code",200);
+            map.put("message", "文件列表加载完成");
+            map.put("length",files.size());
+        }catch (Exception e) {
+            e.printStackTrace();
+            map.put("code", 401);
+            map.put("message", "文件列表加载失败");
+        }
+
     }
 
     /**

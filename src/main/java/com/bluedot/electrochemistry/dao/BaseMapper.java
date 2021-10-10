@@ -1,4 +1,4 @@
-package com.bluedot.electrochemistry.dao.base;
+package com.bluedot.electrochemistry.dao;
 
 import com.bluedot.electrochemistry.pojo.domain.*;
 

@@ -22,7 +22,7 @@ import java.util.*;
 public class TestMain {
     static Logger logger = LoggerFactory.getLogger("test");
     public static void main(String[] args) {
-        logger.debug("你好啊");
+
     }
     /**
      *
