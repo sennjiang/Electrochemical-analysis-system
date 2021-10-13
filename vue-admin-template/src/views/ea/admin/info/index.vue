@@ -1,11 +1,13 @@
 <template>
   <div class="container">
 
+    <!--标题-->
+    <h2 style="position: relative; left: 7%;">个人中心</h2>
+
     <!--头像-->
     <div class="style-left-div">
-      <el-row class="demo-avatar demo-basic">
+      <el-row class="demo-avatar demo-basic" style="left: 25%">
         <el-col :span="12">
-          <div class="sub-title">circle</div>
           <div class="demo-basic--circle">
             <div class="block"><el-avatar :size="100" :src="circleUrl" class="style-avatar-div"></el-avatar></div>
             <el-button>更换头像</el-button>
@@ -42,6 +44,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">保存修改</el-button>
+          <el-button type="info" @click="LogoutAccount()">注销账号</el-button>
         </el-form-item>
       </el-form>
 
@@ -119,8 +122,8 @@ export default {
         }
       });
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+    LogoutAccount() {
+
     }
   }
 }
@@ -130,18 +133,17 @@ export default {
 .container {
   width: 100%;
   height: auto;
-  border: 1px solid blue;
+  //border: 1px solid blue;
   position: absolute;
 }
 
 .style-left-div {
   position: relative;
   width: 18%;
-  top:0;
   height: 100%;
-  border: 1px solid red;
-  text-align: center;
+  //border: 1px solid red;
   float: left;
+  text-align: right;
 }
 
 .style-right-div {
@@ -150,7 +152,7 @@ export default {
   height: 100%;
   float: left;
   padding-top: 0;
-  border: 1px solid green;
+  //border: 1px solid green;
 }
 
 .style-avatar-div {
