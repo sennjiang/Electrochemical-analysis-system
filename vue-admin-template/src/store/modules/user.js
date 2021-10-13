@@ -30,9 +30,10 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    const { username, password, boundary } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      login({ username: username.trim(), password: password, boundary: boundary }).then(response => {
+        console.log('111')
         const { data } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)
@@ -68,7 +69,7 @@ const actions = {
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
-        removeToken() // must remove  token  first
+        window.sessionStorage.removeItem('tokenStr')
         resetRouter()
         commit('RESET_STATE')
         resolve()

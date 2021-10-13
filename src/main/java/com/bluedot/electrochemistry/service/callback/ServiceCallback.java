@@ -1,6 +1,6 @@
 package com.bluedot.electrochemistry.service.callback;
 
-import com.bluedot.electrochemistry.dao.base.BaseMapper;
+import com.bluedot.electrochemistry.dao.BaseMapper;
 import com.bluedot.electrochemistry.dao.base.BaseDao;
 
 import javax.security.auth.callback.Callback;

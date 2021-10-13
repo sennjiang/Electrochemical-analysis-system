@@ -1,23 +1,19 @@
 package com.bluedot.electrochemistry.service;
 
+import com.bluedot.electrochemistry.dao.BaseMapper;
 import com.bluedot.electrochemistry.dao.base.BaseDao;
-import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.annotation.Service;
 import com.bluedot.framework.simplespring.inject.annotation.Autowired;
-import com.bluedot.framework.simplespring.mvc.monitor.Data;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @description
@@ -34,8 +30,47 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void export(Map<String,Object> map) {
-        //TODO 前端做导出excel
-        map.put("data","你好啊");
+        //测试
+        File file = new File(1,"a.txt","/qwe",1234567890,100d,(short)1,(short)1);
+        file.setModifiedTime(new Timestamp(System.currentTimeMillis()));
+        file.setProduceTime(new Timestamp(System.currentTimeMillis()));
+        List<File> list = new ArrayList<>();
+
+        for (int i = 0; i < 60; i++) {
+            list.add(file);
+        }
+
+        map.put("code", 200);
+        map.put("message", "文件列表加载完成");
+        map.put("data",list);
+        map.put("length",list.size());
+
+    }
+
+    /**
+     * 查询文件
+     * @param map 数据集合
+     */
+    private void listFiles(Map<String,Object> map) {
+        try {
+            String str = (String) map.get("username");
+            int username = Integer.parseInt(str);
+            Integer pageStart = Integer.parseInt((String) map.get("page"));
+            Integer pageSize = Integer.parseInt((String)  map.get("limit"));
+            short type = Short.parseShort((String) map.get("kind"));
+            short status = Short.parseShort((String) map.get("status"));
+            BaseMapper mapper = mapperFactory.createMapper();
+            List<File> files = mapper.listFiles(username,type, status,pageStart - 1,pageSize * pageStart);
+            map.put("data",files);
+            map.put("code",200);
+            map.put("message", "文件列表加载完成");
+            map.put("length",files.size());
+        }catch (Exception e) {
+            e.printStackTrace();
+            map.put("code", 401);
+            map.put("message", "文件列表加载失败");
+        }
+
     }
 
     /**
@@ -44,12 +79,17 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void findFile(Map<String,Object> map) {
-        Integer fileId = (Integer) map.get("fileId");
-        Integer pageStart = (Integer) map.get("pageStart");
-        Integer pageSize = (Integer) map.get("pageSize");
-        BaseMapper mapper = mapperFactory.createMapper();
-        File file = mapper.getFileById(fileId,pageStart,pageSize);
-        map.put("data",file);
+        try {
+            Integer fileId = (Integer) map.get("fileId");
+            Integer pageStart = (Integer) map.get("pageStart");
+            Integer pageSize = (Integer) map.get("pageSize");
+            BaseMapper mapper = mapperFactory.createMapper();
+            File file = mapper.getFileById(fileId);
+            map.put("data",file);
+        }catch (Exception e){
+            map.put("message",e.getMessage());
+            map.put("code",404);
+        }
     }
 
     /**
@@ -57,24 +97,29 @@ public class FileService extends BaseService {
      *
      * @param map 数据
      */
-    private void uploadFile(Map<String,Object> map) throws Exception {
-        HttpServletRequest request = ((Data) map).getRequest();
-        String realPath = request.getSession().getServletContext().getRealPath("/uploads");
-        java.io.File file = new java.io.File(realPath);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        DiskFileItemFactory factory = new DiskFileItemFactory();
-        ServletFileUpload upload = new ServletFileUpload(factory);
-        List<FileItem> items = upload.parseRequest(request);
-        for (FileItem item : items) {
-            if (item.isFormField()) {
-                //普通表单
-            } else {
-                String uuid = UUID.randomUUID().toString().replace("-", "");
-                String filename = uuid + "_" + item.getName();
-                item.write(new java.io.File(realPath, filename));
-                item.delete();
+    private void uploadFile(Map<String,Object> map){
+        java.io.File file = (java.io.File) map.get("file");
+        BufferedReader reader = null;
+        try {
+            reader = new  BufferedReader(new FileReader(file));
+            StringBuffer str = new StringBuffer();
+            String temp = "";
+            while ((temp = reader.readLine()) != null) {
+                str.append(temp);
+                //TODO 文件数据处理
+            }
+            System.out.println("file ---------------- " + str);
+        }catch (Exception e) {
+            map.put("message",e.getMessage());
+            map.put("code",404);
+        }finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    map.put("message",e.getMessage());
+                    map.put("code",404);
+                }
             }
         }
     }
@@ -162,8 +207,8 @@ public class FileService extends BaseService {
      * @param fileHash 文件hash值
      */
     private boolean contrast(String fileHash,int username) {
-        long l = mapperFactory.createMapper().contrastFile(fileHash, username);
-        return l >= 1;
+//        long l = mapperFactory.createMapper().contrastFile(fileHash, username);
+        return 2 >= 1;
     }
 
     /**

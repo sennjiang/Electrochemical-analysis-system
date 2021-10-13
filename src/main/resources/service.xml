@@ -67,8 +67,8 @@
     </node>
     <node>
         <number>0211</number>
-        <service>SearchService</service>
-        <method>search</method>
+        <service>FileService</service>
+        <method>listFiles</method>
     </node>
     <node>
         <number>0205</number>
@@ -87,8 +87,8 @@
     </node>
     <node>
         <number>0208</number>
-        <service>SearchService</service>
-        <method>list</method>
+        <service>FileService</service>
+        <method>listFiles</method>
     </node>
     <node>
         <number>0209</number>
@@ -294,6 +294,19 @@
         <number>0803</number>
         <service>AlgorithmSendService</service>
         <method>judgementAlgorithmSend</method>
+    </node>
+    <node>
+        <number>0901</number>
+        <service>OperationService</service>
+        <method>listOperation</method>
+    </node><node>
+        <number>0902</number>
+        <service>OperationService</service>
+        <method>listOperation</method>
+    </node><node>
+        <number>0903</number>
+        <service>OperationService</service>
+        <method>listOperation</method>
     </node>
 
 </service_mapping>

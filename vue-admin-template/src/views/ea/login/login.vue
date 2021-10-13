@@ -7,12 +7,14 @@
       <el-form class="form-wrapper" ref="loginForm" :rules="loginRules" :model="loginForm">
         <el-input type="text" name="username" placeholder="账号/邮箱" class="input-item"/>
         <el-input type="password" name="password" placeholder="密码" class="input-item"/>
-        <div class="btn btn-login">登录</div>
+        <div class="btn btn-login" @click="login">登录</div>
       </el-form>
 
       <div class="msg">
         没有账号?
-        <a href="#">立即注册</a>
+        <!--<router-link to="/admin/userManage/register">立即注册</router-link>-->
+        <a href="#/admin/userManage/register" target="_blank" rel="noopener" @click="">立即注册</a>
+        <!--<a @click="$router">立即注册</a>-->
       </div>
       <div>
         <div class="btn-forget-password">
@@ -29,7 +31,21 @@
 </template>
 
 <script>
+export default {
+  name:"Login",
 
+  data() {
+    return {
+
+    }
+  },
+
+  methods: {
+    login() {
+      this.$router.push({ path: '/' })
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

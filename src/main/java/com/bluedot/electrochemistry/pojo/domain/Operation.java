@@ -53,7 +53,7 @@ public class Operation {
     public Operation() {
     }
 
-    public Operation(int id, String message, String level, int user, String recorder, short type, Timestamp time, Boolean isFile, int fileType, String boundary) {
+    public Operation(int id, String message, String level, int user, String recorder, short type, Timestamp time, boolean isFile, int fileType, String boundary) {
         this.id = id;
         this.message = message;
         this.level = level;

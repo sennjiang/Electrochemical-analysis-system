@@ -54,6 +54,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import store from "@/store";
 
 export default {
   name: 'Login',
@@ -74,8 +75,9 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        boundary: '0101',
+        username: '20190001',
+        password: '123456'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -109,12 +111,31 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
+
+          // start 此处为方便调试, 直接进入了主页
+          const tokenStr = "20190001"
+          window.sessionStorage.setItem('tokenStr', tokenStr)
+          this.$store.commit('modifyCurrentUsername', "20190001")
+          this.$store.commit('modifyCurrentNickname', "20190001")
+          this.$store.commit('modifyCurrentStatus', "1")
+          this.$router.push({ path: this.redirect || '/' })
+          // end
+
+          this.postRequest('/login', this.loginForm).then(resp => {
+            if (resp) {
+              // 将服务器返回的token存储到sessionStorage
+              console.log(resp)
+              const tokenStr = resp.username
+              window.sessionStorage.setItem('tokenStr', tokenStr)
+              this.$store.commit('modifyCurrentUsername', resp.obj.username)
+              this.$store.commit('modifyCurrentNickname', resp.obj.nickname)
+              this.$store.commit('modifyCurrentStatus', resp.obj.status)
+              this.$router.push({ path: this.redirect || '/' })
+            }
           })
+          setTimeout(() => {
+            this.loading = false
+          }, 750)
         } else {
           console.log('error submit!!')
           return false
@@ -145,7 +166,6 @@ $cursor: #fff;
     display: inline-block;
     height: 47px;
     width: 85%;
-
     input {
       background: transparent;
       border: 0px;
@@ -180,7 +200,7 @@ $light_gray:#eee;
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
+  background-image: url("../../assets/login/login-background.jpg");
   overflow: hidden;
 
   .login-form {

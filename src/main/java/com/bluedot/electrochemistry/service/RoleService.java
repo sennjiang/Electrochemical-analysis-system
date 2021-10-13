@@ -1,12 +1,14 @@
 package com.bluedot.electrochemistry.service;
 
 import com.bluedot.electrochemistry.dao.base.BaseDao;
-import com.bluedot.electrochemistry.dao.base.BaseMapper;
+import com.bluedot.electrochemistry.dao.BaseMapper;
+import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.Role;
 import com.bluedot.electrochemistry.pojo.domain.RoleRight;
 import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.annotation.Service;
+import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -20,12 +22,19 @@ import java.util.Map;
 @Service
 public class RoleService extends BaseService {
 
+    @Autowired
+    MapperFactory mapperFactory;
 
     /**
      * 查询角色信息
      *
      * @param map
      */
+    private void queryAdmins(Map<String,Object> map){
+        BaseMapper mapper = mapperFactory.createMapper();
+        List<Role> roleList = mapper.getRoles();
+        map.put("data",roleList);
+    }
 //    private void queryRoles(Map<String , Object> map){
 //        doSimpleQueryListTemplate(map, new ServiceCallback<Role>() {
 //            @Override

@@ -1,22 +1,29 @@
 package com.bluedot.framework.simplespring.mvc.processor.impl;
 
+import com.bluedot.electrochemistry.pojo.domain.Operation;
+import com.bluedot.electrochemistry.service.OperationService;
 import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.framework.simplespring.core.BeanContainer;
 import com.bluedot.framework.simplespring.mvc.RequestProcessorChain;
+import com.bluedot.framework.simplespring.mvc.mapper.CommonMapper;
 import com.bluedot.framework.simplespring.mvc.monitor.BlockQueue;
 import com.bluedot.framework.simplespring.mvc.monitor.Data;
 import com.bluedot.framework.simplespring.mvc.processor.RequestProcessor;
-import com.bluedot.framework.simplespring.mvc.render.impl.InternalErrorResultRender;
 import com.bluedot.framework.simplespring.mvc.render.impl.JsonResultRender;
 import com.bluedot.framework.simplespring.util.LogUtil;
 
 import javafx.util.Pair;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Properties;
+import java.sql.Timestamp;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -30,15 +37,11 @@ public class MQRequestProcessor implements RequestProcessor {
     private Logger logger = LogUtil.getLogger();
 
     /**
-     * service映射map
-     */
-    private Map<String, Pair<Class, String>> xmlMap;
-
-
-    /**
      * test baseBoundary
      */
     private String baseBoundary;
+
+    private static List<String> writeList = new ArrayList<>();
 
     /**
      * 获取到当前运行环境的可用处理器数量
@@ -63,6 +66,64 @@ public class MQRequestProcessor implements RequestProcessor {
      */
     private AtomicLong requestId = new AtomicLong(1);
 
+    /**
+     * 初始化白名单
+     */
+    static {
+        writeList.add("0101");
+    }
+
+    /**
+     * 日志线程处理对象
+     */
+    class LogTask implements Runnable {
+        private Data data;
+
+        public LogTask(Data data) {
+            this.data = data;
+        }
+
+        @Override
+        public void run() {
+            Operation operation = packageOperation();
+            OperationService operationService = (OperationService) BeanContainer.getInstance().getBean(OperationService.class);
+            operationService.insertOperation(operation);
+        }
+
+        /**
+         * 包装 Operation 对象
+         * @return Operation
+         */
+        private Operation packageOperation() {
+            Class<?> service = data.getService();
+            String name = service.getName();
+            String serviceMethod = data.getServiceMethod();
+            Operation operation = new Operation();
+
+            if (data.containsKey("message")) {
+                operation.setMessage((String) data.get("message"));
+            }
+
+            operation.setLevel(data.containsKey("error") ? "error" : "info");
+
+            operation.setUser(((int)data.get("user")));
+
+            operation.setRecorder(name + "." + serviceMethod);
+
+            String boundary = (String) data.get("boundary");
+            operation.setType(data.containsKey(boundary) ? CommonMapper.typeMapper.get(boundary) : (short) 1);
+
+            operation.setTime(new Timestamp(System.currentTimeMillis()));
+
+            operation.setBoundary(boundary);
+
+            if ("FileService".equals(name)) {
+                operation.setFile(true);
+                operation.setFileType(CommonMapper.fileTypeMapper.get(boundary));
+            }
+            return operation;
+        }
+    }
 
     /**
      * 处理器线程
@@ -74,14 +135,8 @@ public class MQRequestProcessor implements RequestProcessor {
 
         private Data newData;
 
-        private Boolean hadFind = false;
-
         public Adapter(Data data) {
             this.newData = data;
-        }
-
-        public Boolean getHadFind() {
-            return hadFind;
         }
 
         @Override
@@ -98,8 +153,7 @@ public class MQRequestProcessor implements RequestProcessor {
     }
 
 
-    public MQRequestProcessor(Map<String, Pair<Class, String>> xmlMap, Properties config) {
-        this.xmlMap = xmlMap;
+    public MQRequestProcessor(Properties config) {
         baseBoundary = config.getProperty("boundary");
     }
 
@@ -108,21 +162,22 @@ public class MQRequestProcessor implements RequestProcessor {
 
         Data data = doRequest(requestProcessorChain);
 
+        if (data.get("username") == null && !writeList.contains(data.get("boundary"))) {
+            return false;
+        }
+
         Adapter adapter = new Adapter(data);
 
         Future<Data> submit = executors.submit(adapter);
 
         Data newData = submit.get();
 
-        //TODO 日志处理 多线程处理 并发处理
+        //暂不开启
+//        LogTask task = new LogTask(newData);
+//
+//        executors.submit(task);
 
-        //判断是否异常
-        if (newData.containsKey("error")) {
-            Exception error = (Exception) newData.get("error");
-            requestProcessorChain.setResultRender(new InternalErrorResultRender(error.getMessage()));
-        }else {
-            requestProcessorChain.setResultRender(new JsonResultRender(newData));
-        }
+        requestProcessorChain.setResultRender(new JsonResultRender(newData));
 
         return false;
     }
@@ -133,33 +188,64 @@ public class MQRequestProcessor implements RequestProcessor {
      * @param requestProcessorChain 责任链
      * @return Data
      */
-    private Data doRequest(RequestProcessorChain requestProcessorChain) {
+    private Data doRequest(RequestProcessorChain requestProcessorChain) throws Exception {
 
         HttpServletRequest request = requestProcessorChain.getReq();
 
-
+        String header = request.getHeader("Content-Type");
+        String username = request.getHeader("Authorization");
         Data data = new Data(request);
-        logger.info("parameterMap ---> data : {}",data);
-        String boundary = (String) data.get("boundary");
-        if (baseBoundary != null && boundary == null) {
-            boundary = baseBoundary;
-            data.put("boundary", boundary);
-        }
+        data.put("username",username);
+        if (header == null || header.startsWith("application")){
 
-        if ("".equals(boundary) || boundary == null) {
-            try {
-                requestProcessorChain.getResp().sendRedirect("index.jsp");
-            } catch (IOException e) {
-                e.printStackTrace();
+            logger.info("parameterMap ---> data : {}",data);
+            String boundary = (String) data.get("boundary");
+            if (baseBoundary != null && boundary == null) {
+                boundary = baseBoundary;
+                data.put("boundary", boundary);
+            }
+
+            if ("".equals(boundary) || boundary == null) {
+                try {
+                    requestProcessorChain.getResp().sendRedirect("index.jsp");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            data.setRequest(request);
+            data.put("boundary",boundary);
+        } else {
+            logger.debug("start parse file request ... ");
+            String realPath = request.getSession().getServletContext().getRealPath("/uploads");
+            java.io.File file = new java.io.File(realPath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            List<FileItem> items = upload.parseRequest(request);
+            for (FileItem item : items) {
+                if (item.isFormField()) {
+                    String value = item.getString();
+                    String name = item.getFieldName();
+                    data.put(name,value);
+                } else {
+                    String filename = item.getName();
+                    File file1 = new File(realPath, filename);
+                    data.put("file",file1);
+                    item.write(file1);
+                    item.delete();
+                }
             }
         }
-        data.setRequest(request);
-        Pair<Class, String> classStringPair = xmlMap.get(boundary);
+        Pair<Class, String> classStringPair = CommonMapper.methodMapper.get(data.get("boundary"));
 
         data.put("service", classStringPair.getKey());
         data.put("serviceMethod", classStringPair.getValue());
         data.put("requestId", requestId.getAndIncrement());
+
         return data;
     }
 }
+
 

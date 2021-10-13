@@ -1,9 +1,10 @@
 package com.bluedot.electrochemistry.service;
 
-import com.bluedot.electrochemistry.dao.base.BaseMapper;
+import com.bluedot.electrochemistry.dao.BaseMapper;
+import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.service.base.BaseService;
-import com.bluedot.electrochemistry.service.callback.ServiceCallback;
+import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,18 @@ import java.util.Map;
  * @date 2021/9/11 19:31
  */
 public class BackupFileService extends BaseService {
+
+    @Autowired
+    MapperFactory mapperFactory;
+    /**
+     * 查询管理员信息
+     *
+     */
+    private void queryAdmins(Map<String,Object> map){
+        BaseMapper mapper = mapperFactory.createMapper();
+        List<File> backupFileList = mapper.getBackupFiles();
+        map.put("data",backupFileList);
+    }
 
 //    private void queryBackupFiles(Map<String , Object> map){
 //        doSimpleQueryListTemplate(map, new ServiceCallback<File>() {
