@@ -146,6 +146,7 @@ public class MQRequestProcessor implements RequestProcessor {
             Class clazz = newData.getService();
 
             BaseService service = (BaseService) beanContainer.getBean(clazz);
+            //System.out.println(newData!=null?true:false);
             service.doService(newData);
             logger.info("处理请求结束--- 请求id: {}", newData.get("requestId"));
             return newData;
