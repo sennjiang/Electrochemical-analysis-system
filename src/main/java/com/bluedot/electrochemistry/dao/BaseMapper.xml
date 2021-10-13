@@ -56,12 +56,18 @@
     </select>
 
     <!--算法相关-->
-    <select id="getAlgorithms" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
+    <select id = "getAlgorithmById" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
+        select * from t_algorithm where alg_id = #{id}
+    </select>
+    <select id="listAlgorithms" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
+        select * from t_algorithm
+    </select>
+   <!-- <select id="getAlgorithms" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
         select * from t_algorithm limit #{pageStart},#{pageSize}
     </select>
     <select id="getAlgorithmsCount" resultType="java.lang.Long">
         select count(*) from t_algorithm
-    </select>
+    </select>-->
     <select id="getFileById" resultType="com.bluedot.electrochemistry.pojo.domain.File">
         select * from file where id = #{id};
     </select>
@@ -70,6 +76,10 @@
     </select>
     <select id="listFiles" resultType="com.bluedot.electrochemistry.pojo.domain.File">
         select * from file where type = #{type} and status = #{status} and owner = #{username} limit #{pageStart},#{pageSize};
+    </select>
+    <!--算法申请相关-->
+    <select id="listAlgorithmSends" resultType="com.bluedot.electrochemistry.pojo.domain.AlgorithmSend">
+        select * from t_algorithm_send
     </select>
     <!--有问题
     <select id="getAlgorithmsByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">

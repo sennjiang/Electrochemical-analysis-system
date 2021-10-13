@@ -229,6 +229,14 @@ public interface BaseMapper {
 
     long getFilesCountByQueryCondition(int username, String queryCondition, int fileType, int timeOrder);
 
+    /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓算法相关↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+    /**
+     * 通过算法id查找指定算法
+     * @param id 指定算法的id
+     * @return 返回一个算法对象
+     */
+    Algorithm getAlgorithmById(int id);
+
     /**
      * 获取所有算法集合
      *
@@ -254,6 +262,7 @@ public interface BaseMapper {
 
     long getAlgorithmsCountByQueryCondition(String queryCondition, int type, int timeOrder);
 
+    /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓算法申请相关↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
     /**
      * 获取所有算法申请集合
      *
