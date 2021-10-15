@@ -1,7 +1,7 @@
 package com.bluedot.electrochemistry.service;
 
 import com.bluedot.electrochemistry.dao.base.BaseDao;
-import com.bluedot.electrochemistry.dao.BaseMapper;
+import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.pojo.domain.Operation;
 import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.framework.simplespring.core.BeanContainer;

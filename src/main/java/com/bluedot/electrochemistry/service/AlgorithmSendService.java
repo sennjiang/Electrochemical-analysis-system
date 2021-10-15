@@ -175,8 +175,8 @@ public class AlgorithmSendService extends BaseService {
      */
     private void listAlgorithmSends(Map<String, Object> map){
         try {
-            List<AlgorithmSend> algorithmSends = mapperFactory.createMapper().listAlgorithmSends();
-            map.put("algorithmSends", algorithmSends);
+//            List<AlgorithmSend> algorithmSends = mapperFactory.createMapper().listAlgorithmSends();
+//            map.put("algorithmSends", algorithmSends);
             map.put("code", "200");
             map.put("message", "查询算法申请列表成功");
         }catch (Exception e){

@@ -1,6 +1,6 @@
 package com.bluedot.electrochemistry.service;
 
-import com.bluedot.electrochemistry.dao.BaseMapper;
+import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.service.base.BaseService;
@@ -24,8 +24,8 @@ public class BackupFileService extends BaseService {
      */
     private void queryAdmins(Map<String,Object> map){
         BaseMapper mapper = mapperFactory.createMapper();
-        List<File> backupFileList = mapper.getBackupFiles();
-        map.put("data",backupFileList);
+//        List<File> backupFileList = mapper.getBackupFiles();
+//        map.put("data",backupFileList);
     }
 
 //    private void queryBackupFiles(Map<String , Object> map){

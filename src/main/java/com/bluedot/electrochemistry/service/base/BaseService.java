@@ -1,6 +1,6 @@
 package com.bluedot.electrochemistry.service.base;
 
-import com.bluedot.electrochemistry.dao.BaseMapper;
+import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.PageInfo;
 import com.bluedot.electrochemistry.dao.base.BaseDao;

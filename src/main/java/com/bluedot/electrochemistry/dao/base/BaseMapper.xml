@@ -71,15 +71,62 @@
     <select id="getFileById" resultType="com.bluedot.electrochemistry.pojo.domain.File">
         select * from file where id = #{id};
     </select>
-    <select id="listOperations" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
-        select * from operation where type = #{type}
-    </select>
+
     <select id="listFiles" resultType="com.bluedot.electrochemistry.pojo.domain.File">
         select * from file where type = #{type} and status = #{status} and owner = #{username} limit #{pageStart},#{pageSize};
     </select>
+
+    <select id="listOperations" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
+        select * from operation where type = #{type};
+    </select>
+
+
     <!--算法申请相关-->
     <select id="listAlgorithmSends" resultType="com.bluedot.electrochemistry.pojo.domain.AlgorithmSend">
         select * from t_algorithm_send
+    </select>
+    <select id="getBackupFileByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.File">
+
+    </select>
+    <select id="getBackupFileCountByQueryCondition" resultType="java.lang.Long">
+
+    </select>
+    <select id="listFileByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.File">
+
+    </select>
+    <select id="getFileCountByQuery" resultType="java.lang.Long">
+
+    </select>
+    <select id="getFilesByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.File">
+
+    </select>
+    <select id="getFilesCountByQueryCondition" resultType="java.lang.Long">
+
+    </select>
+    <select id="getAlgorithms" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
+
+    </select>
+    <select id="getAlgorithmsCount" resultType="java.lang.Long">
+
+    </select>
+    <select id="getAlgorithmsByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
+
+    </select>
+    <select id="getAlgorithmsCountByQueryCondition" resultType="java.lang.Long">
+
+    </select>
+    <select id="getAlgorithmSends" resultType="com.bluedot.electrochemistry.pojo.domain.AlgorithmSend">
+
+    </select>
+    <select id="getAlgorithmSendsCount" resultType="java.lang.Long">
+
+    </select>
+    <select id="getAlgorithmSendsByQueryCondition"
+            resultType="com.bluedot.electrochemistry.pojo.domain.AlgorithmSend">
+
+    </select>
+    <select id="getAlgorithmSendsCountByQueryCondition" resultType="java.lang.Long">
+
     </select>
     <!--有问题
     <select id="getAlgorithmsByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
@@ -89,4 +136,7 @@
         select count(*) from t_algorithm where #{queryCondition}=#{queryValue}
     </select>-->
 
+    <update id="contrastFile">
+
+    </update>
 </mapper>

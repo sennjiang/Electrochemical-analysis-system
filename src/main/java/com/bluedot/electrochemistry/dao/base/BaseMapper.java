@@ -287,4 +287,14 @@ public interface BaseMapper {
     List<AlgorithmSend> getAlgorithmSendsByQueryCondition(String queryCondition, int type, int timeOrder, int pageStart, int pageSize);
 
     long getAlgorithmSendsCountByQueryCondition(String queryCondition, int type, int timeOrder);
+
+    /**
+     *  listFiles
+     * @param username username
+     * @param type 1 用户文件 2 系统文件
+     * @param status 1 正常 2 已移除
+     * @param pageStart pageStart
+     * @param pageSize pageSize
+     */
+    List<File> listFiles(int username, short type, short status, Integer pageStart, Integer pageSize);
 }

@@ -1,7 +1,7 @@
 package com.bluedot.electrochemistry.service;
 
-import com.bluedot.electrochemistry.dao.BaseMapper;
 import com.bluedot.electrochemistry.dao.base.BaseDao;
+import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.Algorithm;
 import com.bluedot.electrochemistry.service.base.BaseService;
@@ -151,15 +151,15 @@ public class AlgorithmService extends BaseService {
      * 查询结果会以list列表的形式放回到map中去
      */
     private void listAlgorithm(Map<String,Object> map){
-        BaseMapper mapper = mapperFactory.createMapper();
-        List<Algorithm> algs = mapper.listAlgorithms();
-        if(algs!=null){
-            map.put("message", "算法列表查询成功");
-            map.put("code", 200);
-            map.put("data",algs);
-        }else{
-            map.put("code", 500);
-            map.put("message", "算法列表查询失败");
-        }
+//        BaseMapper mapper = mapperFactory.createMapper();
+//        List<Algorithm> algs = mapper.listAlgorithms();
+//        if(algs!=null){
+//            map.put("message", "算法列表查询成功");
+//            map.put("code", 200);
+//            map.put("data",algs);
+//        }else{
+//            map.put("code", 500);
+//            map.put("message", "算法列表查询失败");
+//        }
     }
 }
