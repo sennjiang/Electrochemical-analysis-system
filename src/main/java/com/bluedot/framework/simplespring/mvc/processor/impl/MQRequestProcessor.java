@@ -23,10 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -43,6 +40,8 @@ public class MQRequestProcessor implements RequestProcessor {
      * test baseBoundary
      */
     private String baseBoundary;
+
+    private static List<String> writeList = new ArrayList<>();
 
     /**
      * 获取到当前运行环境的可用处理器数量
@@ -67,6 +66,12 @@ public class MQRequestProcessor implements RequestProcessor {
      */
     private AtomicLong requestId = new AtomicLong(1);
 
+    /**
+     * 初始化白名单
+     */
+    static {
+        writeList.add("0101");
+    }
 
     /**
      * 日志线程处理对象
@@ -139,7 +144,7 @@ public class MQRequestProcessor implements RequestProcessor {
 
             logger.info("开始处理请求--- 请求路径: {}", newData.getRequest().getPathInfo());
             Class clazz = newData.getService();
-
+            //这里调用了baseservice的doservice方法执行具体业务
             BaseService service = (BaseService) beanContainer.getBean(clazz);
             service.doService(newData);
             logger.info("处理请求结束--- 请求id: {}", newData.get("requestId"));
@@ -156,6 +161,10 @@ public class MQRequestProcessor implements RequestProcessor {
     public boolean process(RequestProcessorChain requestProcessorChain) throws Exception {
 
         Data data = doRequest(requestProcessorChain);
+
+        if (data.get("username") == null && !writeList.contains(data.get("boundary"))) {
+            return false;
+        }
 
         Adapter adapter = new Adapter(data);
 
@@ -184,8 +193,9 @@ public class MQRequestProcessor implements RequestProcessor {
         HttpServletRequest request = requestProcessorChain.getReq();
 
         String header = request.getHeader("Content-Type");
+        String username = request.getHeader("Authorization");
         Data data = new Data(request);
-
+        data.put("username",username);
         if (header == null || header.startsWith("application")){
 
             logger.info("parameterMap ---> data : {}",data);
@@ -220,8 +230,7 @@ public class MQRequestProcessor implements RequestProcessor {
                     String name = item.getFieldName();
                     data.put(name,value);
                 } else {
-                    String uuid = UUID.randomUUID().toString().replace("-", "");
-                    String filename = uuid + "_" + item.getName();
+                    String filename = item.getName();
                     File file1 = new File(realPath, filename);
                     data.put("file",file1);
                     item.write(file1);

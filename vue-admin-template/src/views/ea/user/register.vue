@@ -1,7 +1,9 @@
 <template>
-  <div>
+  <div class="container">
     <div class="register-wrapper">
-      <div class="register-div" id="register">
+      <h1>电化学分析系统, 欢迎注册</h1>
+      <hr class="line-style"/>
+      <div class="register register-div">
         <p class="title">注册</p>
         <el-form
           :model="ruleForm2"
@@ -12,19 +14,50 @@
           class="demo-ruleForm"
 
         >
-            <el-form-item  prop="tel" >
-              <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="请输入手机号"></el-input>
+
+            <el-form-item prop="tel">
+              <span class="demonstration">昵称：</span>
+              <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="请输入昵称 2-5位" class="input-style-width"></el-input>
             </el-form-item>
 
+          <el-form-item prop="email">
+            <span class="demonstration">密码：</span>
+            <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="6-18位字母+数字组合" class="input-style-width"></el-input>
+          </el-form-item>
+
+          <el-form-item prop="email">
+            <span class="demonstration">确认：</span>
+            <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="密码确认" class="input-style-width"></el-input>
+          </el-form-item>
+
+          <el-form-item prop="email" style="text-align: left">
+            <div style="margin-left: 15px">
+              <span class="demonstration">性别：</span>
+              <el-radio v-model="radio2" label="1" border size="medium">男</el-radio>
+              <el-radio v-model="radio2" label="2" border size="medium">女</el-radio>
+            </div>
+          </el-form-item>
+
+          <el-form-item prop="email" style="text-align: left">
+            <div class="block" style="margin-left: 15px">
+              <span class="demonstration">日期：</span>
+              <el-date-picker
+                v-model="value1"
+                type="date"
+                placeholder="选择日期">
+              </el-date-picker>
+            </div>
+          </el-form-item>
+
+          <el-form-item prop="email">
+            <span class="demonstration">邮箱：</span>
+            <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="请输入邮箱" class="input-style-width"></el-input>
+          </el-form-item>
+
+
           <el-form-item prop="smscode" class="code">
-            <el-input v-model="ruleForm2.smscode" placeholder="验证码"></el-input>
-            <el-button type="primary" :disabled='isDisabled' @click="sendCode">{{buttonText}}</el-button>
-          </el-form-item>
-          <el-form-item prop="pass">
-            <el-input type="password" v-model="ruleForm2.pass" auto-complete="off" placeholder="输入密码"></el-input>
-          </el-form-item>
-          <el-form-item prop="checkPass">
-            <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="确认密码"></el-input>
+            <el-input class="style-code-input" v-model="ruleForm2.smscode" placeholder="请输入验证码"></el-input>
+            <el-button type="primary" :disabled='isDisabled' @click="sendCode">{{ buttonText }}</el-button>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm2')" style="width:100%;">注册</el-button>
@@ -43,9 +76,9 @@ export default {
     // <!--验证手机号是否合法-->
     let checkTel = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入手机号码'))
+        callback(new Error('请输入昵称'))
       } else if (!this.checkMobile(value)) {
-        callback(new Error('手机号码不合法'))
+        callback(new Error('昵称不合法'))
       } else {
         callback()
       }
@@ -53,7 +86,7 @@ export default {
     //  <!--验证码是否为空-->
     let checkSmscode = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入手机验证码'))
+        callback(new Error('请输入邮箱验证码'))
       } else {
         callback()
       }
@@ -87,19 +120,29 @@ export default {
         smscode: ""
       },
       rules2: {
-        pass: [{ validator: validatePass, trigger: 'change' }],
-        checkPass: [{ validator: validatePass2, trigger: 'change' }],
-        tel: [{ validator: checkTel, trigger: 'change' }],
-        smscode: [{ validator: checkSmscode, trigger: 'change' }],
+        pass: [{validator: validatePass, trigger: 'change'}],
+        checkPass: [{validator: validatePass2, trigger: 'change'}],
+        tel: [{validator: checkTel, trigger: 'change'}],
+        smscode: [{validator: checkSmscode, trigger: 'change'}],
       },
       buttonText: '发送验证码',
       isDisabled: false, // 是否禁止点击发送验证码按钮
-      flag: true
+      flag: true,
+
+    //  日期
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        },
+      },
+      value1: '',
+      value2: '',
+
     }
   },
   methods: {
     // <!--发送验证码-->
-    sendCode () {
+    sendCode() {
       let tel = this.ruleForm2.tel
       if (this.checkMobile(tel)) {
         console.log(tel)
@@ -154,6 +197,26 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  background-image: url("../../../assets/image/backgroud-tree.jpg");
+  background-size: 100%;
+  height: 100%;
+  /*background-image: linear-gradient(to right, #fbc2eb, #a6c1ee);*/
+}
+
+/*水平线*/
+.line-style {
+  box-shadow: #1ab2ff;
+}
+
+.input-style-width {
+  width: 300px;
+}
+
+.input-birth-width {
+  width: 275px;
+}
+
 .loading-wrapper {
   position: fixed;
   top: 0;
@@ -166,13 +229,15 @@ export default {
   justify-content: center;
 }
 
-.register-div{
-  border:1px solid #1ab2ff;
+.register-div {
+  border: 1px solid #f2f2f2;
 }
+
 .register-wrapper img {
   position: absolute;
   z-index: 1;
 }
+
 .register-wrapper {
   position: fixed;
   top: 0;
@@ -180,8 +245,9 @@ export default {
   left: 0;
   bottom: 0;
 }
-#register {
-  max-width: 340px;
+
+.register {
+  max-width: 450px;
   margin: 60px auto;
   background: #fff;
   padding: 20px 40px;
@@ -189,6 +255,7 @@ export default {
   position: relative;
   z-index: 9;
 }
+
 .title {
   font-size: 26px;
   line-height: 50px;
@@ -196,9 +263,11 @@ export default {
   margin: 10px;
   text-align: center;
 }
+
 .el-form-item {
   text-align: center;
 }
+
 .login {
   margin-top: 10px;
   font-size: 14px;
@@ -209,19 +278,28 @@ export default {
   text-indent: 8px;
   width: 160px;
 }
+
 .login:hover {
   color: #2c2fd6;
 }
+
 .code >>> .el-form-item__content {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
+.style-code-input {
+  width: 200px;
+  margin-left: 55px;
+}
+
 .code button {
   margin-left: 20px;
-  width: 140px;
+  width: 100px;
   text-align: center;
 }
+
 .el-button--primary:focus {
   background: #409EFF;
   border-color: #409EFF;

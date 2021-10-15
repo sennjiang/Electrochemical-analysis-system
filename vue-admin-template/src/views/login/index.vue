@@ -111,6 +111,16 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
+
+          // start 此处为方便调试, 直接进入了主页
+          const tokenStr = "20190001"
+          window.sessionStorage.setItem('tokenStr', tokenStr)
+          this.$store.commit('modifyCurrentUsername', "20190001")
+          this.$store.commit('modifyCurrentNickname', "20190001")
+          this.$store.commit('modifyCurrentStatus', "1")
+          this.$router.push({ path: this.redirect || '/' })
+          // end
+
           this.postRequest('/login', this.loginForm).then(resp => {
             if (resp) {
               // 将服务器返回的token存储到sessionStorage
@@ -156,7 +166,6 @@ $cursor: #fff;
     display: inline-block;
     height: 47px;
     width: 85%;
-
     input {
       background: transparent;
       border: 0px;
@@ -191,7 +200,7 @@ $light_gray:#eee;
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
+  background-image: url("../../assets/login/login-background.jpg");
   overflow: hidden;
 
   .login-form {

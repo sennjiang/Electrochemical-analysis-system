@@ -1,16 +1,11 @@
 package com.bluedot.electrochemistry.service.base;
 
-import com.bluedot.electrochemistry.dao.base.BaseMapper;
+import com.bluedot.electrochemistry.dao.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.PageInfo;
 import com.bluedot.electrochemistry.dao.base.BaseDao;
-import com.bluedot.electrochemistry.factory.MapperFactory;
-import com.bluedot.electrochemistry.pojo.domain.File;
-import com.bluedot.electrochemistry.service.FileService;
-import com.bluedot.electrochemistry.service.SearchService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.BeanContainer;
-import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 
 import java.lang.reflect.Method;
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.bluedot.electrochemistry.service;
 
+import com.bluedot.electrochemistry.dao.BaseMapper;
 import com.bluedot.electrochemistry.dao.base.BaseDao;
-import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.service.base.BaseService;
@@ -31,19 +31,20 @@ public class FileService extends BaseService {
      */
     private void export(Map<String,Object> map) {
         //测试
-        File file = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
-        File file1 = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
-        File file2 = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
-        File file3 = new File(1,"a.txt","/qwe",1234567890,100D,(short)1,(short)1);
-        List<File> list = new ArrayList<>();
-        list.add(file);
-        list.add(file1);
-        list.add(file2);
-        list.add(file3);
+        File file = new File(1,"a.txt","/qwe",1234567890,100d,(short)1,(short)1);
         file.setModifiedTime(new Timestamp(System.currentTimeMillis()));
+        file.setProduceTime(new Timestamp(System.currentTimeMillis()));
+        List<File> list = new ArrayList<>();
+
+        for (int i = 0; i < 60; i++) {
+            list.add(file);
+        }
+
+        map.put("code", 200);
+        map.put("message", "文件列表加载完成");
         map.put("data",list);
-        map.put("code",404);
-        map.put("message","true");
+        map.put("length",list.size());
+
     }
 
     /**
@@ -51,14 +52,25 @@ public class FileService extends BaseService {
      * @param map 数据集合
      */
     private void listFiles(Map<String,Object> map) {
-        int username = (Integer) map.get("username");
-        Integer pageStart = (Integer) map.get("pageStart");
-        Integer pageSize = (Integer) map.get("pageSize");
-        short type = (short) map.get("type");
-        short status = (short) map.get("status");
-        BaseMapper mapper = mapperFactory.createMapper();
-        List<File> files = mapper.listFiles(username,type, status,pageStart,pageSize);
-        map.put("data",files);
+        try {
+            String str = (String) map.get("username");
+            int username = Integer.parseInt(str);
+            Integer pageStart = Integer.parseInt((String) map.get("page"));
+            Integer pageSize = Integer.parseInt((String)  map.get("limit"));
+            short type = Short.parseShort((String) map.get("kind"));
+            short status = Short.parseShort((String) map.get("status"));
+            BaseMapper mapper = mapperFactory.createMapper();
+            List<File> files = mapper.listFiles(username,type, status,pageStart - 1,pageSize * pageStart);
+            map.put("data",files);
+            map.put("code",200);
+            map.put("message", "文件列表加载完成");
+            map.put("length",files.size());
+        }catch (Exception e) {
+            e.printStackTrace();
+            map.put("code", 401);
+            map.put("message", "文件列表加载失败");
+        }
+
     }
 
     /**

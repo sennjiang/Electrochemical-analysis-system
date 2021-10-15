@@ -31,7 +31,7 @@ public class PreRequestProcessor implements RequestProcessor {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, HEAD, PUT,PATCH, DELETE");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        response.setHeader("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
         // 接受跨域的cookie
         response.setHeader("Access-Control-Allow-Credentials", "true");
         log.info("请求设置允许跨域");

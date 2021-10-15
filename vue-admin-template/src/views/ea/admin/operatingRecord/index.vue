@@ -63,24 +63,23 @@
  <!-- @pagination="getList" -->
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"  />
     <!-- 弹框 详情页面 -->
-  <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogDetailVisible">
+  <el-dialog :visible.sync="dialogDetailVisible">
       <table  
       fit
       highlight-current-row
       style="width: 100%;" class="file_table">
         <tr align="center"><td>属性名</td> <td>属性值</td></tr>
-        <tr  align="center"><td>id</td><td>{{ data.id }}</td></tr>
-        <tr align="center"><td>message</td> <td>{{ data.message }}</td></tr>
-        <tr align="center"><td>level</td> <td>{{ data.level }}</td></tr>
-        <tr align="center"><td>user</td> <td>{{ data.user }}</td></tr>
-        <tr align="center"><td>recorder</td> <td>{{ data.recorder }}</td></tr>
-        <tr align="center"><td>type</td> <td>{{ data.type | typeFilter}}</td></tr>  
-        <tr align="center"><td>time</td> <td>{{data.time }}</td></tr>
-        <tr align="center"><td>isFile</td> <td>{{ data.isFile | fileFilter}}</td></tr>
-        <tr align="center"><td>fileType</td> <td>{{ data.fileType | fileTypeFilter}}</td></tr>
-        <tr align="center"><td>boundary</td> <td>{{ data.boundary }}</td></tr>
+        <tr  align="center"><td>id</td><td>{{ detail.id }}</td></tr>
+        <tr align="center"><td>message</td> <td>{{ detail.message }}</td></tr>
+        <tr align="center"><td>level</td> <td>{{ detail.level }}</td></tr>
+        <tr align="center"><td>user</td> <td>{{ detail.user }}</td></tr>
+        <tr align="center"><td>recorder</td> <td>{{ detail.recorder }}</td></tr>
+        <tr align="center"><td>type</td> <td>{{ detail.type | typeFilter}}</td></tr>  
+        <tr align="center"><td>time</td> <td>{{detail.time }}</td></tr>
+        <tr align="center"><td>isFile</td> <td>{{ detail.isFile | fileFilter}}</td></tr>
+        <tr align="center"><td>fileType</td> <td>{{ detail.fileType }}</td></tr>
+        <tr align="center"><td>boundary</td> <td>{{ detail.boundary }}</td></tr>
         </table>
-      
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogDetailVisible = false">
           确认
@@ -115,11 +114,11 @@ const fileOptions = [
 ]
 
 const fileTypeOptions = [
-  { key : '上传' },
-  { key : '移除' },
-  { key : '还原' },
-  { key : '删除' },
-  { key : '导出' }
+  { key: '上传' },
+  { key: '移除' },
+  { key: '还原' },
+  { key: '删除' },
+  { key: '导出' }
 ]
 
 export default {
@@ -133,7 +132,12 @@ export default {
       return typeOptions[type].key
     },
     fileFilter:function (type) {
-      return fileOptions[type].key
+      if (type = 'true') {
+        return fileOptions[0].key
+      }
+      if (type = 'false') {
+        return fileOptions[1].key
+      }
     },
     fileTypeFilter:function (type) {
       return fileTypeOptions[type].key
@@ -148,15 +152,17 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
+        boundary: '0901',
         importance: undefined,
         title: undefined,
         type: undefined,
+        kind: '1'
       },
       importanceOptions: ['正常','已删除'],
       calendarTypeOptions,
       statusOptions: ['正常', '删除'],
 
-      data: {
+      detail: {
         id: 1,
         message: "下载文件", 
         level:"INFO", 
@@ -169,12 +175,6 @@ export default {
         boundary: "0101"
       },
       dialogDetailVisible: false,
-      dialogStatus: '',
-      textMap: {
-        update: 'Edit',
-        create: 'Create'
-      },
-      downloadLoading: false
     }
   },
   created() {
@@ -182,17 +182,21 @@ export default {
   },
   methods: {
     getList() {
-      this.listLoading = false
-      this.list = [{id: 1,message: "下载文件", level:"INFO", user:"1234567890", recorder: "SearchService.download", type: 1, time: "2021:10:01:15:00",isFile: 1,fileType: 1,boundary: "0101"}]
-      this.total = 1
-      // fetchList(this.listQuery).then(response => {
-        // this.list = response.data.items
-        // this.total = response.data.total
-        // Just to simulate the time of the request
-        // setTimeout(() => {
-        //   this.listLoading = false
-        // }, 1.5 * 1000)
-      // })
+      // this.listLoading = false
+      // this.list = [{id: 1,message: "下载文件", level:"INFO", user:"1234567890", recorder: "SearchService.download", type: 1, time: "2021:10:01:15:00",isFile: 1,fileType: 1,boundary: "0101"}]
+      // this.total = 1
+      this.loading = true
+          this.postRequest('/operation/list', this.listQuery).then(response => {
+            if (response) {
+              this.list = response.data
+              console.log(this.list)
+              this.total = response.length
+            }
+          })
+          this.listLoading = false
+          setTimeout(() => {
+            this.loading = false
+          }, 750)
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -205,28 +209,10 @@ export default {
       })
       row.status = status
     },
-    handledetail(row, index) {
-       this.data.data = row
+    handledetail(row) {
+       this.detail = row
        this.dialogDetailVisible = true
     },
-    handleDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
-      })
-      this.list.splice(index, 1)
-    },
-    formatJson(filterVal) {
-      return this.list.map(v => filterVal.map(j => {
-        if (j === 'timestamp') {
-          return parseTime(v[j])
-        } else {
-          return v[j]
-        }
-      }))
-    }
   }
 }
 </script>
