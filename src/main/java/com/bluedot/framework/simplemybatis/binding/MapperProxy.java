@@ -4,6 +4,7 @@ package com.bluedot.framework.simplemybatis.binding;
 
 import com.bluedot.framework.simplemybatis.constants.Constant;
 import com.bluedot.framework.simplemybatis.mapping.MappedStatement;
+import com.bluedot.framework.simplemybatis.session.Configuration;
 import com.bluedot.framework.simplemybatis.session.SqlSession;
 import com.bluedot.framework.simplemybatis.utils.LogUtils;
 
@@ -43,13 +44,23 @@ public class MapperProxy<T> implements InvocationHandler {
     private Object execute(Method method, Object[] args) {
         //sql语句的唯一id
         String statementId = this.mapperInterface.getName() + "." + method.getName();
+
+        //System.out.println("statementId=>"+statementId);
+        //System.out.println(sqlSession!=null?"sqlSession not null":"sqlSession is null");
+
+        //获取配置类
+        //Configuration configuration = this.sqlSession.getConfiguration();
+        //System.out.println(configuration!=null?"configuration not null":"configuration is null");
+        //System.out.println(sqlSession!=null?"sqlSession not null":"sqlSession is null");
+        //MappedStatement mappedStatement1 = configuration.getMappedStatement(statementId);
+        //System.out.println(mappedStatement1!=null?"mappedStatement1 not null":"mappedStatement1 is null");
         //获取sql信息
         MappedStatement mappedStatement = this.sqlSession.getConfiguration().getMappedStatement(statementId);
         Object result = null;
         //根据mappedStatement提供的方法选择对应的CRUD方法
         //查询
 
-        System.out.println(mappedStatement!=null?"mappedStatement not null":false);
+        //System.out.println(mappedStatement!=null?"mappedStatement not null":"mappedStatement is null");
 
         if (Constant.SqlType.SELECT.value().equals(mappedStatement.getSqlType())) {
             Class<?> returnType = method.getReturnType();

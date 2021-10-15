@@ -38,7 +38,7 @@ public class MapperRegistry {
      */
     @SuppressWarnings("unchecked")
     public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
-        this.addMapper(type);
+        //this.addMapper(type);
         MapperProxyFactory<T> mapperProxyFactory = (MapperProxyFactory<T>) this.knownMappers.get(type);
         //System.out.println(sqlSession.toString());
         //System.out.println(sqlSession!=null?true:false);
