@@ -1,7 +1,7 @@
 package com.bluedot.electrochemistry.service.callback;
 
-import com.bluedot.electrochemistry.dao.BaseMapper;
 import com.bluedot.electrochemistry.dao.base.BaseDao;
+import com.bluedot.electrochemistry.dao.base.BaseMapper;
 
 import javax.security.auth.callback.Callback;
 import java.util.List;
@@ -41,7 +41,7 @@ public interface ServiceCallback<T> extends Callback {
          * @param dropdownValue2 下拉菜单的选项值2
          * @return 数据条数
          */
-        default Long doCountExecutor(BaseMapper baseMapper,String dropdownType1,String dropdownType2, int dropdownValue1,int dropdownValue2,String queryCondition){ return null; }
+        default Long doCountExecutor(BaseMapper baseMapper, String dropdownType1, String dropdownType2, int dropdownValue1, int dropdownValue2, String queryCondition){ return null; }
 
     /**
      * 调用增删改方法的模板方法

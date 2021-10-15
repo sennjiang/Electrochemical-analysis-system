@@ -1,7 +1,7 @@
 package com.bluedot.electrochemistry.service;
 
-import com.bluedot.electrochemistry.dao.BaseMapper;
 import com.bluedot.electrochemistry.dao.base.BaseDao;
+import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.service.base.BaseService;
@@ -84,8 +84,8 @@ public class FileService extends BaseService {
             Integer pageStart = (Integer) map.get("pageStart");
             Integer pageSize = (Integer) map.get("pageSize");
             BaseMapper mapper = mapperFactory.createMapper();
-            File file = mapper.getFileById(fileId);
-            map.put("data",file);
+//            File file = mapper.getFileById(fileId);
+//            map.put("data",file);
         }catch (Exception e){
             map.put("message",e.getMessage());
             map.put("code",404);

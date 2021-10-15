@@ -1,7 +1,7 @@
 package com.bluedot.electrochemistry.service;
 
 import com.bluedot.electrochemistry.dao.base.BaseDao;
-import com.bluedot.electrochemistry.dao.BaseMapper;
+import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.Role;
 import com.bluedot.electrochemistry.pojo.domain.RoleRight;
@@ -32,8 +32,8 @@ public class RoleService extends BaseService {
      */
     private void queryAdmins(Map<String,Object> map){
         BaseMapper mapper = mapperFactory.createMapper();
-        List<Role> roleList = mapper.getRoles();
-        map.put("data",roleList);
+//        List<Role> roleList = mapper.getRoles();
+//        map.put("data",roleList);
     }
 //    private void queryRoles(Map<String , Object> map){
 //        doSimpleQueryListTemplate(map, new ServiceCallback<Role>() {

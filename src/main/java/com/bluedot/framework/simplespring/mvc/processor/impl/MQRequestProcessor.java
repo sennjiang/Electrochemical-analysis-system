@@ -12,6 +12,7 @@ import com.bluedot.framework.simplespring.mvc.processor.RequestProcessor;
 import com.bluedot.framework.simplespring.mvc.render.impl.JsonResultRender;
 import com.bluedot.framework.simplespring.util.LogUtil;
 
+import com.bluedot.framework.simplespring.util.PathUtil;
 import javafx.util.Pair;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -33,6 +34,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * @createDate 2021/9/7-16:35
  */
 public class MQRequestProcessor implements RequestProcessor {
+
+    private static final String projectPath = PathUtil.getAppPath();
 
     private Logger logger = LogUtil.getLogger();
 
@@ -144,7 +147,7 @@ public class MQRequestProcessor implements RequestProcessor {
 
             logger.info("开始处理请求--- 请求路径: {}", newData.getRequest().getPathInfo());
             Class clazz = newData.getService();
-
+            //这里调用了baseservice的doservice方法执行具体业务
             BaseService service = (BaseService) beanContainer.getBean(clazz);
             //System.out.println(newData!=null?true:false);
             service.doService(newData);
@@ -217,7 +220,7 @@ public class MQRequestProcessor implements RequestProcessor {
             data.put("boundary",boundary);
         } else {
             logger.debug("start parse file request ... ");
-            String realPath = request.getSession().getServletContext().getRealPath("/uploads");
+            String realPath =  projectPath +"/uploads";
             java.io.File file = new java.io.File(realPath);
             if (!file.exists()) {
                 file.mkdirs();
@@ -234,6 +237,7 @@ public class MQRequestProcessor implements RequestProcessor {
                     String filename = item.getName();
                     File file1 = new File(realPath, filename);
                     data.put("file",file1);
+                    data.put("filePath","/uploads");
                     item.write(file1);
                     item.delete();
                 }
