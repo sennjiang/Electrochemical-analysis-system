@@ -1,5 +1,7 @@
 package com.bluedot;
 
+import com.bluedot.framework.simplespring.util.PathUtil;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.Comparator;
@@ -20,7 +22,6 @@ public class TestDemo{
     };
 
     public static void main(String[] args) {
-        Map<String, String[]> parameterMap = new HashMap<>();
-
+        System.out.println(PathUtil.getAppPath());
     }
 }
