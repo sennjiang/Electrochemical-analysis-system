@@ -35,7 +35,10 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class MQRequestProcessor implements RequestProcessor {
 
-    private static final String projectPath = PathUtil.getAppPath();
+    /**
+     * 项目地址，请在application配置文件中配置
+     */
+    private static String projectPath;
 
     private Logger logger = LogUtil.getLogger();
 
@@ -158,6 +161,7 @@ public class MQRequestProcessor implements RequestProcessor {
 
     public MQRequestProcessor(Properties config) {
         baseBoundary = config.getProperty("boundary");
+        projectPath = config.getProperty("projectPath");
     }
 
     @Override
@@ -165,7 +169,7 @@ public class MQRequestProcessor implements RequestProcessor {
 
         Data data = doRequest(requestProcessorChain);
 
-        if (data.get("username") == null && !writeList.contains(data.get("boundary"))) {
+        if (data == null) {
             return false;
         }
 
@@ -195,31 +199,24 @@ public class MQRequestProcessor implements RequestProcessor {
 
         HttpServletRequest request = requestProcessorChain.getReq();
 
-        String header = request.getHeader("Content-Type");
         String username = request.getHeader("Authorization");
         Data data = new Data(request);
-        data.put("username",username);
-        if (header == null || header.startsWith("application")){
-
-            logger.info("parameterMap ---> data : {}",data);
-            String boundary = (String) data.get("boundary");
-            if (baseBoundary != null && boundary == null) {
-                boundary = baseBoundary;
-                data.put("boundary", boundary);
+        if (!data.containsKey("username")){
+            data.put("username",username);
+        }
+        String boundary = (String) data.get("boundary");
+        data.setRequest(request);
+        data.put("boundary",boundary);
+        logger.info("parameterMap ---> data : {}",data);
+        if (username == null || boundary == null) {
+            if (!"0205".equals(boundary)){
+                return null;
             }
-
-            if ("".equals(boundary) || boundary == null) {
-                try {
-                    requestProcessorChain.getResp().sendRedirect("index.jsp");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            data.setRequest(request);
-            data.put("boundary",boundary);
-        } else {
+        }
+        if ("0205".equals(boundary)){
             logger.debug("start parse file request ... ");
             String realPath =  projectPath +"/uploads";
+            logger.info("projectPath ---- {}",projectPath);
             java.io.File file = new java.io.File(realPath);
             if (!file.exists()) {
                 file.mkdirs();
@@ -235,6 +232,7 @@ public class MQRequestProcessor implements RequestProcessor {
                 } else {
                     String filename = item.getName();
                     File file1 = new File(realPath, filename);
+                    logger.info("file1  ---- {}",file1.getAbsolutePath());
                     data.put("file",file1);
                     data.put("filePath","/uploads");
                     item.write(file1);
@@ -247,6 +245,7 @@ public class MQRequestProcessor implements RequestProcessor {
         data.put("service", classStringPair.getKey());
         data.put("serviceMethod", classStringPair.getValue());
         data.put("requestId", requestId.getAndIncrement());
+
 
         return data;
     }

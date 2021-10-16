@@ -35,11 +35,11 @@ public class File {
     /**
      * 文件类型
      */
-    private Short type;
+    private Integer type;
     /**
      * 文件状态
      */
-    private Short status;
+    private Integer status;
     /**
      * 文件创建时间
      */
@@ -51,65 +51,40 @@ public class File {
     /**
      * 文件数据起始点
      */
-    private double dataStart;
+    private Double dataStart;
     /**
      * 文件数据结束点
      */
-    private double dataEnd;
+    private Double dataEnd;
     /**
      * 文件数据最小值
      */
-    private double dataBottom;
+    private Double dataBottom;
     /**
      * 文件数据最大值
      */
-    private double dataPeak;
+    private Double dataPeak;
     /**
      * 文件数据精度
      */
-    private double dataPrecision;
+    private Double dataPrecision;
     /**
      * 文件数据圈数
      */
-    private double dataCycle;
+    private Double dataCycle;
     /**
      * 文件数据速率
      */
-    private double dataRate;
+    private Double dataRate;
     /**
      * 文件数据计算结果
      */
-    private double dataResult;
+    private Double dataResults;
 
     public File() {
     }
 
-    public File(Integer id, String name, String url, Integer owner, Double size, Short type, Short status) {
-        this.id = id;
-        this.name = name;
-        this.url = url;
-        this.owner = owner;
-        this.size = size;
-        this.type = type;
-        this.status = status;
-    }
-
-    public File(Integer id, Double size, String hash, Timestamp modifiedTime, double dataStart, double dataEnd, double dataBottom, double dataPeak, double dataPrecision, double dataCycle, double dataRate, double dataResult) {
-        this.id = id;
-        this.size = size;
-        this.hash = hash;
-        this.modifiedTime = modifiedTime;
-        this.dataStart = dataStart;
-        this.dataEnd = dataEnd;
-        this.dataBottom = dataBottom;
-        this.dataPeak = dataPeak;
-        this.dataPrecision = dataPrecision;
-        this.dataCycle = dataCycle;
-        this.dataRate = dataRate;
-        this.dataResult = dataResult;
-    }
-
-    public File(int id, String name, String url, int owner, double size, String hash, short type, short status, Timestamp produceTime, Timestamp modifiedTime, double dataStart, double dataEnd, double dataBottom, double dataPeak, double dataPrecision, double dataCycle, double dataRate, double dataResult) {
+    public File(Integer id, String name, String url, Integer owner, Double size, String hash, Integer type, Integer status, Timestamp produceTime, Timestamp modifiedTime) {
         this.id = id;
         this.name = name;
         this.url = url;
@@ -120,21 +95,29 @@ public class File {
         this.status = status;
         this.produceTime = produceTime;
         this.modifiedTime = modifiedTime;
-        this.dataStart = dataStart;
-        this.dataEnd = dataEnd;
-        this.dataBottom = dataBottom;
-        this.dataPeak = dataPeak;
-        this.dataPrecision = dataPrecision;
-        this.dataCycle = dataCycle;
-        this.dataRate = dataRate;
-        this.dataResult = dataResult;
     }
 
-    public int getId() {
+    public File(Integer fileId, Double size, String hash, Timestamp modified_time, Double data_start, Double data_end, Double data_bottom, Double data_peak, Double data_precision, Double data_cycle, Double data_rate, Double data_results) {
+        this.id = fileId;
+        this.size = size;
+        this.hash = hash;
+        this.modifiedTime = modified_time;
+        this.dataStart = data_start;
+        this.dataEnd = data_end;
+        this.dataBottom = data_bottom;
+        this.dataPeak = data_peak;
+        this.dataPrecision = data_precision;
+        this.dataCycle = data_cycle;
+        this.dataRate = data_rate;
+        this.dataResults = data_results;
+    }
+
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -154,19 +137,19 @@ public class File {
         this.url = url;
     }
 
-    public int getOwner() {
+    public Integer getOwner() {
         return owner;
     }
 
-    public void setOwner(int owner) {
+    public void setOwner(Integer owner) {
         this.owner = owner;
     }
 
-    public double getSize() {
+    public Double getSize() {
         return size;
     }
 
-    public void setSize(double size) {
+    public void setSize(Double size) {
         this.size = size;
     }
 
@@ -178,19 +161,19 @@ public class File {
         this.hash = hash;
     }
 
-    public short getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(short type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
-    public short getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(short status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -210,67 +193,67 @@ public class File {
         this.modifiedTime = modifiedTime;
     }
 
-    public double getDataStart() {
+    public Double getDataStart() {
         return dataStart;
     }
 
-    public void setDataStart(double dataStart) {
+    public void setDataStart(Double dataStart) {
         this.dataStart = dataStart;
     }
 
-    public double getDataEnd() {
+    public Double getDataEnd() {
         return dataEnd;
     }
 
-    public void setDataEnd(double dataEnd) {
+    public void setDataEnd(Double dataEnd) {
         this.dataEnd = dataEnd;
     }
 
-    public double getDataBottom() {
+    public Double getDataBottom() {
         return dataBottom;
     }
 
-    public void setDataBottom(double dataBottom) {
+    public void setDataBottom(Double dataBottom) {
         this.dataBottom = dataBottom;
     }
 
-    public double getDataPeak() {
+    public Double getDataPeak() {
         return dataPeak;
     }
 
-    public void setDataPeak(double dataPeak) {
+    public void setDataPeak(Double dataPeak) {
         this.dataPeak = dataPeak;
     }
 
-    public double getDataPrecision() {
+    public Double getDataPrecision() {
         return dataPrecision;
     }
 
-    public void setDataPrecision(double dataPrecision) {
+    public void setDataPrecision(Double dataPrecision) {
         this.dataPrecision = dataPrecision;
     }
 
-    public double getDataCycle() {
+    public Double getDataCycle() {
         return dataCycle;
     }
 
-    public void setDataCycle(double dataCycle) {
+    public void setDataCycle(Double dataCycle) {
         this.dataCycle = dataCycle;
     }
 
-    public double getDataRate() {
+    public Double getDataRate() {
         return dataRate;
     }
 
-    public void setDataRate(double dataRate) {
+    public void setDataRate(Double dataRate) {
         this.dataRate = dataRate;
     }
 
-    public double getDataResult() {
-        return dataResult;
+    public Double getDataResults() {
+        return dataResults;
     }
 
-    public void setDataResult(double dataResult) {
-        this.dataResult = dataResult;
+    public void setDataResults(Double dataResult) {
+        this.dataResults = dataResult;
     }
 }

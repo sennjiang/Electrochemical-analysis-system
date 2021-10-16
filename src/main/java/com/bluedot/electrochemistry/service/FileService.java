@@ -30,8 +30,8 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void export(Map<String,Object> map) {
-        //测试
-        File file = new File(1,"a.txt","/qwe",1234567890,100d,(short)1,(short)1);
+        //测试1,"a.txt","/qwe",1234567890,100d,(short)1,(short)1
+        File file = new File(1,"1.txt","/user/file",12345,1D,"sadf123erd",1,1,new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()));
         file.setModifiedTime(new Timestamp(System.currentTimeMillis()));
         file.setProduceTime(new Timestamp(System.currentTimeMillis()));
         List<File> list = new ArrayList<>();
@@ -60,11 +60,12 @@ public class FileService extends BaseService {
             short type = Short.parseShort((String) map.get("kind"));
             short status = Short.parseShort((String) map.get("status"));
             BaseMapper mapper = mapperFactory.createMapper();
-            List<File> files = mapper.listFiles(username,type, status,pageStart - 1,pageSize * pageStart);
+            List<File> files = mapper.listFiles(type, status, username,(pageStart - 1) * pageSize,pageSize);
+            Long size = mapper.countFiles(type, status, username);
             map.put("data",files);
             map.put("code",200);
             map.put("message", "文件列表加载完成");
-            map.put("length",files.size());
+            map.put("length",size);
         }catch (Exception e) {
             e.printStackTrace();
             map.put("code", 401);
@@ -111,14 +112,14 @@ public class FileService extends BaseService {
             System.out.println("file ---------------- " + str);
         }catch (Exception e) {
             map.put("message",e.getMessage());
-            map.put("code",404);
+            map.put("code",401);
         }finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
                     map.put("message",e.getMessage());
-                    map.put("code",404);
+                    map.put("code",401);
                 }
             }
         }
@@ -133,8 +134,9 @@ public class FileService extends BaseService {
         doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
-                int fileId = (int) map.get("fileId");
-                File file = new File(fileId, null, null, null, null, null, null);
+                Integer fileId = Integer.parseInt((String) map.get("fileId"));
+                File file = new File();
+                file.setId(fileId);
                 return baseDao.delete(file);
             }
         });
@@ -150,7 +152,7 @@ public class FileService extends BaseService {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
                 int fileId = (int) map.get("fileId");
-                File file = new File(fileId, null, null, null, null, null, (short) 2);
+                File file = new File(fileId, null, null,null,null,null, null, 2, null,null);
                 return baseDao.update(file);
             }
         });
@@ -166,7 +168,9 @@ public class FileService extends BaseService {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
                 int fileId = (int) map.get("fileId");
-                File file = new File(fileId, null, null, null, null, null, (short) 1);
+                File file = new File();
+                file.setId(fileId);
+                file.setStatus(1);
                 return baseDao.update(file);
             }
         });

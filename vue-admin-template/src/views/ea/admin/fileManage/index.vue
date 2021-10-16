@@ -14,6 +14,14 @@
       <el-button class="filter-item" style="margin-left: 410px;" type="primary" icon="el-icon-edit" @click="handleImport">
         添加
       </el-button>
+      <!-- <el-upload
+        class="upload-demo"
+        action="https://jsonplaceholder.typicode.com/posts/"
+        :on-change="handleChange"
+        :file-list="fileList">
+        <el-button size="small" type="primary">点击上传</el-button>
+        <div slot="tip" class="el-upload__tip">只能上传txt文件，且不超过500kb</div>
+      </el-upload> -->
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleExport">
         导出
       </el-button>
@@ -85,6 +93,24 @@
       :total="total">
     </el-pagination>
 
+    <el-dialog :visible.sync="fileUploadVisible">
+      <el-upload
+          align="center"
+          class="upload-demo"
+          drag
+          :action="fileUploadPath"
+          multiple>
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          <div class="el-upload__tip" slot="tip">只能上传txt文件，且不超过500kb</div>
+        </el-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="fileUploadVisible = false">
+          确认
+        </el-button>
+      </div>
+    </el-dialog>
+
     <el-dialog :visible.sync="dialogDetailVisible">
       <table
       fit
@@ -121,8 +147,6 @@
 </template>
 
 <script>
-// 查询引入的
-import { fetchList } from '@/api/file'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -159,22 +183,24 @@ export default {
       total: 0,
       // 懒加载的数据
       detail: {dataBottom: 0,dataCycle: 0,dataEnd: 0,dataPeak: 0,dataPrecision: 0,dataRate: 0,dataResult: 0,dataStart: 0,id: 1,modifiedTime: "Oct 8, 2021 4:38:09 PM",name: "a.txt",owner: 1234567890,produceTime: "Oct 8, 2021 4:38:09 PM",size: 100,status: 1,type: 1,url: "/qwe"},
-
+      owner: '',
       listLoading: true,
       listQuery: {
         boundary: '0208',
         page: 1,
-        limit: 20,
+        limit: 10,
         importance: undefined,
         title: undefined,
         type: undefined,
         kind: 1,
         status: 1
       },
+      fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/file/upload?boundary=0205&username='+this.owner,
       importanceOptions: ['正常','已删除'],
       calendarTypeOptions,
       statusOptions,
       dialogDetailVisible: false,
+      fileUploadVisible : false,
       dialogStatus: '',
       downloadLoading: false
     }
@@ -183,6 +209,9 @@ export default {
     this.getList()
   },
   methods: {
+    handleChange(file, fileList) {
+        this.fileList = fileList.slice(-3);
+      },
     handleSizeChange(val) {
         this.listQuery.limit=val,
         this.getList()
@@ -193,11 +222,13 @@ export default {
     },
     getList() {
           this.loading = true
+          this.listQuery.boundary = '0208'
           this.postRequest('/file/list', this.listQuery).then(response => {
             if (response) {
               this.list = response.data
               console.log(this.list)
               this.total = response.length
+              this.owner = response.username
             }
           })
           this.listLoading = false
@@ -217,10 +248,7 @@ export default {
       row.status = status
     },
     handleImport() {
-      this.$message({
-        message: 'Import TODO',
-        type: 'success'
-      })
+      this.fileUploadVisible = true;
     },
     handleDetail(row) {
       this.dialogDetailVisible = true
@@ -233,10 +261,12 @@ export default {
       })
     },
     handleDelete(row, index) {
-      this.$message({
-        message: 'Delete TODO',
-        type: 'success'
-      })
+     let deleteData = {boundary:"0209",fileId:row.id};
+     this.getRequest('/file/delete', deleteData).then(response => {
+            if (response) {
+              this.getList()
+            }
+          })
     },
     formatTime(filterVal) {
       return this.list.map(v => filterVal.map(j => {
@@ -257,5 +287,7 @@ export default {
   border-style:none none solid none;
   border-color:#c5c5c5;
   border-width:2px;
+}
+.upload-demo{
 }
 </style>
