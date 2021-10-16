@@ -40,7 +40,7 @@ public class CommonMapper {
     /**
      * 操作的 角色级别
      */
-    public  static Map<String,Short> typeMapper;
+    public  static Map<String,Integer> typeMapper;
 
     public void initMapper(Properties contextConfig) {
         logger.debug("start init mapper ... ");
@@ -63,21 +63,21 @@ public class CommonMapper {
     }
     private void initTypeMapper() {
         typeMapper = new HashMap<>();
-        typeMapper.put("0214", (short) 2);
-        typeMapper.put("0404", (short) 2);
-        typeMapper.put("0405", (short) 2);
-        typeMapper.put("0406", (short) 2);
-        typeMapper.put("0409", (short) 2);
-        typeMapper.put("0410", (short) 2);
-        typeMapper.put("0411", (short) 2);
-        typeMapper.put("0412", (short) 3);
-        typeMapper.put("0413", (short) 3);
-        typeMapper.put("0503", (short) 3);
-        typeMapper.put("0504", (short) 3);
-        typeMapper.put("0703", (short) 3);
-        typeMapper.put("0704", (short) 3);
-        typeMapper.put("0705", (short) 3);
-        typeMapper.put("0803", (short) 3);
+        typeMapper.put("0214", 2);
+        typeMapper.put("0404", 2);
+        typeMapper.put("0405", 2);
+        typeMapper.put("0406", 2);
+        typeMapper.put("0409", 2);
+        typeMapper.put("0410", 2);
+        typeMapper.put("0411", 2);
+        typeMapper.put("0412", 3);
+        typeMapper.put("0413", 3);
+        typeMapper.put("0503", 3);
+        typeMapper.put("0504", 3);
+        typeMapper.put("0703", 3);
+        typeMapper.put("0704", 3);
+        typeMapper.put("0705", 3);
+        typeMapper.put("0803", 3);
     }
 
     private void initMethodMapper(Properties contextConfig){

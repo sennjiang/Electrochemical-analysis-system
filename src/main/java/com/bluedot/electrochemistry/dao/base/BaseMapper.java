@@ -7,8 +7,6 @@ import java.util.List;
 
 import com.bluedot.electrochemistry.pojo.domain.File;
 
-import java.util.List;
-
 /**
  * @author zero
  * @description 所有 查询方法 的接口
@@ -296,5 +294,15 @@ public interface BaseMapper {
      * @param pageStart pageStart
      * @param pageSize pageSize
      */
-    List<File> listFiles(int username, short type, short status, Integer pageStart, Integer pageSize);
+    List<File> listFiles( short type, short status, int username, Integer pageStart, Integer pageSize);
+
+    Long countFiles(short type, short status, int username);
+
+    List<Operation> listOperations(Integer type, Integer pageStart, Integer pageSize);
+
+    List<Operation> listOperationsByUser(Integer type, Integer username, Integer pageStart, Integer pageSize);
+
+    Long countOperations(Integer type);
+
+    Long countOperationsByUser(Integer type,Integer username);
 }

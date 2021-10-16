@@ -2,10 +2,12 @@ package com.bluedot.electrochemistry.service;
 
 import com.bluedot.electrochemistry.dao.base.BaseDao;
 import com.bluedot.electrochemistry.dao.base.BaseMapper;
+import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.Operation;
 import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.framework.simplespring.core.BeanContainer;
 import com.bluedot.framework.simplespring.core.annotation.Service;
+import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -20,29 +22,35 @@ import java.util.Map;
 @Service
 public class OperationService extends BaseService {
 
-    private BaseDao baseDao = (BaseDao) BeanContainer.getInstance().getBean(BaseDao.class);
+    @Autowired
+    MapperFactory mapperFactory;
 
-    private BaseMapper baseMapper = (BaseMapper) BeanContainer.getInstance().getBean(BaseMapper.class);
+    private BaseDao baseDao = (BaseDao) BeanContainer.getInstance().getBean(BaseDao.class);
 
     public void insertOperation(Operation operation) {
         baseDao.insert(operation);
     }
 
     private void listOperation(Map<String, Object> map) {
+        BaseMapper baseMapper = mapperFactory.createMapper();
         try {
-//            short type = (short) map.get("kind");
-//            List<Operation> list = baseMapper.listOperations(type);
-//            map.put("data",list);
-            Operation operation1 = new Operation(1,"message","INFO",1,"UserService.login",
-                    (short) 1,new Timestamp(System.currentTimeMillis()),false,0,"0101");
-            Operation operation2 = new Operation(2,"message","WARN",1234567890,"FileService.export",
-                    (short) 1,new Timestamp(System.currentTimeMillis()),true,1,"0101");
-            List<Operation> list = new ArrayList<>();
-            list.add(operation1);
-            list.add(operation2);
-            map.put("code",200);
+            Integer type = Integer.parseInt((String) map.get("kind"));
+            String str = (String) map.get("username");
+            Integer username = Integer.parseInt(str);
+            Integer pageStart = Integer.parseInt((String) map.get("page"));
+            Integer pageSize = Integer.parseInt((String)  map.get("limit"));
+            List<Operation> list = null;
+            Long length = null;
+            if (type == 1) {
+                list = baseMapper.listOperationsByUser(type,username,(pageStart - 1) * pageSize,pageSize);
+                length = baseMapper.countOperationsByUser(type,username);
+            }else {
+                list = baseMapper.listOperations(type,(pageStart - 1) * pageSize,pageSize);
+                length = baseMapper.countOperations(type);
+            }
             map.put("data",list);
-            map.put("length",list.size());
+            map.put("code",200);
+            map.put("length",length);
 
         } catch (Exception e) {
             map.put("code",404);

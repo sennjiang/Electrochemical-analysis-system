@@ -11,7 +11,7 @@ public class Operation {
     /**
      * 日志id
      */
-    private int id;
+    private Integer id;
     /**
      * 日志信息
      */
@@ -23,7 +23,7 @@ public class Operation {
     /**
      * 日志user
      */
-    private int user;
+    private Integer user;
     /**
      * 日志 地点
      */
@@ -31,7 +31,7 @@ public class Operation {
     /**
      * 日志类型
      */
-    private short type;
+    private Integer type;
     /**
      * 日志时间
      */
@@ -43,7 +43,7 @@ public class Operation {
     /**
      * 文件类型
      */
-    private int fileType;
+    private Integer fileType;
 
     /**
      * 日志编号
@@ -53,7 +53,7 @@ public class Operation {
     public Operation() {
     }
 
-    public Operation(int id, String message, String level, int user, String recorder, short type, Timestamp time, boolean isFile, int fileType, String boundary) {
+    public Operation(Integer id, String message, String level, Integer user, String recorder, Integer type, Timestamp time, Boolean isFile, Integer fileType, String boundary) {
         this.id = id;
         this.message = message;
         this.level = level;
@@ -66,11 +66,11 @@ public class Operation {
         this.boundary = boundary;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -90,11 +90,11 @@ public class Operation {
         this.level = level;
     }
 
-    public int getUser() {
+    public Integer getUser() {
         return user;
     }
 
-    public void setUser(int user) {
+    public void setUser(Integer user) {
         this.user = user;
     }
 
@@ -106,11 +106,11 @@ public class Operation {
         this.recorder = recorder;
     }
 
-    public short getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(short type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
@@ -122,19 +122,19 @@ public class Operation {
         this.time = time;
     }
 
-    public Boolean getFile() {
+    public Boolean getIsFile() {
         return isFile;
     }
 
-    public void setFile(Boolean file) {
-        isFile = file;
+    public void setIsFile(Boolean isFile) {
+        this.isFile = isFile;
     }
 
-    public int getFileType() {
+    public Integer getFileType() {
         return fileType;
     }
 
-    public void setFileType(int fileType) {
+    public void setFileType(Integer fileType) {
         this.fileType = fileType;
     }
 

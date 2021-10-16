@@ -1,12 +1,16 @@
 package com.bluedot;
 
-import com.bluedot.framework.simplespring.util.PathUtil;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import com.bluedot.electrochemistry.dao.base.BaseMapper;
+import com.bluedot.electrochemistry.factory.MapperFactory;
+import com.bluedot.electrochemistry.pojo.domain.File;
+import com.bluedot.framework.simplemybatis.session.defaults.DefaultSqlSessionFactory;
+import com.bluedot.framework.simplespring.util.JsonUtil;
+
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class TestDemo{
     private static Comparator<Map> comparator = new Comparator<Map>() {
@@ -21,7 +25,19 @@ public class TestDemo{
         }
     };
 
-    public static void main(String[] args) {
-        System.out.println(PathUtil.getAppPath());
+    public static void main(String[] args){
+        String time = "Oct 10, 2021 7:23:26 PM";
+//        Timestamp timestamp = Timestamp.valueOf(time);
+//        System.out.println(timestamp.toString());
+//        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+//        File file = new File();
+//        file.setProduceTime(timestamp);
+//        file.setModifiedTime(timestamp);
+//        List<File> list = new ArrayList<>();
+//        list.add(file);
+//        Map<String,Object> map = new HashMap<>();
+//        map.put("data",list);
+//        System.out.println(JsonUtil.toJson(map));
+
     }
 }
