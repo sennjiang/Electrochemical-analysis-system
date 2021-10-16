@@ -1,27 +1,13 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.title" placeholder="文件名" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.importance" placeholder="文件类型" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
-      </el-select>
-      <el-select v-model="listQuery.type" placeholder="处理时间" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.key" :value="item.key" />
-      </el-select>
+      <el-input v-model="listQuery.title" placeholder="文件名、状态、所属" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" style="margin-left: 20px; "  type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-      <el-button class="filter-item" style="margin-left: 410px;" type="primary" icon="el-icon-edit" @click="handleImport">
+      <el-button class="filter-item" style="margin-left: 710px;" type="primary" icon="el-icon-edit" @click="handleImport">
         添加
       </el-button>
-      <!-- <el-upload
-        class="upload-demo"
-        action="https://jsonplaceholder.typicode.com/posts/"
-        :on-change="handleChange"
-        :file-list="fileList">
-        <el-button size="small" type="primary">点击上传</el-button>
-        <div slot="tip" class="el-upload__tip">只能上传txt文件，且不超过500kb</div>
-      </el-upload> -->
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleExport">
         导出
       </el-button>
@@ -53,7 +39,7 @@
       </el-table-column>
       <el-table-column label="上传时间" min-width="110px" align="center">
         <template slot-scope="{row}">
-          <span >{{ row.modifiedTime }}</span>
+          <span >{{ row.produceTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="处理时间" min-width="110px" align="center">
@@ -63,7 +49,7 @@
       </el-table-column>
       <el-table-column label="文件状态" width="80px" align="center">
         <template slot-scope="{row}">
-        <span> {{ row.status | statusFilter }}</span>
+        <span> {{ row.status-1 | statusFilter }}</span>
         </template>
       </el-table-column>
       <el-table-column label="所属者" align="center" width="120px">
@@ -189,10 +175,8 @@ export default {
         boundary: '0208',
         page: 1,
         limit: 10,
-        importance: undefined,
         title: undefined,
-        type: undefined,
-        kind: 1,
+        type: 1,
         status: 1
       },
       fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/file/upload?boundary=0205&username='+this.owner,
@@ -238,6 +222,7 @@ export default {
     },
     handleFilter() {
       this.listQuery.page = 1
+      this.listQuery.boundary = '0213'
       this.getList()
     },
     handleModifyStatus(row, status) {

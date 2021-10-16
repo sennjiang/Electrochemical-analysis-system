@@ -117,14 +117,14 @@ public class MQRequestProcessor implements RequestProcessor {
             operation.setRecorder(name + "." + serviceMethod);
 
             String boundary = (String) data.get("boundary");
-            operation.setType(data.containsKey(boundary) ? CommonMapper.typeMapper.get(boundary) : (short) 1);
+            operation.setType(data.containsKey(boundary) ? CommonMapper.typeMapper.get(boundary) : 1);
 
             operation.setTime(new Timestamp(System.currentTimeMillis()));
 
             operation.setBoundary(boundary);
 
             if ("FileService".equals(name)) {
-                operation.setFile(true);
+                operation.setIsFile(true);
                 operation.setFileType(CommonMapper.fileTypeMapper.get(boundary));
             }
             return operation;
@@ -201,9 +201,7 @@ public class MQRequestProcessor implements RequestProcessor {
 
         String username = request.getHeader("Authorization");
         Data data = new Data(request);
-        if (!data.containsKey("username")){
-            data.put("username",username);
-        }
+
         String boundary = (String) data.get("boundary");
         data.setRequest(request);
         data.put("boundary",boundary);
@@ -213,6 +211,15 @@ public class MQRequestProcessor implements RequestProcessor {
                 return null;
             }
         }
+//        TODO 角色级别 用于日志
+//        if (CommonMapper.typeMapper.containsKey(boundary)) {
+//            data.put("level",2);
+//        }
+        //判断username 是否传递 不传递则将请求头中的username放入
+        if (!data.containsKey("username")){
+            data.put("username",username);
+        }
+
         if ("0205".equals(boundary)){
             logger.debug("start parse file request ... ");
             String realPath =  projectPath +"/uploads";

@@ -132,6 +132,15 @@
     <select id="getAlgorithmSendsCountByQueryCondition" resultType="java.lang.Long">
 
     </select>
+    <select id="listOperationsByUser" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
+        select * from operation where type=#{type} and user = #{username} limit #{pageStart},#{pageSize}
+    </select>
+    <select id="countOperations" resultType="java.lang.Long">
+        select count(*) from operation where type=#{type};
+    </select>
+    <select id="countOperationsByUser" resultType="java.lang.Long">
+        select count(*) from operation where type=#{type} and user = #{username};
+    </select>
 
     <!--有问题
     <select id="getAlgorithmsByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">

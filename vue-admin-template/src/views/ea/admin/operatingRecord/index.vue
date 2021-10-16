@@ -60,9 +60,18 @@
         </template>
       </el-table-column>
     </el-table>
- <!-- @pagination="getList" -->
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"  />
-    <!-- 弹框 详情页面 -->
+
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage4"
+      :page-sizes="[10, 20, 50, 100]"
+      :page-size="10"
+      background=true
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total">
+    </el-pagination>
+    
   <el-dialog :visible.sync="dialogDetailVisible">
       <table  
       fit
@@ -91,9 +100,7 @@
 
 <script>
 // 查询引入的
-import { fetchList } from '@/api/operation'
 import waves from '@/directive/waves' // waves directive
-import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const calendarTypeOptions = [
@@ -182,9 +189,6 @@ export default {
   },
   methods: {
     getList() {
-      // this.listLoading = false
-      // this.list = [{id: 1,message: "下载文件", level:"INFO", user:"1234567890", recorder: "SearchService.download", type: 1, time: "2021:10:01:15:00",isFile: 1,fileType: 1,boundary: "0101"}]
-      // this.total = 1
       this.loading = true
           this.postRequest('/operation/list', this.listQuery).then(response => {
             if (response) {
@@ -197,6 +201,14 @@ export default {
           setTimeout(() => {
             this.loading = false
           }, 750)
+    },
+    handleSizeChange(val) {
+        this.listQuery.limit=val,
+        this.getList()
+      },
+      handleCurrentChange(val) {
+      this.listQuery.page=val,
+        this.getList()
     },
     handleFilter() {
       this.listQuery.page = 1

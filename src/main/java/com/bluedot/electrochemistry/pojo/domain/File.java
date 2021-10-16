@@ -1,6 +1,8 @@
 package com.bluedot.electrochemistry.pojo.domain;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * @author JDsen99
@@ -43,11 +45,11 @@ public class File {
     /**
      * 文件创建时间
      */
-    private Timestamp produceTime;
+    private String produceTime;
     /**
      * 文件处理时间
      */
-    private Timestamp modifiedTime;
+    private String modifiedTime;
     /**
      * 文件数据起始点
      */
@@ -93,15 +95,15 @@ public class File {
         this.hash = hash;
         this.type = type;
         this.status = status;
-        this.produceTime = produceTime;
-        this.modifiedTime = modifiedTime;
+//        this.produceTime = produceTime;
+//        this.modifiedTime = modifiedTime;
     }
 
     public File(Integer fileId, Double size, String hash, Timestamp modified_time, Double data_start, Double data_end, Double data_bottom, Double data_peak, Double data_precision, Double data_cycle, Double data_rate, Double data_results) {
         this.id = fileId;
         this.size = size;
         this.hash = hash;
-        this.modifiedTime = modified_time;
+//        this.modifiedTime = modified_time;
         this.dataStart = data_start;
         this.dataEnd = data_end;
         this.dataBottom = data_bottom;
@@ -178,19 +180,31 @@ public class File {
     }
 
     public Timestamp getProduceTime() {
-        return produceTime;
+        Timestamp ts = null;
+        try {
+            ts = Timestamp.valueOf(produceTime);
+        } catch (Exception ignored) {
+        }
+        return ts;
     }
 
     public void setProduceTime(Timestamp produceTime) {
-        this.produceTime = produceTime;
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.produceTime = sdf.format(produceTime);
     }
 
     public Timestamp getModifiedTime() {
-        return modifiedTime;
+        Timestamp ts = null;
+        try {
+            ts = Timestamp.valueOf(modifiedTime);
+        } catch (Exception ignored) {
+        }
+        return ts;
     }
 
     public void setModifiedTime(Timestamp modifiedTime) {
-        this.modifiedTime = modifiedTime;
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.modifiedTime = sdf.format(modifiedTime);
     }
 
     public Double getDataStart() {

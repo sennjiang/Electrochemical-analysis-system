@@ -112,8 +112,8 @@
     </node>
     <node>
         <number>0213</number>
-        <service>SearchService</service>
-        <method>search</method>
+        <service>FileService</service>
+        <method>searchFiles</method>
     </node>
     <node>
         <number>0214</number>
