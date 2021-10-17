@@ -32,7 +32,7 @@ public class UserService extends BaseService {
 		BaseMapper mapper = mapperFactory.createMapper();
 		User user = mapper.queryUserByUsername(username);
 		if(user != null && password.equals(user.getPassword())) {
-			map.put("loginUser", user);
+			map.put("userInfo", user);
 			map.put("code", 200);
 			map.put("message", "登录成功");
 		}else {

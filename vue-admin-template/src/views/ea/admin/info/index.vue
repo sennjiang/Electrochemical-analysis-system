@@ -9,7 +9,7 @@
       <el-row class="demo-avatar demo-basic" style="left: 25%">
         <el-col :span="12">
           <div class="demo-basic--circle">
-            <div class="block"><el-avatar :size="100" :src="circleUrl" class="style-avatar-div"></el-avatar></div>
+            <div class="block"><el-avatar :size="100" :src="userInfo.portrait" class="style-avatar-div"></el-avatar></div>
             <el-button>更换头像</el-button>
           </div>
         </el-col>
@@ -66,10 +66,23 @@ export default {
   data() {
     return {
 
+      userInfo: {
+        username: '',
+        password: '',
+        nickname: '',
+        gender: '',
+        age: '',
+        email: '',
+        birth: '',
+        status: '',
+        portrait: 'https://typorasss2021.oss-cn-shenzhen.aliyuncs.com/avatar/man.jpeg',
+        gmtCreated: '',
+        gmtModified: ''
+      },
+
       // 性别
       radio: '1',
 
-      circleUrl: "https://typorasss2021.oss-cn-shenzhen.aliyuncs.com/avatar/man.jpeg",
       sizeList: ["large", "medium", "small"],
 
     //  form start
@@ -109,6 +122,12 @@ export default {
 
     //  form end
     };
+  },
+
+  created() {
+    this.userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
+    console.log(this.userInfo.nickname)
+
   },
 
   methods: {

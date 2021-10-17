@@ -83,14 +83,13 @@ export default {
             if (resp.code === 200) {
 
               // 用户状态正常, 正常登录
-              if (resp.loginUser.status === 1) {
+              if (resp.userInfo.status === 1) {
                 // 将服务器返回的token存储到sessionStorage
                 const tokenStr = resp.username
 
                 window.sessionStorage.setItem('tokenStr', tokenStr)
-                window.sessionStorage.setItem('loginUser', resp.loginUser)
-
-                // 将loginUser存入session
+                window.sessionStorage.setItem('userInfo', JSON.stringify(resp.userInfo))
+                // 将userInfo存入session
                 this.$store.commit('modifyCurrentUsername', resp.username)
                 this.$store.commit('modifyCurrentNickname', resp.nickname)
                 this.$store.commit('modifyCurrentStatus', resp.status)
@@ -99,12 +98,12 @@ export default {
               }
 
               // 用户状态被冻结
-              if (resp.loginUser.status === 0) {
+              if (resp.userInfo.status === 0) {
                 // todo 跳转到解冻申请页
               }
 
               // 剩下被删除状态, 状态码为2
-              if (resp.loginUser.status === 0) {
+              if (resp.userInfo.status === 0) {
                 this.$message.error('用户不存在')
               }
 
