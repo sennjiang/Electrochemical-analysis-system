@@ -71,7 +71,7 @@ export default {
           this.loading = true
 
           // start 此处为方便调试, 直接进入了主页
-          const tokenStr = "20190001"
+          const tokenStr = "20190002"
           window.sessionStorage.setItem('tokenStr', tokenStr)
           this.$store.commit('modifyCurrentUsername', "20190002")
           this.$store.commit('modifyCurrentNickname', "20190002")
