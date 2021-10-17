@@ -105,27 +105,31 @@
     { key: '最近一周' }
   ]
 
+  const statusOptions = [
+    { key: '正常' },
+    { key: '冻结' }
+  ]
+
   export default {
     name: 'AdminManage',
     components: { Pagination },
     directives: { waves },
     filters: {
-      //类型过滤
-      typeFilter(type) {
-        return calendarTypeOptions[type]
-      }
+      //日期类型过滤
+      calendarTypeFilter(type) {
+        return calendarTypeOptions[type].key
+      },
+      //状态过滤
+      statusFilter(type){
+        return statusOptions[type].key
+      },
+
     },
     data() {
       return {
         tableKey: 0,
-        list: [{id: 1,
-          username: "20190001",
-          password:"123456",
-          nickname:"超级管理员",
-          email:"1234567@163.com",
-          gmtCreated:"2021-09-13 21:44:42",
-          status:"1"}],
-        total: 1,
+        list: null,
+        total: 0,
         listLoading: true,
         listQuery: {
           page: 1,
@@ -136,31 +140,13 @@
         },
         importanceOptions: ['正常','冻结·'],
         calendarTypeOptions,
-        statusOptions: ['正常', '冻结'],
-
-        temp: {
-          id: 1,
-          username: "20190001",
-          password:"123456",
-          nickname:"超级管理员",
-          email:"1234567@163.com",
-          gmtCreated:"2021-09-13 21:44:42",
-          status:"1"
-        },
+        statusOptions,
         dialogDetailVisible: false,
+        fileUploadVisible : false,
         dialogStatus: '',
-        textMap: {
-          update: 'Edit',
-          create: 'Create'
-        },
-        dialogPvVisible: false,
-        pvData: [],
-        rules: {
-          type: [{ required: true, message: 'type is required', trigger: 'change' }],
-          timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-          title: [{ required: true, message: 'title is required', trigger: 'blur' }]
-        },
-        downloadLoading: false
+        downloadLoading: false,
+
+
       }
     },
     created() {
@@ -169,13 +155,7 @@
     methods: {
       getList() {
         this.listLoading = false
-        this.list = [{id: 1,
-          username: "20190001",
-          password:"123456",
-          nickname:"超级管理员",
-          email:"1234567@163.com",
-          gmtCreated:"2021-09-13 21:44:42",
-          status:"1"}]
+        this.listQuery.boundary = ''
         this.total = 1
         // fetchList(this.listQuery).then(response => {
         // this.list = response.data.items

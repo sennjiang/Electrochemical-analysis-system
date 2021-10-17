@@ -45,22 +45,15 @@ public interface BaseMapper {
      */
     User queryUserByEmail(String email);
 
-    /**
-     * 获取管理员信息列表
-     *
-     * @param pageStart 页码
-     * @param pageSize  每页大小
-     * @return 管理员列表
-     */
+
 
     /**
      * 获取管理员信息列表
      *
-     * @param pageStart 页码
-     * @param pageSize  每页大小
+     *
      * @return 管理员列表
      */
-    List<User> getAdmins(int pageStart, int pageSize);
+    List<User> getAdmins();
 
     /**
      * 获取管理员数据总数
