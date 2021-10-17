@@ -90,22 +90,28 @@ public class FileService extends BaseService {
      */
     private void searchFiles(Map<String, Object> map) {
         try {
+            BaseMapper mapper = mapperFactory.createMapper();
+
             String str = (String) map.get("username");
             int username = Integer.parseInt(str);
             Integer pageStart = Integer.parseInt((String) map.get("page"));
             Integer pageSize = Integer.parseInt((String) map.get("limit"));
             short type = Short.parseShort((String) map.get("type"));
-            if (type == 1) {
-
-            }
             String title = (String) map.get("title");
-            BaseMapper mapper = mapperFactory.createMapper();
-//            List<File> files = mapper.listFiles(kind, status, username, (pageStart - 1) * pageSize, pageSize);
-//            Long size = mapper.countFilesBySearch(kind, status, username,title,timeCondition,time);
-//            map.put("data", files);
+            List<File> files = null;
+            Long size = null;
+            if (type == 1) {
+                files = mapper.searchFileByUser("%" + title + "%", 1,username, type, (pageStart - 1) * pageSize, pageSize);
+                size = mapper.countFilesByUser("%" + title + "%", 1,username, type);
+            } else {
+                files = mapper.searchFileByAdmin("%" + title + "%","%" + title + "%", type, (pageStart - 1) * pageSize, pageSize);
+                size = mapper.countFilesByAdmin("%" + title + "%","%" + title + "%", type);
+            }
+
+            map.put("data", files);
+            map.put("length", size);
             map.put("code", 200);
             map.put("message", "文件列表加载完成");
-//            map.put("length", size);
         } catch (Exception e) {
             e.printStackTrace();
             map.put("code", 401);
@@ -113,7 +119,8 @@ public class FileService extends BaseService {
         }
 
     }
-        /**
+
+    /**
      * 根据文件编号去查询文件
      *
      * @param map 数据

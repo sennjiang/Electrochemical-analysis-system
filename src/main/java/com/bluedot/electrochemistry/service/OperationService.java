@@ -3,6 +3,7 @@ package com.bluedot.electrochemistry.service;
 import com.bluedot.electrochemistry.dao.base.BaseDao;
 import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
+import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.pojo.domain.Operation;
 import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.framework.simplespring.core.BeanContainer;
@@ -34,7 +35,7 @@ public class OperationService extends BaseService {
     private void listOperation(Map<String, Object> map) {
         BaseMapper baseMapper = mapperFactory.createMapper();
         try {
-            Integer type = Integer.parseInt((String) map.get("kind"));
+            Integer type = Integer.parseInt((String) map.get("type"));
             String str = (String) map.get("username");
             Integer username = Integer.parseInt(str);
             Integer pageStart = Integer.parseInt((String) map.get("page"));
@@ -43,7 +44,7 @@ public class OperationService extends BaseService {
             Long length = null;
             if (type == 1) {
                 list = baseMapper.listOperationsByUser(type,username,(pageStart - 1) * pageSize,pageSize);
-                length = baseMapper.countOperationsByUser(type,username);
+                length = baseMapper.countOperationsByUser(username,type);
             }else {
                 list = baseMapper.listOperations(type,(pageStart - 1) * pageSize,pageSize);
                 length = baseMapper.countOperations(type);
@@ -56,5 +57,37 @@ public class OperationService extends BaseService {
             map.put("code",404);
             map.put("message",e.getMessage());
         }
+    }
+
+    private void searchOperation(Map<String, Object> map) {
+        try {
+            BaseMapper mapper = mapperFactory.createMapper();
+
+            String str = (String) map.get("username");
+            int username = Integer.parseInt(str);
+            Integer pageStart = Integer.parseInt((String) map.get("page"));
+            Integer pageSize = Integer.parseInt((String) map.get("limit"));
+            short type = Short.parseShort((String) map.get("type"));
+            String title = (String) map.get("title");
+            List<Operation> files = null;
+            Long size = null;
+            if (type == 1) {
+                files = mapper.searchOperationsByUser("%" + title + "%", username, type, (pageStart - 1) * pageSize, pageSize);
+                size = mapper.countOperationsBySearchUser(("%" + title + "%"), username, type);
+            } else {
+                files = mapper.searchOperationsByAdmin("%" + title + "%","%" + title + "%", type, (pageStart - 1) * pageSize, pageSize);
+                size = mapper.countOperationsByAdmin("%" + title + "%","%" + title + "%", type);
+            }
+
+            map.put("data", files);
+            map.put("length", size);
+            map.put("code", 200);
+            map.put("message", "文件列表加载完成");
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("code", 401);
+            map.put("message", "文件列表加载失败");
+        }
+
     }
 }

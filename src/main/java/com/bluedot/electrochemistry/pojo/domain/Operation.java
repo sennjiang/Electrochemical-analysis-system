@@ -1,6 +1,8 @@
 package com.bluedot.electrochemistry.pojo.domain;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * @author JDsen99
@@ -35,7 +37,7 @@ public class Operation {
     /**
      * 日志时间
      */
-    private Timestamp time;
+    private String time;
     /**
      * 是否为文件
      */
@@ -53,7 +55,7 @@ public class Operation {
     public Operation() {
     }
 
-    public Operation(Integer id, String message, String level, Integer user, String recorder, Integer type, Timestamp time, Boolean isFile, Integer fileType, String boundary) {
+    public Operation(Integer id, String message, String level, Integer user, String recorder, Integer type, String time, Boolean isFile, Integer fileType, String boundary) {
         this.id = id;
         this.message = message;
         this.level = level;
@@ -115,11 +117,17 @@ public class Operation {
     }
 
     public Timestamp getTime() {
-        return time;
+        Timestamp ts = null;
+        try {
+            ts = Timestamp.valueOf(time);
+        } catch (Exception ignored) {
+        }
+        return ts;
     }
 
     public void setTime(Timestamp time) {
-        this.time = time;
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.time = sdf.format(time);
     }
 
     public Boolean getIsFile() {

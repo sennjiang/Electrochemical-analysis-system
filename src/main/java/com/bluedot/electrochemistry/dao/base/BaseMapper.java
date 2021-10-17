@@ -228,8 +228,10 @@ public interface BaseMapper {
     long getFilesCountByQueryCondition(int username, String queryCondition, int fileType, int timeOrder);
 
     /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓算法相关↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+
     /**
      * 通过算法id查找指定算法
+     *
      * @param id 指定算法的id
      * @return 返回一个算法对象
      */
@@ -261,6 +263,7 @@ public interface BaseMapper {
     long getAlgorithmsCountByQueryCondition(String queryCondition, int type, int timeOrder);
 
     /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓算法申请相关↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+
     /**
      * 获取所有算法申请集合
      *
@@ -287,14 +290,15 @@ public interface BaseMapper {
     long getAlgorithmSendsCountByQueryCondition(String queryCondition, int type, int timeOrder);
 
     /**
-     *  listFiles
-     * @param username username
-     * @param type 1 用户文件 2 系统文件
-     * @param status 1 正常 2 已移除
+     * listFiles
+     *
+     * @param username  username
+     * @param type      1 用户文件 2 系统文件
+     * @param status    1 正常 2 已移除
      * @param pageStart pageStart
-     * @param pageSize pageSize
+     * @param pageSize  pageSize
      */
-    List<File> listFiles( short type, short status, int username, Integer pageStart, Integer pageSize);
+    List<File> listFiles(short type, short status, int username, Integer pageStart, Integer pageSize);
 
     Long countFiles(short type, short status, int username);
 
@@ -304,5 +308,21 @@ public interface BaseMapper {
 
     Long countOperations(Integer type);
 
-    Long countOperationsByUser(Integer type,Integer username);
+    List<File> searchFileByAdmin(String title0,String title1, short type, int pageStart, Integer pageSize);
+
+    Long countFilesByAdmin(String title0,String title1, short type);
+
+    List<File> searchFileByUser(String title, int status, int username, short type, int pageStart, Integer pageSize);
+
+    Long countFilesByUser(String title, int status, int username, short type);
+
+    List<Operation> searchOperationsByUser(String title, int username, short type, int pageStart, Integer pageSize);
+
+    Long countOperationsBySearchUser(String title, int username, short type);
+
+    List<Operation> searchOperationsByAdmin(String title0,String title1, short type, int pageStart, Integer pageSize);
+
+    Long countOperationsByAdmin(String title0,String title1, short type);
+
+    Long countOperationsByUser( Integer username,Integer type);
 }

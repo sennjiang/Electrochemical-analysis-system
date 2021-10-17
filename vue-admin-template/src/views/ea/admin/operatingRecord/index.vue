@@ -1,13 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.title" placeholder="文件名" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.importance" placeholder="文件类型" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
-      </el-select>
-      <el-select v-model="listQuery.type" placeholder="处理时间" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.key" :value="item.key" />
-      </el-select>
+      <el-input v-model="listQuery.title" placeholder="文件名、所属" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" style="margin-left: 20px; "  type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
@@ -160,10 +154,8 @@ export default {
         page: 1,
         limit: 20,
         boundary: '0901',
-        importance: undefined,
         title: undefined,
-        type: undefined,
-        kind: '1'
+        type: 1,
       },
       importanceOptions: ['正常','已删除'],
       calendarTypeOptions,
@@ -185,34 +177,35 @@ export default {
     }
   },
   created() {
-    this.getList()
+    this.getList('/operation/list','0901')
   },
   methods: {
-    getList() {
+    getList(path,b) {
       this.loading = true
-          this.postRequest('/operation/list', this.listQuery).then(response => {
-            if (response) {
-              this.list = response.data
-              console.log(this.list)
-              this.total = response.length
-            }
-          })
-          this.listLoading = false
-          setTimeout(() => {
-            this.loading = false
-          }, 750)
+      this.listQuery.boundary = b
+      this.postRequest(path, this.listQuery).then(response => {
+        if (response) {
+          this.list = response.data
+          console.log(this.list)
+          this.total = response.length
+        }
+      })
+      this.listLoading = false
+      setTimeout(() => {
+        this.loading = false
+      }, 750)
     },
     handleSizeChange(val) {
         this.listQuery.limit=val,
-        this.getList()
+        this.getList('/operation/list','0901')
       },
       handleCurrentChange(val) {
       this.listQuery.page=val,
-        this.getList()
+        this.getList('/operation/list','0901')
     },
     handleFilter() {
       this.listQuery.page = 1
-       this.getList()
+       this.getList('/operation/list','0903')
     },
     handleModifyStatus(row, status) {
       this.$message({

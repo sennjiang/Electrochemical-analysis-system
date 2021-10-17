@@ -306,7 +306,7 @@
     </node><node>
         <number>0903</number>
         <service>OperationService</service>
-        <method>listOperation</method>
+        <method>searchOperation</method>
     </node>
 
 </service_mapping>
