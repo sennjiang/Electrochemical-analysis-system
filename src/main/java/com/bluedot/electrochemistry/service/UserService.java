@@ -26,12 +26,13 @@ public class UserService extends BaseService {
 	 * @param map User实体类
 	 */
 	private void login(Map map) {
+
 		int username = Integer.parseInt((String) map.get("username"));
 		String password = (String) map.get("password");
 		BaseMapper mapper = mapperFactory.createMapper();
 		User user = mapper.queryUserByUsername(username);
-		map.put("obj", user);
 		if(user != null && password.equals(user.getPassword())) {
+			map.put("loginUser", user);
 			map.put("code", 200);
 			map.put("message", "登录成功");
 		}else {
