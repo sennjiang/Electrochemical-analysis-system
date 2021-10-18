@@ -2,9 +2,9 @@
 <mapper namespace="com.bluedot.electrochemistry.dao.base.BaseMapper">
 
     <!--    用户模块相关-->
-<!--    <select id="listUser" resultType="com.bluedot.electrochemistry.pojo.domain.User">-->
-<!--        select * from user;-->
-<!--    </select>-->
+    <!--    <select id="listUser" resultType="com.bluedot.electrochemistry.pojo.domain.User">-->
+    <!--        select * from user;-->
+    <!--    </select>-->
     <select id="listUser" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user limit #{currentPage},#{pageSize}
     </select>
@@ -60,24 +60,25 @@
     </select>
 
     <!--算法相关-->
-    <select id = "getAlgorithmById" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
+    <select id="getAlgorithmById" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
         select * from t_algorithm where alg_id = #{id}
     </select>
     <select id="listAlgorithms" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
         select * from t_algorithm
     </select>
-   <!-- <select id="getAlgorithms" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
-        select * from t_algorithm limit #{pageStart},#{pageSize}
-    </select>
-    <select id="getAlgorithmsCount" resultType="java.lang.Long">
-        select count(*) from t_algorithm
-    </select>-->
+    <!-- <select id="getAlgorithms" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
+         select * from t_algorithm limit #{pageStart},#{pageSize}
+     </select>
+     <select id="getAlgorithmsCount" resultType="java.lang.Long">
+         select count(*) from t_algorithm
+     </select>-->
     <select id="getFileById" resultType="com.bluedot.electrochemistry.pojo.domain.File">
         select * from file where id = #{id};
     </select>
 
     <select id="listFiles" resultType="com.bluedot.electrochemistry.pojo.domain.File">
-        select * from file where type = #{type} and status = #{status} and owner = #{username} limit #{pageStart},#{pageSize};
+        select * from file where type = #{type} and status = #{status} and owner = #{username} limit
+        #{pageStart},#{pageSize};
     </select>
 
     <select id="countFiles" resultType="Long">
@@ -142,8 +143,32 @@
     <select id="countOperations" resultType="java.lang.Long">
         select count(*) from operation where type=#{type};
     </select>
-    <select id="countOperationsByUser" resultType="java.lang.Long">
-        select count(*) from operation where type=#{type} and user = #{username};
+    <select id="searchFileByAdmin" resultType="com.bluedot.electrochemistry.pojo.domain.File">
+        select * from file where (name like #{title0} or  owner like #{title1} ) and (type = #{type}) limit #{pageStart},#{pageSize};
+    </select>
+
+    <select id="countFilesByAdmin" resultType="Long">
+        select count(*) from file where ( (name like #{title0} or  owner like #{title1} ) and (type = #{type});
+    </select>
+    <select id="searchFileByUser" resultType="com.bluedot.electrochemistry.pojo.domain.File">
+        select * from file where ( (name like #{title} ) and status = #{status} and owner = #{username} and type = #{type} ) limit #{pageStart},#{pageSize};
+    </select>
+    <select id="countFilesByUser" resultType="Long">
+        select count(*) from file where ( (name like #{title} ) and status = #{status} and owner = #{username} and type = #{type});
+    </select>
+
+    <select id="searchOperationsByUser" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
+        select * from operation where ( (message like #{title} ) and user = #{username} and type = #{type} ) limit #{pageStart},#{pageSize};
+    </select>
+
+    <select id="countOperationsBySearchUser" resultType="Long">
+        select count(*) from operation where ( (message like #{title} ) and user = #{username} and type = #{type});
+    </select>
+    <select id="searchOperationsByAdmin" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
+        select * from operation where (message like #{title0} or  user like #{title1} ) and (type !> #{type}) limit #{pageStart},#{pageSize};
+    </select>
+    <select id="countOperationsByAdmin" resultType="Long">
+        select count(*) from operation where ( (message like #{title0} or  user like #{title1} ) and (type !> #{type} );
     </select>
 
     <!--有问题
@@ -154,7 +179,12 @@
         select count(*) from t_algorithm where #{queryCondition}=#{queryValue}
     </select>-->
 
-    <update id="contrastFile">
+    <select id="contrastFile">
 
-    </update>
+    </select>
+
+
+    <select id="countOperationsByUser" resultType="Long">
+        select count(*) from operation where user = #{username} and type = #{type};
+    </select>
 </mapper>

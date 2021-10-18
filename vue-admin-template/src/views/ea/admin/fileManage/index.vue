@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.title" placeholder="文件名、状态、所属" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.title" placeholder="文件名、所属" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" style="margin-left: 20px; "  type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-      <el-button class="filter-item" style="margin-left: 710px;" type="primary" icon="el-icon-edit" @click="handleImport">
+      <el-button class="filter-item" style="margin-left: 610px;" type="primary" icon="el-icon-edit" @click="handleImport">
         添加
       </el-button>
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleExport">
@@ -190,7 +190,7 @@ export default {
     }
   },
   created() {
-    this.getList()
+    this.getList('/file/list','0208')
   },
   methods: {
     handleChange(file, fileList) {
@@ -198,16 +198,16 @@ export default {
       },
     handleSizeChange(val) {
         this.listQuery.limit=val,
-        this.getList()
+        this.getList('/file/list','0208')
       },
       handleCurrentChange(val) {
       this.listQuery.page=val,
-        this.getList()
+        this.getList('/file/list','0208')
     },
-    getList() {
+    getList(path,b) {
           this.loading = true
-          this.listQuery.boundary = '0208'
-          this.postRequest('/file/list', this.listQuery).then(response => {
+          this.listQuery.boundary = b
+          this.postRequest(path, this.listQuery).then(response => {
             if (response) {
               this.list = response.data
               console.log(this.list)
@@ -222,8 +222,7 @@ export default {
     },
     handleFilter() {
       this.listQuery.page = 1
-      this.listQuery.boundary = '0213'
-      this.getList()
+      this.getList('/file/search','0213')
     },
     handleModifyStatus(row, status) {
       this.$message({
@@ -249,7 +248,7 @@ export default {
      let deleteData = {boundary:"0209",fileId:row.id};
      this.getRequest('/file/delete', deleteData).then(response => {
             if (response) {
-              this.getList()
+              this.getList('file/list','0208')
             }
           })
     },

@@ -5,8 +5,15 @@
     <div class="login-wrapper">
       <div class="header">登录</div>
       <el-form class="form-wrapper" ref="loginForm" :rules="loginRules" :model="loginForm">
-        <el-input type="text" name="username" placeholder="账号/邮箱" class="input-item"/>
-        <el-input type="password" name="password" placeholder="密码" class="input-item"/>
+        <!--      用户名-->
+        <el-form-item prop="username">
+          <el-input type="text" name="username" placeholder="账号/邮箱" class="input-item" v-model="loginForm.username"/>
+        </el-form-item>
+        <!--      密码-->
+        <el-form-item prop="password">
+          <el-input type="password" name="password" placeholder="密码" class="input-item" v-model="loginForm.password"/>
+        </el-form-item>
+
         <div class="btn btn-login" @click="login">登录</div>
       </el-form>
 
@@ -32,18 +39,86 @@
 
 <script>
 export default {
-  name:"Login",
+  name: "Login",
 
   data() {
     return {
-
+      loginForm: {
+        boundary: '0101',
+        username: '20190002',
+        password: '123456'
+      },
+      // 校验规则
+      loginRules: {
+        username: [
+          {required: true, message: '请输入用户名', trigger: 'blur'},
+          {min: 6, max: 10, message: '长度在 6 到 10 个字符', trigger: 'blur'}
+        ],
+        password: [
+          {required: true, message: '请输入密码', trigger: 'blur'},
+          {min: 6, max: 10, message: '长度在 6 到 10 个字符', trigger: 'blur'}
+        ]
+      }
     }
+
   },
 
   methods: {
+    //  登陆
     login() {
-      this.$router.push({ path: '/' })
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+
+          // start 此处为方便调试, 直接进入了主页
+          // const tokenStr = "20190002"
+          // window.sessionStorage.setItem('tokenStr', tokenStr)
+          // this.$store.commit('modifyCurrentUsername', "20190002")
+          // this.$store.commit('modifyCurrentNickname', "20190002")
+          // this.$store.commit('modifyCurrentStatus', "1")
+          // this.$router.push({ path: this.redirect || '/' })
+          // end
+
+          this.postRequest('/login', this.loginForm).then(resp => {
+            if (resp.code === 200) {
+
+              // 用户状态正常, 正常登录
+              if (resp.userInfo.status === 1) {
+                // 将服务器返回的token存储到sessionStorage
+                const tokenStr = resp.username
+
+                window.sessionStorage.setItem('tokenStr', tokenStr)
+                window.sessionStorage.setItem('userInfo', JSON.stringify(resp.userInfo))
+                // 将userInfo存入session
+                this.$store.commit('modifyCurrentUsername', resp.username)
+                this.$store.commit('modifyCurrentNickname', resp.nickname)
+                this.$store.commit('modifyCurrentStatus', resp.status)
+                this.$router.push({path: this.redirect || '/'})
+                console.log(window.sessionStorage.getItem(tokenStr))
+              }
+
+              // 用户状态被冻结
+              if (resp.userInfo.status === 0) {
+                // todo 跳转到解冻申请页
+              }
+
+              // 剩下被删除状态, 状态码为2
+              if (resp.userInfo.status === 0) {
+                this.$message.error('用户不存在')
+              }
+
+            }
+          })
+          setTimeout(() => {
+            this.loading = false
+          }, 750)
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
+
   }
 }
 </script>

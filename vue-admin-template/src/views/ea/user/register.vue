@@ -231,6 +231,7 @@ export default {
 
 .register-div {
   border: 1px solid #f2f2f2;
+  bottom: 5%;
 }
 
 .register-wrapper img {

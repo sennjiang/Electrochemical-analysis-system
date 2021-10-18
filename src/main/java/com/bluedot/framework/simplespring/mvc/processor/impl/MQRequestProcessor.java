@@ -169,7 +169,6 @@ public class MQRequestProcessor implements RequestProcessor {
     public boolean process(RequestProcessorChain requestProcessorChain) throws Exception {
 
         Data data = doRequest(requestProcessorChain);
-
         if (data == null) {
             return false;
         }
@@ -208,7 +207,7 @@ public class MQRequestProcessor implements RequestProcessor {
         data.put("boundary",boundary);
         logger.info("parameterMap ---> data : {}",data);
         if (username == null || boundary == null) {
-            if (!"0205".equals(boundary)){
+            if (!"0205".equals(boundary) && !writeList.contains(boundary)){
                 return null;
             }
         }

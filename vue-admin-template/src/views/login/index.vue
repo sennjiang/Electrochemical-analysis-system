@@ -1,6 +1,7 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on"
+             label-position="left">
 
       <div class="title-container">
         <h3 class="title">Login Form</h3>
@@ -8,7 +9,7 @@
 
       <el-form-item prop="username">
         <span class="svg-container">
-          <svg-icon icon-class="user" />
+          <svg-icon icon-class="user"/>
         </span>
         <el-input
           ref="username"
@@ -23,7 +24,7 @@
 
       <el-form-item prop="password">
         <span class="svg-container">
-          <svg-icon icon-class="password" />
+          <svg-icon icon-class="password"/>
         </span>
         <el-input
           :key="passwordType"
@@ -37,11 +38,13 @@
           @keyup.enter.native="handleLogin"
         />
         <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
+                 @click.native.prevent="handleLogin">Login
+      </el-button>
 
       <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
@@ -53,7 +56,7 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import {validUsername} from '@/utils/validate'
 import store from "@/store";
 
 export default {
@@ -80,8 +83,8 @@ export default {
         password: '123456'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [{required: true, trigger: 'blur', validator: validateUsername}],
+        password: [{required: true, trigger: 'blur', validator: validatePassword}]
       },
       loading: false,
       passwordType: 'password',
@@ -90,7 +93,7 @@ export default {
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
@@ -113,24 +116,27 @@ export default {
           this.loading = true
 
           // start 此处为方便调试, 直接进入了主页
-          const tokenStr = "20190001"
-          window.sessionStorage.setItem('tokenStr', tokenStr)
-          this.$store.commit('modifyCurrentUsername', "20190001")
-          this.$store.commit('modifyCurrentNickname', "20190001")
-          this.$store.commit('modifyCurrentStatus', "1")
-          this.$router.push({ path: this.redirect || '/' })
+          // const tokenStr = "20190001"
+          // window.sessionStorage.setItem('tokenStr', tokenStr)
+          // this.$store.commit('modifyCurrentUsername', "20190001")
+          // this.$store.commit('modifyCurrentNickname', "20190001")
+          // this.$store.commit('modifyCurrentStatus', "1")
+          // this.$router.push({ path: this.redirect || '/' })
           // end
 
           this.postRequest('/login', this.loginForm).then(resp => {
             if (resp) {
               // 将服务器返回的token存储到sessionStorage
-              console.log(resp)
               const tokenStr = resp.username
+
               window.sessionStorage.setItem('tokenStr', tokenStr)
-              this.$store.commit('modifyCurrentUsername', resp.obj.username)
-              this.$store.commit('modifyCurrentNickname', resp.obj.nickname)
-              this.$store.commit('modifyCurrentStatus', resp.obj.status)
-              this.$router.push({ path: this.redirect || '/' })
+              console.log("hello" + resp.loginUser.username)
+              // 将loginUser存入session
+              this.$store.commit('modifyCurrentUsername', resp.username)
+              this.$store.commit('modifyCurrentNickname', resp.nickname)
+              this.$store.commit('modifyCurrentStatus', resp.status)
+              this.$router.push({path: this.redirect || '/'})
+              console.log(window.sessionStorage.getItem(tokenStr))
             }
           })
           setTimeout(() => {
@@ -150,8 +156,8 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
-$light_gray:#fff;
+$bg: #283443;
+$light_gray: #fff;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -166,6 +172,7 @@ $cursor: #fff;
     display: inline-block;
     height: 47px;
     width: 85%;
+
     input {
       background: transparent;
       border: 0px;
@@ -193,9 +200,9 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #eee;
 
 .login-container {
   min-height: 100%;
