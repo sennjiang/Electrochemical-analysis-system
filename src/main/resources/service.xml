@@ -315,4 +315,10 @@
         <method>queryAdmins</method>
     </node>
 
+    <node>
+        <number>1101</number>
+        <service>LoginRightService</service>
+        <method>queryRightByUser</method>
+    </node>
+
 </service_mapping>

@@ -45,7 +45,11 @@ public interface BaseMapper {
      */
     User queryUserByEmail(String email);
 
-
+    /**
+     * 根据用户名查权限
+     *
+     */
+    List<Integer> queryRightByUser(int username);
 
     /**
      * 获取管理员信息列表

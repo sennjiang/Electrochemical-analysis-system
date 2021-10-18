@@ -15,6 +15,10 @@
         select * from user where email = #{email};
     </select>
     <!--超级管理员相关-->
+    <!--根据用户名查权限-->
+    <select id="queryRightByUser" >
+        select b.right_id from user_role as a left join role_right as b on a.role_id = b.role_id where a.username = #{username}
+    </select>
     <!--查询管理员相关-->
     <select id="getAdmins" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select a.* from user as a left join user_role as b on a.username = b.username where b.role_id = '200'
