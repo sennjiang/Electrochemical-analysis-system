@@ -248,16 +248,14 @@ public interface BaseMapper {
 
     /**
      * @param queryCondition 关键字
-     * @param type           算法类型 0滤波处理，1平滑处理，2 CV, 3 DPV, 4 SWV, 5 LSV
-     * @param timeOrder      0按时间降序，1按时间升序
      * @param pageStart      起始页码
      * @param pageSize       一页的数据量
      * @return 算法列表
      * @author zero
      */
-    List<Algorithm> getAlgorithmsByQueryCondition(String queryCondition, int type, int timeOrder, int pageStart, int pageSize);
+    List<Algorithm> getAlgorithmsByQueryCondition(String queryCondition, int pageStart, int pageSize);
 
-    long getAlgorithmsCountByQueryCondition(String queryCondition, int type, int timeOrder);
+    long getAlgorithmsCountByQueryCondition(String queryCondition);
 
     /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓算法申请相关↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 
@@ -275,16 +273,14 @@ public interface BaseMapper {
 
     /**
      * @param queryCondition 关键字
-     * @param type           算法类型 0滤波处理，1平滑处理，2 CV, 3 DPV, 4 SWV, 5 LSV
-     * @param timeOrder      0按时间降序，1按时间升序
      * @param pageStart      起始页码
      * @param pageSize       一页的数据量
      * @return 算法申请集合
      * @author zero
      */
-    List<AlgorithmSend> getAlgorithmSendsByQueryCondition(String queryCondition, int type, int timeOrder, int pageStart, int pageSize);
+    List<AlgorithmSend> getAlgorithmSendsByQueryCondition(String queryCondition, int pageStart, int pageSize);
 
-    long getAlgorithmSendsCountByQueryCondition(String queryCondition, int type, int timeOrder);
+    long getAlgorithmSendsCountByQueryCondition(String queryCondition);
 
     /**
      * listFiles
