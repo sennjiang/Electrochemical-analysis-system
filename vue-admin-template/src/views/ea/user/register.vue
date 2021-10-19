@@ -6,43 +6,43 @@
       <div class="register register-div">
         <p class="title">注册</p>
         <el-form
-          :model="ruleForm2"
+          :model="userForm"
           status-icon
-          :rules="rules2"
-          ref="ruleForm2"
+          :rules="registerRules"
+          ref="ruleForm"
           label-width="0"
           class="demo-ruleForm"
 
         >
 
-            <el-form-item prop="tel">
+            <el-form-item prop="nickname">
               <span class="demonstration">昵称：</span>
-              <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="请输入昵称 2-5位" class="input-style-width"></el-input>
+              <el-input v-model="userForm.nickname" auto-complete="off" placeholder="请输入昵称 2-5位" class="input-style-width"></el-input>
             </el-form-item>
 
-          <el-form-item prop="email">
+          <el-form-item prop="pwd1">
             <span class="demonstration">密码：</span>
-            <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="6-18位字母+数字组合" class="input-style-width"></el-input>
+            <el-input v-model="userForm.pwd1" auto-complete="off" placeholder="6-18位字母+数字组合" class="input-style-width"></el-input>
           </el-form-item>
 
-          <el-form-item prop="email">
+          <el-form-item prop="pwd2">
             <span class="demonstration">确认：</span>
-            <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="密码确认" class="input-style-width"></el-input>
+            <el-input v-model="userForm.pwd2" auto-complete="off" placeholder="密码确认" class="input-style-width"></el-input>
           </el-form-item>
 
-          <el-form-item prop="email" style="text-align: left">
+          <el-form-item prop="gender" style="text-align: left">
             <div style="margin-left: 15px">
               <span class="demonstration">性别：</span>
-              <el-radio v-model="radio2" label="1" border size="medium">男</el-radio>
-              <el-radio v-model="radio2" label="2" border size="medium">女</el-radio>
+              <el-radio v-model="userForm.gender" label="1" border size="medium">男</el-radio>
+              <el-radio v-model="userForm.gender" label="2" border size="medium">女</el-radio>
             </div>
           </el-form-item>
 
-          <el-form-item prop="email" style="text-align: left">
+          <el-form-item prop="birth" style="text-align: left">
             <div class="block" style="margin-left: 15px">
-              <span class="demonstration">日期：</span>
+              <span class="demonstration">生日：</span>
               <el-date-picker
-                v-model="value1"
+                v-model="userForm.birth"
                 type="date"
                 placeholder="选择日期">
               </el-date-picker>
@@ -51,16 +51,16 @@
 
           <el-form-item prop="email">
             <span class="demonstration">邮箱：</span>
-            <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="请输入邮箱" class="input-style-width"></el-input>
+            <el-input v-model="userForm.email" auto-complete="off" placeholder="请输入邮箱" class="input-style-width"></el-input>
           </el-form-item>
 
 
           <el-form-item prop="smscode" class="code">
-            <el-input class="style-code-input" v-model="ruleForm2.smscode" placeholder="请输入验证码"></el-input>
+            <el-input class="style-code-input" v-model="userForm.smscode" placeholder="请输入验证码"></el-input>
             <el-button type="primary" :disabled='isDisabled' @click="sendCode">{{ buttonText }}</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm2')" style="width:100%;">注册</el-button>
+            <el-button type="primary" @click="submitForm('userForm')" style="width:100%;">注册</el-button>
             <p class="login" @click="gotoLogin">已有账号？立即登录</p>
           </el-form-item>
         </el-form>
@@ -73,58 +73,80 @@
 export default {
   name: "Register",
   data() {
-    // <!--验证手机号是否合法-->
-    let checkTel = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入昵称'))
-      } else if (!this.checkMobile(value)) {
-        callback(new Error('昵称不合法'))
-      } else {
-        callback()
-      }
-    }
+    // <!--验证nickname是否合法-->
+    // let checkTel = (rule, value, callback) => {
+    //   if (value === '') {
+    //     callback(new Error('请输入昵称'))
+    //   } else if (!this.checkMobile(value)) {
+    //     callback(new Error('昵称不合法'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     //  <!--验证码是否为空-->
-    let checkSmscode = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入邮箱验证码'))
-      } else {
-        callback()
-      }
-    }
+    // let checkSmscode = (rule, value, callback) => {
+    //   if (value === '') {
+    //     callback(new Error('请输入邮箱验证码'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     // <!--验证密码-->
-    let validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"))
-      } else {
-        if (this.ruleForm2.checkPass !== "") {
-          this.$refs.ruleForm2.validateField("checkPass");
-        }
-        callback()
-      }
-    }
+    // let validatePwd1 = (rule, value, callback) => {
+    //   if (value === "") {
+    //     callback(new Error("请输入密码"))
+    //   } else {
+    //     if (this.ruleForm2.checkPass !== "") {
+    //       this.$refs.ruleForm2.validateField("checkPass");
+    //     }
+    //     callback()
+    //   }
+    // }
     // <!--二次验证密码-->
-    let validatePass2 = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm2.pass) {
+    let validatePwd2 = (rule, value, callback) => {
+      var reg = new RegExp(/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/);
+      if (value !== this.userForm.pwd1) {
         callback(new Error("两次输入密码不一致!"));
+      } else if (!reg.test(this.userForm.pwd1)) {
+        callback(new Error("密码必须包含字母和数字!"));
+        return false;
       } else {
         callback();
       }
     };
     return {
-      ruleForm2: {
-        pass: "",
-        checkPass: "",
-        tel: "",
+      // 注册信息核验规则
+      registerRules: {
+        //  校验用户名
+        nickname: [
+          // trigger:blur-触发方式，blur失去焦点，change数据改变
+          { required: true, message: '请输入昵称', trigger: 'blur' },
+          // min: 3, max: 5, message: '长度在3到5个字符', trigger: 'blur'
+          { min: 5, max: 12, message: '长度在5到8个字符', trigger: 'blur' }
+        ],
+        //  校验密码
+        pwd1: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 18, message: '长度在 5 到 12 个字符', trigger: 'blur' }
+        ],
+        pwd2: {validator: validatePwd2, trigger: 'blur'}
+
+      },
+
+      userForm: {
+        nickname: "",
+        pwd1: "",
+        pwd2: "",
+        gender: "",
+        birth: "",
         smscode: ""
       },
-      rules2: {
-        pass: [{validator: validatePass, trigger: 'change'}],
-        checkPass: [{validator: validatePass2, trigger: 'change'}],
-        tel: [{validator: checkTel, trigger: 'change'}],
-        smscode: [{validator: checkSmscode, trigger: 'change'}],
-      },
+      // rules2: {
+      //   pass: [{validator: validatePass, trigger: 'change'}],
+      //   checkPass: [{validator: validatePass2, trigger: 'change'}],
+      //   tel: [{validator: checkTel, trigger: 'change'}],
+      //   smscode: [{validator: checkSmscode, trigger: 'change'}],
+      // },
       buttonText: '发送验证码',
       isDisabled: false, // 是否禁止点击发送验证码按钮
       flag: true,
@@ -141,11 +163,12 @@ export default {
     }
   },
   methods: {
+
     // <!--发送验证码-->
     sendCode() {
-      let tel = this.ruleForm2.tel
-      if (this.checkMobile(tel)) {
-        console.log(tel)
+      let email = this.userForm.email
+      if (this.checkEmail(email)) {
+        console.log(email)
         let time = 60
         this.buttonText = '已发送'
         this.isDisabled = true
@@ -184,7 +207,7 @@ export default {
       });
     },
     // 验证手机号
-    checkMobile(str) {
+    checkEmail(str) {
       let re = /^1\d{10}$/
       if (re.test(str)) {
         return true;
