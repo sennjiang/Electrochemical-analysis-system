@@ -9,11 +9,7 @@
       </el-button>
       <!--添加按钮-->
       <el-button class="filter-item" style="margin-left: 610px;" type="primary" icon="el-icon-edit" @click="handleImport">
-        添加
-      </el-button>
-      <!--导出按钮-->
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleExport">
-        导出
+        上传算法
       </el-button>
     </div>
     <!--表格-->
@@ -21,8 +17,7 @@
       :key="tableKey"
       v-loading="listLoading"
       :data="list"
-      border
-      fit
+      border fit
       highlight-current-row
       style="width: 100%;"
     >
@@ -31,7 +26,7 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="文件名" width="150px" align="center">
+      <el-table-column label="算法名" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.name }}</span>
         </template>
@@ -49,11 +44,6 @@
       <el-table-column label="处理时间" min-width="110px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.modifiedTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="文件状态" width="80px" align="center">
-        <template slot-scope="{row}">
-          <span> {{ row.status-1 | statusFilter }}</span>
         </template>
       </el-table-column>
       <el-table-column label="所属者" align="center" width="120px">
@@ -83,7 +73,7 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
-    <!--文件上传对话框-->
+    <!--算法上传对话框-->
     <el-dialog :visible.sync="fileUploadVisible">
       <el-upload
         align="center"
@@ -187,16 +177,16 @@ export default {
       },
       fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/file/upload?boundary=0205&username='+this.owner,
       importanceOptions: ['正常','已删除'],
-      calendarTypeOptions,
+      /*calendarTypeOptions,*/
       statusOptions,
       dialogDetailVisible: false,
-      fileUploadVisible : false,
+      algorithmUploadVisible : false,
       dialogStatus: '',
       downloadLoading: false
     }
   },
   created() {
-    this.getList('/file/list','0208')
+    this.getList('/algorithm/list','0404')
   },
   methods: {
     handleChange(file, fileList) {
@@ -204,31 +194,30 @@ export default {
     },
     handleSizeChange(val) {
       this.listQuery.limit=val;
-        this.getList('/file/list','0404')
+        this.getList('/algorithm/list','0404')
     },
     handleCurrentChange(val) {
       this.listQuery.page=val;
-        this.getList('/file/list','0404')
+        this.getList('/algorithm/list','0404')
     },
     getList(path,b) {
-      this.loading = true
-      this.listQuery.boundary = b
+      this.loading = true;
+      this.listQuery.boundary = b;
       this.postRequest(path, this.listQuery).then(response => {
         if (response) {
-          this.list = response.data
-          console.log(this.list)
-          this.total = response.length
-          this.owner = response.username
+          this.list = response.data;
+          console.log(this.list);
+          this.total = response.length;
         }
-      })
-      this.listLoading = false
+      });
+      this.listLoading = false;
       setTimeout(() => {
         this.loading = false
       }, 750)
     },
     handleAlgorithm() {
-      this.listQuery.page = 1
-      this.getList('/algorithm/search','????')  //todo 搜索
+      this.listQuery.page = 1;
+      this.getList('/algorithm/search','0407')
     },
     handleModifyStatus(row, status) {
       this.$message({
@@ -238,17 +227,11 @@ export default {
       row.status = status
     },
     handleImport() {
-      this.fileUploadVisible = true;
+      this.algorithmUploadVisible = true;
     },
     handleDetail(row) {
       this.dialogDetailVisible = true
       this.detail = row
-    },
-    handleExport(row, index) {
-      this.$message({
-        message: 'Export TODO',
-        type: 'success'
-      })
     },
     handleDelete(row, index) {
       let deleteData = {boundary:"0209",fileId:row.id};
