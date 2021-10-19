@@ -11,10 +11,10 @@ public class Algorithm {
     private String algorithmName;      //算法的名称
     private Integer username;           //算法上传者的账户
     private Timestamp createdTime;          //算法生成的时间
-    private Short classification;       //算法的类别 1：平滑处理、2：滤波处理、3：CV伏安法、4：DPV、5：SWV、6：LSV
+    private Integer classification;       //算法的类别 1：平滑处理、2：滤波处理、3：CV伏安法、4：DPV、5：SWV、6：LSV
     private Timestamp changeTime;           //最新修改时间
     private String url;                 //算法文件路径
-    private Short isUsed;               //是否启用 1 ：启用 2 ：未启用
+    private Integer isUsed;               //是否启用 1 ：启用 2 ：未启用
 
     public Integer getAlgId() {
         return algId;
@@ -48,11 +48,11 @@ public class Algorithm {
         this.createdTime = createdTime;
     }
 
-    public Short getClassification() {
+    public Integer getClassification() {
         return classification;
     }
 
-    public void setClassification(Short classification) {
+    public void setClassification(Integer classification) {
         this.classification = classification;
     }
 
@@ -72,11 +72,11 @@ public class Algorithm {
         this.url = url;
     }
 
-    public Short getIsUsed() {
+    public Integer getIsUsed() {
         return isUsed;
     }
 
-    public void setIsUsed(Short isUsed) {
+    public void setIsUsed(Integer isUsed) {
         this.isUsed = isUsed;
     }
 

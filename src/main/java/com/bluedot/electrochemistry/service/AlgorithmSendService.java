@@ -49,7 +49,7 @@ public class AlgorithmSendService extends BaseService {
             algorithm.setAlgId(algorithmId);
 
             if(type == 0){  //添加算法操作
-                algorithm.setIsUsed((short) 2); //设置启用
+                algorithm.setIsUsed(2); //设置启用
                 doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
                     @Override
                     public int doDataModifyExecutor(BaseDao baseDao) {
@@ -98,7 +98,7 @@ public class AlgorithmSendService extends BaseService {
                 //让新算法上架
                 Algorithm algorithm_new = new Algorithm();
                 algorithm_new.setAlgId(type);
-                algorithm_new.setIsUsed((short) 2); //设置启用
+                algorithm_new.setIsUsed(2); //设置启用
                 algorithm_new.setChangeTime(new Timestamp(System.currentTimeMillis()));
                 doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
                     @Override

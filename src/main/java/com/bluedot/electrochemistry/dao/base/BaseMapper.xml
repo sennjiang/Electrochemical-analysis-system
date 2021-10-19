@@ -134,31 +134,6 @@
     <select id="getFilesCountByQueryCondition" resultType="java.lang.Long">
 
     </select>
-    <select id="getAlgorithms" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
-
-    </select>
-    <select id="getAlgorithmsCount" resultType="java.lang.Long">
-
-    </select>
-    <select id="getAlgorithmsByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
-
-    </select>
-    <select id="getAlgorithmsCountByQueryCondition" resultType="java.lang.Long">
-
-    </select>
-    <select id="getAlgorithmSends" resultType="com.bluedot.electrochemistry.pojo.domain.AlgorithmSend">
-
-    </select>
-    <select id="getAlgorithmSendsCount" resultType="java.lang.Long">
-
-    </select>
-    <select id="getAlgorithmSendsByQueryCondition"
-            resultType="com.bluedot.electrochemistry.pojo.domain.AlgorithmSend">
-
-    </select>
-    <select id="getAlgorithmSendsCountByQueryCondition" resultType="java.lang.Long">
-
-    </select>
     <select id="listOperationsByUser" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
         select * from operation where type=#{type} and user = #{username} limit #{pageStart},#{pageSize}
     </select>

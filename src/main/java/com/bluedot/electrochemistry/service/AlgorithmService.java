@@ -75,7 +75,7 @@ public class AlgorithmService extends BaseService {
                 public int doDataModifyExecutor(BaseDao baseDao) {
                     Algorithm algorithm = new Algorithm();
                     algorithm.setAlgorithmName((String) map.get("algorithmName"));
-                    algorithm.setClassification((Short) map.get("classification"));
+                    algorithm.setClassification((Integer) map.get("classification"));
                     algorithm.setUrl(file.getAbsolutePath());
                     algorithm.setUsername((Integer) map.get("username"));
                     int insert = baseDao.insert(algorithm);
