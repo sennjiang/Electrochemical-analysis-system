@@ -46,6 +46,7 @@ public class XmlParseUtils {
             //获取标签内容
             String namespace = rootElement.attributeValue(Constant.XML_NAMESPACE);
             LogUtil.getLogger().debug("注册mapper代理工厂：{}",namespace);
+
             //遍历根元素内的标签
             for (Iterator iterator = rootElement.elementIterator(); iterator.hasNext(); ) {
                 //封装mappedStatement信息
@@ -83,10 +84,13 @@ public class XmlParseUtils {
                 statement.setSql(StringUtils.stringTrim(sql));
 
                 //封装进configuration对象
+                //System.out.println("id=>"+id);
+                //System.out.println("statement=>"+statement);
                 configuration.addMappedStatement(id, statement);
                 //注册一个该mapper对象接口类的代理工厂
                 configuration.addMapper(Class.forName(namespace));
             }
+
 
 
 

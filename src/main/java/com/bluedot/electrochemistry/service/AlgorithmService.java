@@ -147,19 +147,49 @@ public class AlgorithmService extends BaseService {
      * 查询所有算法列表
      * @author zero
      * @param map map中包含参数：
-     *      （暂时不包含可用数据）
+     *      page --> pageStart
+     *      limit --> pageSize
      * 查询结果会以list列表的形式放回到map中去
      */
-    private void listAlgorithm(Map<String,Object> map){
-//        BaseMapper mapper = mapperFactory.createMapper();
-//        List<Algorithm> algs = mapper.listAlgorithms();
-//        if(algs!=null){
-//            map.put("message", "算法列表查询成功");
-//            map.put("code", 200);
-//            map.put("data",algs);
-//        }else{
-//            map.put("code", 500);
-//            map.put("message", "算法列表查询失败");
-//        }
+    private void listAlgorithms(Map<String,Object> map){
+        BaseMapper mapper = mapperFactory.createMapper();
+        Integer pageStart = Integer.parseInt((String) map.get("page"));
+        Integer pageSize = Integer.parseInt((String) map.get("limit"));
+        List<Algorithm> algs = mapper.getAlgorithms((pageStart - 1) * pageSize,pageSize);
+        Long size = mapper.getAlgorithmsCount();
+        if(algs!=null){
+            map.put("message", "算法列表查询成功");
+            map.put("code", 200);
+            map.put("data",algs);
+            map.put("length", size);
+        }else{
+            map.put("code", 500);
+            map.put("message", "算法列表查询失败");
+        }
+    }
+
+    /**
+     * 根据条件查询所有符合要求的算法集合
+     * @param map 包含查询条件 queryCondition
+     */
+    private void searchAlgorithms(Map<String, Object> map) {
+        try {
+            BaseMapper mapper = mapperFactory.createMapper();
+            Integer pageStart = Integer.parseInt((String) map.get("page"));
+            Integer pageSize = Integer.parseInt((String) map.get("limit"));
+            String queryCondition = (String) map.get("queryCondition");
+            Long size = null;
+            List<Algorithm> algorithms = mapper.getAlgorithmsByQueryCondition("%" + queryCondition + "%", (pageStart - 1) * pageSize, pageSize);
+            size = mapper.getAlgorithmsCountByQueryCondition("%" + queryCondition + "%");
+
+            map.put("data", algorithms);
+            map.put("length", size);
+            map.put("code", 200);
+            map.put("message", "算法列表搜索完成");
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("code", 500);
+            map.put("message", "算法列表搜索失败："+e.getMessage());
+        }
     }
 }

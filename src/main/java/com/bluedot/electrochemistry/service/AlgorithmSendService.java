@@ -1,6 +1,7 @@
 package com.bluedot.electrochemistry.service;
 
 import com.bluedot.electrochemistry.dao.base.BaseDao;
+import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.Algorithm;
 import com.bluedot.electrochemistry.pojo.domain.AlgorithmSend;
@@ -175,13 +176,43 @@ public class AlgorithmSendService extends BaseService {
      */
     private void listAlgorithmSends(Map<String, Object> map){
         try {
-//            List<AlgorithmSend> algorithmSends = mapperFactory.createMapper().listAlgorithmSends();
-//            map.put("algorithmSends", algorithmSends);
+            BaseMapper mapper = mapperFactory.createMapper();
+            Integer pageStart = Integer.parseInt((String) map.get("page"));
+            Integer pageSize = Integer.parseInt((String) map.get("limit"));
+            List<AlgorithmSend> algorithmSends = mapper.getAlgorithmSends((pageStart - 1) * pageSize,pageSize);
+            Long size = mapper.getAlgorithmSendsCount();
+            map.put("algorithmSends", algorithmSends);
             map.put("code", "200");
             map.put("message", "查询算法申请列表成功");
+            map.put("length", size);
         }catch (Exception e){
             map.put("code", "500");
             map.put("message", "查询算法申请列表失败");
+        }
+    }
+
+    /**
+     * 根据条件查询所有符合要求的算法申请集合
+     * @param map 包含查询条件 queryCondition
+     */
+    private void searchAlgorithmSends(Map<String, Object> map) {
+        try {
+            BaseMapper mapper = mapperFactory.createMapper();
+            Integer pageStart = Integer.parseInt((String) map.get("page"));
+            Integer pageSize = Integer.parseInt((String) map.get("limit"));
+            String queryCondition = (String) map.get("queryCondition");
+            Long size = null;
+            List<AlgorithmSend> algSds = mapper.getAlgorithmSendsByQueryCondition("%" + queryCondition + "%", (pageStart - 1) * pageSize, pageSize);
+            size = mapper.getAlgorithmSendsCountByQueryCondition("%" + queryCondition + "%");
+
+            map.put("data", algSds);
+            map.put("length", size);
+            map.put("code", 200);
+            map.put("message", "算法申请列表搜索完成");
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("code", 500);
+            map.put("message", "算法申请列表搜索失败："+e.getMessage());
         }
     }
 }

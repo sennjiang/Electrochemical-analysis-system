@@ -15,9 +15,13 @@
         select * from user where email = #{email};
     </select>
     <!--超级管理员相关-->
+    <!--根据用户名查权限-->
+    <select id="queryRightByUser" >
+        select b.right_id from user_role as a left join role_right as b on a.role_id = b.role_id where a.username = #{username}
+    </select>
     <!--查询管理员相关-->
     <select id="getAdmins" resultType="com.bluedot.electrochemistry.pojo.domain.User">
-        select * from user
+        select a.* from user as a left join user_role as b on a.username = b.username where b.role_id = '200'
     </select>
     <select id="getAdminByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user where #{queryCondition}=#{queryValue} limit #{pageStart},#{pageSize}
@@ -57,21 +61,27 @@
 
     <!--算法相关-->
     <select id="getAlgorithmById" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
-        select * from t_algorithm where alg_id = #{id}
+        select * from algorithm_view where alg_id = #{id}
     </select>
-    <select id="listAlgorithms" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
-        select * from t_algorithm
-    </select>
-    <!-- <select id="getAlgorithms" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
-         select * from t_algorithm limit #{pageStart},#{pageSize}
+     <select id="getAlgorithms" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
+         select * from algorithm_view limit #{pageStart},#{pageSize}
      </select>
      <select id="getAlgorithmsCount" resultType="java.lang.Long">
-         select count(*) from t_algorithm
-     </select>-->
+         select count(*) from algorithm_view
+     </select>
+    <select id="getAlgorithmsByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
+        select * from algorithm_view
+        where algorithm_name like #{queryCondition} or nickname like #{queryCondition}
+        limit #{pageStart},#{pageSize};
+    </select>
+    <select id="getAlgorithmsCountByQueryCondition" resultType="java.lang.Long">
+        select count(*) from algorithm_view
+        where algorithm_name like #{queryCondition} or nickname like #{queryCondition}
+    </select>
+    <!---->
     <select id="getFileById" resultType="com.bluedot.electrochemistry.pojo.domain.File">
         select * from file where id = #{id};
     </select>
-
     <select id="listFiles" resultType="com.bluedot.electrochemistry.pojo.domain.File">
         select * from file where type = #{type} and status = #{status} and owner = #{username} limit
         #{pageStart},#{pageSize};
@@ -87,8 +97,20 @@
 
 
     <!--算法申请相关-->
-    <select id="listAlgorithmSends" resultType="com.bluedot.electrochemistry.pojo.domain.AlgorithmSend">
-        select * from t_algorithm_send
+    <select id="getAlgorithmSends" resultType="com.bluedot.electrochemistry.pojo.domain.AlgorithmSend">
+        select * from algorithm_send_view limit #{pageStart},#{pageSize}
+    </select>
+    <select id="getAlgorithmSendsCount" resultType="com.bluedot.electrochemistry.pojo.domain.AlgorithmSend">
+        select count(*) from algorithm_send_view
+    </select>
+    <select id="getAlgorithmSendsByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.AlgorithmSend">
+        select * from algorithm_send_view
+        where algorithm_name like #{queryCondition} or sender_nickname like #{queryCondition}
+        limit #{pageStart},#{pageSize};
+    </select>
+    <select id="getAlgorithmSendsCountByQueryCondition" resultType="java.lang.Long">
+        select count(*) from algorithm_send_view
+        where algorithm_name like #{queryCondition} or sender_nickname like #{queryCondition}
     </select>
     <select id="getBackupFileByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.File">
 

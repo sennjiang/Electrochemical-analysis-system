@@ -155,6 +155,7 @@ public class MQRequestProcessor implements RequestProcessor {
             Class clazz = newData.getService();
             //这里调用了baseservice的doservice方法执行具体业务
             BaseService service = (BaseService) beanContainer.getBean(clazz);
+            //System.out.println(newData!=null?true:false);
             service.doService(newData);
             logger.info("处理请求结束--- 请求id: {}", newData.get("requestId"));
             return newData;
@@ -221,7 +222,7 @@ public class MQRequestProcessor implements RequestProcessor {
         data.put("boundary",boundary);
         logger.info("parameterMap ---> data : {}",data);
         if (username == null || boundary == null) {
-            if (!"0205".equals(boundary)){
+            if (!"0205".equals(boundary) && !writeList.contains(boundary)){
                 return null;
             }
         }

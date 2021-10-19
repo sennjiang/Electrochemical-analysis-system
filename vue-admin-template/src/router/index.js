@@ -35,7 +35,7 @@ export const constantRoutes = [
   // 登录
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: () => import('@/views/ea/login/login'),
     hidden: true
   },
   // 注册
