@@ -150,6 +150,7 @@
         <service>SearchService</service>
         <method>list</method>
     </node>
+    <!--算法相关-->
     <node>
         <number>0403</number>
         <service>AlgorithmService</service>
@@ -158,7 +159,7 @@
     <node>
         <number>0404</number>
         <service>AlgorithmService</service>
-        <method>updateAlgorithm</method>
+        <method>listAlgorithms</method>
     </node>
     <node>
         <number>0405</number>
@@ -172,8 +173,8 @@
     </node>
     <node>
         <number>0407</number>
-        <service>SearchService</service>
-        <method>list</method>
+        <service>AlgorithmService</service>
+        <method>searchAlgorithms</method>
     </node>
     <node>
         <number>0408</number>
@@ -299,11 +300,13 @@
         <number>0901</number>
         <service>OperationService</service>
         <method>listOperation</method>
-    </node><node>
+    </node>
+    <node>
         <number>0902</number>
         <service>OperationService</service>
         <method>listOperation</method>
-    </node><node>
+    </node>
+    <node>
         <number>0903</number>
         <service>OperationService</service>
         <method>searchOperation</method>
