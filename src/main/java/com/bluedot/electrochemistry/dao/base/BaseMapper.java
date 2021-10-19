@@ -46,6 +46,13 @@ public interface BaseMapper {
     User queryUserByEmail(String email);
 
     /**
+     * 根据email查询用户数
+     * @param email 邮箱
+     * @return 该email的用户数
+     */
+    Long countUserByEmail(String email);
+
+    /**
      * 根据用户名查权限
      *
      */

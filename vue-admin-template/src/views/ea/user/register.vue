@@ -15,19 +15,22 @@
 
         >
 
-            <el-form-item prop="nickname">
-              <span class="demonstration">昵称：</span>
-              <el-input v-model="userForm.nickname" auto-complete="off" placeholder="请输入昵称 2-5位" class="input-style-width"></el-input>
-            </el-form-item>
+          <el-form-item prop="nickname">
+            <span class="demonstration">昵称：</span>
+            <el-input v-model="userForm.nickname" auto-complete="off" placeholder="请输入昵称 2-5位"
+                      class="input-style-width"></el-input>
+          </el-form-item>
 
           <el-form-item prop="pwd1">
             <span class="demonstration">密码：</span>
-            <el-input v-model="userForm.pwd1" auto-complete="off" placeholder="6-18位字母+数字组合" class="input-style-width"></el-input>
+            <el-input v-model="userForm.pwd1" auto-complete="off" placeholder="6-18位字母+数字组合"
+                      class="input-style-width"></el-input>
           </el-form-item>
 
           <el-form-item prop="pwd2">
             <span class="demonstration">确认：</span>
-            <el-input v-model="userForm.pwd2" auto-complete="off" placeholder="密码确认" class="input-style-width"></el-input>
+            <el-input v-model="userForm.pwd2" auto-complete="off" placeholder="密码确认"
+                      class="input-style-width"></el-input>
           </el-form-item>
 
           <el-form-item prop="gender" style="text-align: left">
@@ -51,7 +54,8 @@
 
           <el-form-item prop="email">
             <span class="demonstration">邮箱：</span>
-            <el-input v-model="userForm.email" auto-complete="off" placeholder="请输入邮箱" class="input-style-width"></el-input>
+            <el-input v-model="userForm.email" auto-complete="off" placeholder="请输入邮箱"
+                      class="input-style-width"></el-input>
           </el-form-item>
 
 
@@ -70,6 +74,10 @@
 </template>
 
 <script>
+function isEmail(s) {
+  return /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(s)
+}
+
 export default {
   name: "Register",
   data() {
@@ -114,22 +122,37 @@ export default {
         callback();
       }
     };
+    // 校验邮箱
+    let validateEmail = (rule, value, callback) => {
+      if (!isEmail(value)) {
+        callback(new Error('邮箱格式错误'))
+      } else if (true) {
+        callback(new Error('邮箱已存在'))
+      } else {
+        callback()
+      }
+    };
     return {
       // 注册信息核验规则
       registerRules: {
         //  校验用户名
         nickname: [
           // trigger:blur-触发方式，blur失去焦点，change数据改变
-          { required: true, message: '请输入昵称', trigger: 'blur' },
+          {required: true, message: '请输入昵称', trigger: 'blur'},
           // min: 3, max: 5, message: '长度在3到5个字符', trigger: 'blur'
-          { min: 5, max: 12, message: '长度在5到8个字符', trigger: 'blur' }
+          {min: 5, max: 12, message: '长度在5到8个字符', trigger: 'blur'}
         ],
         //  校验密码
         pwd1: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 18, message: '长度在 5 到 12 个字符', trigger: 'blur' }
+          {required: true, message: '请输入密码', trigger: 'blur'},
+          {min: 6, max: 18, message: '长度在 5 到 12 个字符', trigger: 'blur'}
         ],
-        pwd2: {validator: validatePwd2, trigger: 'blur'}
+        pwd2: {validator: validatePwd2, trigger: 'blur'},
+        email: [
+          {required: true, message: '邮箱不能为空', trigger: 'blur'},
+          {validator: validateEmail, trigger: 'blur'}
+        ]
+
 
       },
 
@@ -151,7 +174,7 @@ export default {
       isDisabled: false, // 是否禁止点击发送验证码按钮
       flag: true,
 
-    //  日期
+      //  日期
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now();

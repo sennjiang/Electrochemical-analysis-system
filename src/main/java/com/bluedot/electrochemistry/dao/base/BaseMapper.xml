@@ -14,6 +14,10 @@
     <select id="queryUserByEmail" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user where email = #{email};
     </select>
+    <select id="countUserByEmail" resultType="java.lang.Long">
+        select count(*) from user where email=#{email};
+    </select>
+
     <!--超级管理员相关-->
     <!--根据用户名查权限-->
     <select id="queryRightByUser" resultType="com.bluedot.electrochemistry.pojo.domain.RoleRight">

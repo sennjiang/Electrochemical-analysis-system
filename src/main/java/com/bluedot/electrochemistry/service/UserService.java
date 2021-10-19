@@ -70,6 +70,23 @@ public class UserService extends BaseService {
 	}
 
 	/**
+	 * 是否存在该用户
+	 * @param map
+	 */
+	private void existUserByEmail(Map map) {
+		String email = (String) map.get("email");
+		BaseMapper mapper = mapperFactory.createMapper();
+		Long userCount = mapper.countUserByEmail(email);
+		if(userCount > 0) {
+			map.put("code", 500);
+			map.put("message", "用户已存在");
+		}else {
+			map.put("code", 200);
+			map.put("message", "用户不存在");
+		}
+	}
+
+	/**
 	 * 添加管理员
 	 * @param map User实体类
 	 */

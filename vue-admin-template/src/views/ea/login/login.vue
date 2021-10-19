@@ -99,7 +99,7 @@ export default {
               }
 
               // 剩下被删除状态, 状态码为2
-              if (resp.userInfo.status === 0) {
+              if (resp.userInfo.status === 2) {
                 this.$message.error('用户不存在')
               }
 

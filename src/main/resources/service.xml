@@ -46,6 +46,11 @@
         <method>applyUnfreeze</method>
     </node>
     <node>
+        <number>0110</number>
+        <service>UserService</service>
+        <method>existUserByEmail</method>
+    </node>
+    <node>
         <number>0201</number>
         <service>FileService</service>
         <method>getReport</method>
