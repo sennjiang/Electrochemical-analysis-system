@@ -126,8 +126,6 @@ export default {
 
   created() {
     this.userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
-    console.log(this.userInfo.nickname)
-
   },
 
   methods: {

@@ -78,7 +78,7 @@ export default {
 
           await this.postRequest('/login', this.loginForm).then(resp => {
             if (resp.code === 200) {
-              // 用户状态正常, 正常登录
+              // 用户状态正常,状态码为1,正常登录
               if (resp.userInfo.status === 1) {
                 // 将服务器返回的token存储到sessionStorage
                 const tokenStr = resp.username
@@ -93,7 +93,7 @@ export default {
                 console.log(window.sessionStorage.getItem(tokenStr))
               }
 
-              // 用户状态被冻结
+              // 用户状态被冻结, 状态码为0
               if (resp.userInfo.status === 0) {
                 // todo 跳转到解冻申请页
               }
