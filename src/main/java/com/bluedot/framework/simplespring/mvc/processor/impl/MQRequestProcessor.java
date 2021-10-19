@@ -47,6 +47,9 @@ public class MQRequestProcessor implements RequestProcessor {
      */
     private String baseBoundary;
 
+    /**
+     * 请求白名单（以 boundary 为 键）
+     */
     private static List<String> writeList = new ArrayList<>();
 
     /**
@@ -164,19 +167,28 @@ public class MQRequestProcessor implements RequestProcessor {
         projectPath = config.getProperty("projectPath");
     }
 
+    /**
+     * 处理方法
+     * @param requestProcessorChain requestProcessorChain
+     * @return boolean
+     * @throws Exception Exception
+     */
     @Override
     public boolean process(RequestProcessorChain requestProcessorChain) throws Exception {
 
+        //对数据预处理
         Data data = doRequest(requestProcessorChain);
 
+        //  如果 不穿 boundary 与 username(请求头中)   data 为空 则不执行
         if (data == null) {
             return false;
         }
 
+        //创建执行线程
         Adapter adapter = new Adapter(data);
 
         Future<Data> submit = executors.submit(adapter);
-
+        //拿到执行后的数据
         Data newData = submit.get();
 
         //暂不开启
@@ -184,6 +196,7 @@ public class MQRequestProcessor implements RequestProcessor {
 //
 //        executors.submit(task);
 
+        //设置后置处理器
         requestProcessorChain.setResultRender(new JsonResultRender(newData));
 
         return false;
@@ -198,8 +211,9 @@ public class MQRequestProcessor implements RequestProcessor {
     private Data doRequest(RequestProcessorChain requestProcessorChain) throws Exception {
 
         HttpServletRequest request = requestProcessorChain.getReq();
-
+        //从请求头中取得username
         String username = request.getHeader("Authorization");
+        //将请求的数据 封装成Data
         Data data = new Data(request);
 
         String boundary = (String) data.get("boundary");
@@ -220,6 +234,7 @@ public class MQRequestProcessor implements RequestProcessor {
             data.put("username",username);
         }
 
+        //0205 文件上传的编号 对请求进行特殊处理
         if ("0205".equals(boundary)){
             logger.debug("start parse file request ... ");
             String realPath =  projectPath +"/uploads";
@@ -252,8 +267,6 @@ public class MQRequestProcessor implements RequestProcessor {
         data.put("service", classStringPair.getKey());
         data.put("serviceMethod", classStringPair.getValue());
         data.put("requestId", requestId.getAndIncrement());
-
-
         return data;
     }
 }

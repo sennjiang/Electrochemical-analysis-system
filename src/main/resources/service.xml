@@ -299,11 +299,13 @@
         <number>0901</number>
         <service>OperationService</service>
         <method>listOperation</method>
-    </node><node>
+    </node>
+    <node>
         <number>0902</number>
         <service>OperationService</service>
         <method>listOperation</method>
-    </node><node>
+    </node>
+    <node>
         <number>0903</number>
         <service>OperationService</service>
         <method>searchOperation</method>
