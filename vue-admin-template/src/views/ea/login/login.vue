@@ -38,6 +38,9 @@
 </template>
 
 <script>
+import store from "@/store";
+import global from "@/views/global";
+
 export default {
   name: "Login",
 
@@ -58,30 +61,23 @@ export default {
           {required: true, message: '请输入密码', trigger: 'blur'},
           {min: 6, max: 10, message: '长度在 6 到 10 个字符', trigger: 'blur'}
         ]
-      }
+      },
+      loading: false,
+      passwordType: 'password',
+      redirect: undefined,
+      currentRoles:[]
     }
 
   },
-
   methods: {
     //  登陆
     login() {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate(async valid => {
         if (valid) {
           this.loading = true
 
-          // start 此处为方便调试, 直接进入了主页
-          // const tokenStr = "20190002"
-          // window.sessionStorage.setItem('tokenStr', tokenStr)
-          // this.$store.commit('modifyCurrentUsername', "20190002")
-          // this.$store.commit('modifyCurrentNickname', "20190002")
-          // this.$store.commit('modifyCurrentStatus', "1")
-          // this.$router.push({ path: this.redirect || '/' })
-          // end
-
-          this.postRequest('/login', this.loginForm).then(resp => {
+          await this.postRequest('/login', this.loginForm).then(resp => {
             if (resp.code === 200) {
-
               // 用户状态正常, 正常登录
               if (resp.userInfo.status === 1) {
                 // 将服务器返回的token存储到sessionStorage
@@ -109,6 +105,16 @@ export default {
 
             }
           })
+
+          // 获得用户名后查找用户权限加载侧边栏
+          await this.postRequest('/roles', { boundary : '1101', username : store.state.currentUsername }).then(resp => {
+            for(let i = 0; i < resp.rightIdList.length; i ++) {
+              let roleId = resp.rightIdList[i].rightId;
+              this.currentRoles.push(global.map.get(roleId.toString()))
+            }
+            this.$store.commit('modifyRouters', this.currentRoles)
+          })
+
           setTimeout(() => {
             this.loading = false
           }, 750)

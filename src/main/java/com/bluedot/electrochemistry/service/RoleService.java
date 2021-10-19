@@ -102,7 +102,6 @@ public class RoleService extends BaseService {
         Timestamp genTime = (Timestamp) map.get("genTime");
         String description = (String) map.get("description");
         Integer rightType = Integer.valueOf((String) map.get("rightType"));
-
         return new Role(roleName , genTime , description , rightType);
     }
 

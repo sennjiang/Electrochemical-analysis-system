@@ -38,7 +38,8 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import {resetRouter} from "@/router";
+import { resetRouter } from "@/router";
+import store from "@/store";
 
 export default {
   components: {
@@ -55,8 +56,10 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
+    logout() {
       window.sessionStorage.removeItem('tokenStr')
+      store.state.routers = []
+      resetRouter()
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }

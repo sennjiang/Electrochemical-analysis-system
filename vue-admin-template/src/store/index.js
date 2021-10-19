@@ -4,14 +4,17 @@ import getters from './getters'
 import app from './modules/app'
 import settings from './modules/settings'
 import user from './modules/user'
+import Layout from "@/layout";
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
+
   state: {
     currentUsername: undefined,
     currentNickname: undefined,
-    currentStatus: undefined
+    currentStatus: undefined,
+    routers: []
   },
   mutations: {
     modifyCurrentNickname (state, val) {
@@ -22,6 +25,9 @@ const store = new Vuex.Store({
     },
     modifyCurrentStatus (state, val) {
       state.currentStatus = val
+    },
+    modifyRouters (state, val) {
+      state.routers = val
     }
   },
   modules: {

@@ -16,7 +16,7 @@
     </select>
     <!--超级管理员相关-->
     <!--根据用户名查权限-->
-    <select id="queryRightByUser" >
+    <select id="queryRightByUser" resultType="com.bluedot.electrochemistry.pojo.domain.RoleRight">
         select b.right_id from user_role as a left join role_right as b on a.role_id = b.role_id where a.username = #{username}
     </select>
     <!--查询管理员相关-->

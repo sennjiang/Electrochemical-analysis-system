@@ -58,6 +58,8 @@
 <script>
 import {validUsername} from '@/utils/validate'
 import store from "@/store";
+import Layout from "@/layout";
+import router from "@/router";
 
 export default {
   name: 'Login',
@@ -88,8 +90,146 @@ export default {
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      currentRoles:[],
+      map: undefined
     }
+  },
+  created() {
+    console.log('初始化权限map')
+    this.map = new Map()
+    this.map.set('101', {
+      path: '/superAdmin/adminManage',
+      component: Layout,
+      children: [
+        {
+          path: 'index',
+          name: 'AdminManage',
+          component: () => import('@/views/ea/superAdmin/adminManage/index'),
+          meta: { title: '管理员管理', icon: 'user' }
+        }
+      ]
+    })
+    this.map.set('102', {
+      path: '/superAdmin/operationRecord',
+      component: Layout,
+      children: [
+        {
+          path: 'index',
+          name: 'OperationRecord',
+          component: () => import('@/views/ea/superAdmin/operationRecord/index'),
+          meta: { title: '操作记录管理', icon: 'user'}
+        }
+      ]
+    })
+    this.map.set('103', {
+      path: '/superAdmin/systemBackup',
+      component: Layout,
+      children: [
+        {
+          path: 'index',
+          name: 'SystemBackup',
+          component: () => import('@/views/ea/superAdmin/systemBackup/index'),
+          meta: {title: '系统备份', icon: 'user'}
+        }
+      ]
+    })
+    this.map.set('104', {
+      path: '/superAdmin/systemRestore',
+      component: Layout,
+      children: [
+        {
+          path: 'index',
+          name: 'SystemRestore',
+          component: () => import('@/views/ea/superAdmin/systemRestore/index'),
+          meta: {title: '系统还原', icon: 'user'}
+        }
+      ]
+    })
+    this.map.set('105', {
+      path: '/superAdmin/algorithmAudit',
+      component: Layout,
+      children: [
+        {
+          path: 'index',
+          name: 'AlgorithmAudit',
+          component: () => import('@/views/ea/superAdmin/algorithmAudit/index'),
+          meta: {title: '算法审核', icon: 'user'}
+        }
+      ]
+    })
+    this.map.set('106', {
+      path: '/superAdmin/roleManage',
+      component: Layout,
+      children: [
+        {
+          path: 'index',
+          name: 'RoleManage',
+          component: () => import('@/views/ea/superAdmin/roleManage/index'),
+          meta: {title: '角色管理', icon: 'user'}
+        }
+      ]
+    })
+    this.map.set('201', {
+      path: '/admin/userManage',
+      component: Layout,
+      children: [
+        {
+          path: 'index',
+          name: 'UserManage',
+          component: () => import('@/views/ea/admin/userManage/index'),
+          meta: { title: '用户管理', icon: 'user' }
+        }
+      ]
+    })
+    this.map.set('202', {
+      path: '/admin/unfreezeAudit',
+      component: Layout,
+      children: [
+        {
+          path: 'index',
+          name: 'UnfreezeAudit',
+          component: () => import('@/views/ea/admin/unfreezeAudit/index'),
+          meta: { title: '解冻审核', icon: 'user' }
+        }
+      ]
+    })
+    this.map.set('203', {
+      path: '/admin/fileManage',
+      component: Layout,
+      children: [
+        {
+          path: 'index',
+          name: 'FileManage',
+          component: () => import('@/views/ea/admin/fileManage/index'),
+          meta: { title: '文件管理', icon: 'user' }
+        }
+      ]
+    })
+    this.map.set('204', {
+      path: '/admin/operatingRecord',
+      component: Layout,
+      children: [
+        {
+          path: 'index',
+          name: 'OperatingRecord',
+          component: () => import('@/views/ea/admin/operatingRecord/index'),
+          meta: { title: '操作记录', icon: 'user' }
+        }
+      ]
+    })
+    this.map.set('205', {
+      path: '/admin/algorithmManage',
+      component: Layout,
+      children: [
+        {
+          path: 'index',
+          name: 'AlgorithmManage',
+          component: () => import('@/views/ea/admin/algorithmManage/index'),
+          meta: { title: '算法管理', icon: 'user' }
+        }
+      ]
+    })
   },
   watch: {
     $route: {
@@ -126,15 +266,18 @@ export default {
 
           this.postRequest('/login', this.loginForm).then(resp => {
             if (resp) {
+
+              //权限添加
+
+
               // 将服务器返回的token存储到sessionStorage
               const tokenStr = resp.username
-
               window.sessionStorage.setItem('tokenStr', tokenStr)
-              console.log("hello" + resp.loginUser.username)
               // 将loginUser存入session
               this.$store.commit('modifyCurrentUsername', resp.username)
               this.$store.commit('modifyCurrentNickname', resp.nickname)
               this.$store.commit('modifyCurrentStatus', resp.status)
+              console.log('跳转')
               this.$router.push({path: this.redirect || '/'})
               console.log(window.sessionStorage.getItem(tokenStr))
             }

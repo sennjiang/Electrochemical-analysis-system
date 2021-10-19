@@ -16,7 +16,7 @@ const whiteList = ['/login'] // no redirect whitelist （白名单）
 router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
-  loadVuex()
+  // loadVuex()
 
   // set page title
   // 设置页面标题
@@ -31,16 +31,22 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasGetUserInfo = store.state.currentUsername
-      if (hasGetUserInfo) {
-        next()
-      } else {
-        // 删除token存储
-        window.sessionStorage.removeItem('tokenStr')
-        Message.error('出现异常，请重新登录')
-        next(`/login?redirect=${to.path}`)
-        NProgress.done()
+      //const hasGetUserInfo = store.state.currentUsername
+      //if (hasGetUserInfo) {
+      //  next()
+      //} else {
+      //  // 删除token存储
+      //  window.sessionStorage.removeItem('tokenStr')
+      //  Message.error('出现异常，请重新登录')
+      //  next(`/login?redirect=${to.path}`)
+      //  NProgress.done()
+      //}
+
+      if(store.state.routers.length === 0) {
+        loadVuex()
       }
+      next()
+      NProgress.done()
     }
   } else {
     /* has no token*/

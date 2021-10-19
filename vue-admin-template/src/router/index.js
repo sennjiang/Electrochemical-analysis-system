@@ -33,11 +33,18 @@ import Register from '@/views/ea/user/register'
  */
 export const constantRoutes = [
   // 登录
+  //{
+  //  path: '/login',
+  //  component: () => import('@/views/ea/login/login'),
+  //  hidden: true
+  //},
   {
     path: '/login',
     component: () => import('@/views/ea/login/login'),
+    // component: () => import('@/views/login/index'),
     hidden: true
   },
+
   // 注册
   {
     path: '/register',

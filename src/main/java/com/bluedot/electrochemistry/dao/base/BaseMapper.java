@@ -49,7 +49,7 @@ public interface BaseMapper {
      * 根据用户名查权限
      *
      */
-    List<Integer> queryRightByUser(int username);
+    List<RoleRight> queryRightByUser(int username);
 
     /**
      * 获取管理员信息列表
