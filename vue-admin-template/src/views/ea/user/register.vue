@@ -65,7 +65,6 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm('userForm')" style="width:100%;">注册</el-button>
-            <el-button type="primary" @click="existUser(userForm.email)" style="width:100%;">test</el-button>
             <p class="login" @click="gotoLogin">已有账号？立即登录</p>
           </el-form-item>
         </el-form>
@@ -130,7 +129,7 @@ export default {
     let validateEmail = (rule, value, callback) => {
       if (!isEmail(value)) {
         callback(new Error('邮箱格式错误'))
-      } else if (!this.existUser(value)) {
+      } else if (!this.existUser()) {
         callback(new Error('邮箱已存在'))
       } else {
         callback()
@@ -194,15 +193,14 @@ export default {
   methods: {
 
     // 是否存在该用户, 参数为email, true:存在, false:不存在
-    existUser(s) {
+    async existUser() {
       // const {data: resp} = await this.$http.post('/existUserByEmail', this.userForm.email)
-      this.postRequest('/existUserByEmail', this.userForm).then(resp => {
-        console.log(this.userForm)
-        console.log("我是返回的结果" + resp.message)
+      await this.postRequest('/existUserByEmail', this.userForm).then(resp => {
         if (resp.code === 200) {
-          // 用户不存在, 可以注册
+          // 该email不存在, 可以注册
           return true;
         } else {
+          // 该email已存在, 可以注册
           return false;
         }
       })
@@ -229,6 +227,9 @@ export default {
               this.flag = true;
             }
           }, 1000)
+          this.postRequest('/sendEmailCode', {boundary: '0107', email: email}).then(resp => {
+
+          })
         }
       }
     },
@@ -251,9 +252,9 @@ export default {
         path: "/login"
       });
     },
-    // 验证手机号
+    // 验证邮箱
     checkEmail(str) {
-      let re = /^1\d{10}$/
+      let re = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/
       if (re.test(str)) {
         return true;
       } else {
