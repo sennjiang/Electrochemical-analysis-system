@@ -23,38 +23,54 @@
     >
       <el-table-column label="ID" prop="id" align="center" width="80">
         <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
+          <span>{{ row.algId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="算法名" width="150px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span>{{ row.algorithmName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="文件大小" width="80px" align="center">
+      <el-table-column label="算法上传者" width="110px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.size }}</span>
+          <span>{{ row.nickname }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上传时间" min-width="110px" align="center">
+      <el-table-column label="创建时间" min-width="110px" align="center">
         <template slot-scope="{row}">
-          <span >{{ row.produceTime }}</span>
+          <span >{{ row.createdTime+"" }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="处理时间" min-width="110px" align="center">
+      <el-table-column label="算法类型" min-width="80px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.modifiedTime }}</span>
+          <span v-if="1 == row.classification">平滑处理</span>
+          <span v-else-if="2 == row.classification">滤波处理</span>
+          <span v-else-if="3 == row.classification">CV伏安法</span>
+          <span v-else-if="4 == row.classification">DPV</span>
+          <span v-else-if="5 == row.classification">SWV</span>
+          <span v-else-if="6 == row.classification">LSV</span>
+          <span v-else>未知</span>
         </template>
       </el-table-column>
-      <el-table-column label="所属者" align="center" width="120px">
+      <el-table-column label="上次修改时间" min-width="110px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.owner}}</span>
+          <span>{{ row.changeTime+"" }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="是否启用" min-width="80px" align="center">
+        <template slot-scope="{row}">
+          <span v-if="1 == row.isUsed"><el-tag type="success">启用</el-tag></span>
+          <span v-if="2 == row.isUsed"><el-tag type="info">未启用</el-tag></span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleDetail(row)">
             详情
+          </el-button>
+          <!--TODO 单击事件记得修改-->
+          <el-button type="primary" size="mini" @click="handleDetail(row)">
+            修改
           </el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
             删除
@@ -69,7 +85,7 @@
       :current-page="currentPage4"
       :page-sizes="[10, 20, 50, 100]"
       :page-size="10"
-      background=true
+      background
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
@@ -98,24 +114,11 @@
         highlight-current-row
         style="width: 100%;" class="file_table">
         <tr align="center"><td>属性名</td> <td>属性值</td></tr>
-        <tr  align="center"><td>fileId</td><td>{{ detail.id }}</td></tr>
-        <tr align="center"><td>name</td> <td>{{ detail.name }}</td></tr>
-        <tr align="center"><td>url</td> <td>{{ detail.url }}</td></tr>
-        <tr align="center"><td>owner</td> <td>{{ detail.owner }}</td></tr>
-        <tr align="center"><td>size</td> <td>{{ detail.size }}</td></tr>
-        <tr align="center"><td>hash</td> <td>{{ detail.hash }}</td></tr>
-        <tr align="center"><td>type</td> <td>{{detail.type | typeFilter }}</td></tr>
-        <tr align="center"><td>status</td> <td>{{ detail.status }}</td></tr>
-        <tr align="center"><td>produceTime</td> <td>{{ detail.produceTime }}</td></tr>
-        <tr align="center"><td>modifiedTime</td> <td>{{ detail.modifiedTime }}</td></tr>
-        <tr align="center"><td>dataStart</td> <td>{{ detail.dataStart }}</td></tr>
-        <tr align="center"><td>dataEnd </td> <td>{{ detail.dataEnd }}</td></tr>
-        <tr align="center"><td>dataBottom </td><td>{{ detail.dataBottom }}</td></tr>
-        <tr align="center"><td>dataPeak </td><td>{{ detail.dataPeak }}</td></tr>
-        <tr align="center"><td>dataPrecision </td><td>{{ detail.dataPrecision }}</td></tr>
-        <tr align="center"><td>dataCycle </td><td>{{ detail.dataCycle }}</td></tr>
-        <tr align="center"><td>dataRate </td><td>{{ detail.dataRate }}</td></tr>
-        <tr align="center"><td>dataResult </td><td>{{ detail.dataResult }}</td></tr>
+        <tr  align="center"><td>算法名称</td><td>{{ detail.algorithmName }}</td></tr>
+        <tr align="center"><td>上传者昵称</td> <td>{{ detail.nickname }}</td></tr>
+        <tr align="center"><td>上传时间</td> <td>{{ detail.createdTime }}</td></tr>
+        <tr align="center"><td>上一次修改时间</td> <td>{{ detail.changeTime }}</td></tr>
+        <tr align="center"><td>算法代码</td> <td>{{ detail.algcode }}</td></tr><!--todo 算法代码懒加载-->
       </table>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogDetailVisible = false">
@@ -143,7 +146,7 @@ const statusOptions = [
   { key: '被删除' }
 ];
 
-const typeOptions = [{key:'CV'},{key:'PDV'}]
+const typeOptions = [{key:'CV'},{key:'PDV'}];
 
 export default {
   name: 'AlgorithmManage',
@@ -230,7 +233,7 @@ export default {
       this.algorithmUploadVisible = true;
     },
     handleDetail(row) {
-      this.dialogDetailVisible = true
+      this.dialogDetailVisible = true;
       this.detail = row
     },
     handleDelete(row, index) {

@@ -5,6 +5,7 @@ import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.Algorithm;
 import com.bluedot.electrochemistry.pojo.domain.AlgorithmSend;
+import com.bluedot.electrochemistry.pojo.vo.AlgorithmSendView;
 import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.annotation.Service;
@@ -179,7 +180,7 @@ public class AlgorithmSendService extends BaseService {
             BaseMapper mapper = mapperFactory.createMapper();
             Integer pageStart = Integer.parseInt((String) map.get("page"));
             Integer pageSize = Integer.parseInt((String) map.get("limit"));
-            List<AlgorithmSend> algorithmSends = mapper.getAlgorithmSends((pageStart - 1) * pageSize,pageSize);
+            List<AlgorithmSendView> algorithmSends = mapper.getAlgorithmSends((pageStart - 1) * pageSize,pageSize);
             Long size = mapper.getAlgorithmSendsCount();
             map.put("algorithmSends", algorithmSends);
             map.put("code", "200");
@@ -200,10 +201,10 @@ public class AlgorithmSendService extends BaseService {
             BaseMapper mapper = mapperFactory.createMapper();
             Integer pageStart = Integer.parseInt((String) map.get("page"));
             Integer pageSize = Integer.parseInt((String) map.get("limit"));
-            String queryCondition = (String) map.get("queryCondition");
+            String queryCondition = (String) map.get("title");
             Long size = null;
-            List<AlgorithmSend> algSds = mapper.getAlgorithmSendsByQueryCondition("%" + queryCondition + "%", (pageStart - 1) * pageSize, pageSize);
-            size = mapper.getAlgorithmSendsCountByQueryCondition("%" + queryCondition + "%");
+            List<AlgorithmSendView> algSds = mapper.getAlgorithmSendsByQueryCondition("%"+queryCondition+"%", "%"+queryCondition+"%", (pageStart - 1) * pageSize, pageSize);
+            size = mapper.getAlgorithmSendsCountByQueryCondition("%"+queryCondition+"%", "%"+queryCondition+"%");
 
             map.put("data", algSds);
             map.put("length", size);

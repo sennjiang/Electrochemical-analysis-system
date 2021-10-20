@@ -67,21 +67,22 @@
     <select id="getAlgorithmById" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
         select * from algorithm_view where alg_id = #{id}
     </select>
-     <select id="getAlgorithms" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
+     <select id="getAlgorithms" resultType="com.bluedot.electrochemistry.pojo.vo.AlgorithmView">
          select * from algorithm_view limit #{pageStart},#{pageSize}
      </select>
      <select id="getAlgorithmsCount" resultType="java.lang.Long">
          select count(*) from algorithm_view
      </select>
-    <select id="getAlgorithmsByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
+    <select id="getAlgorithmsByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.vo.AlgorithmView">
         select * from algorithm_view
-        where algorithm_name like #{queryCondition} or nickname like #{queryCondition}
+        where algorithm_name like #{queryCondition1} or nickname like #{queryCondition2}
         limit #{pageStart},#{pageSize};
     </select>
     <select id="getAlgorithmsCountByQueryCondition" resultType="java.lang.Long">
         select count(*) from algorithm_view
         where algorithm_name like #{queryCondition} or nickname like #{queryCondition}
     </select>
+
     <!---->
     <select id="getFileById" resultType="com.bluedot.electrochemistry.pojo.domain.File">
         select * from file where id = #{id};
@@ -101,21 +102,23 @@
 
 
     <!--算法申请相关-->
-    <select id="getAlgorithmSends" resultType="com.bluedot.electrochemistry.pojo.domain.AlgorithmSend">
+    <select id="getAlgorithmSends" resultType="com.bluedot.electrochemistry.pojo.vo.AlgorithmSendView">
         select * from algorithm_send_view limit #{pageStart},#{pageSize}
     </select>
-    <select id="getAlgorithmSendsCount" resultType="com.bluedot.electrochemistry.pojo.domain.AlgorithmSend">
+    <select id="getAlgorithmSendsCount" resultType="java.lang.Long">
         select count(*) from algorithm_send_view
     </select>
-    <select id="getAlgorithmSendsByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.AlgorithmSend">
+    <select id="getAlgorithmSendsByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.vo.AlgorithmSendView">
         select * from algorithm_send_view
-        where algorithm_name like #{queryCondition} or sender_nickname like #{queryCondition}
+        where algorithm_name like #{queryCondition1} or sender_nickname like #{queryCondition2}
         limit #{pageStart},#{pageSize};
     </select>
     <select id="getAlgorithmSendsCountByQueryCondition" resultType="java.lang.Long">
         select count(*) from algorithm_send_view
-        where algorithm_name like #{queryCondition} or sender_nickname like #{queryCondition}
+        where algorithm_name like #{queryCondition1} or sender_nickname like #{queryCondition2}
     </select>
+
+    <!---->
     <select id="getBackupFileByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.File">
 
     </select>

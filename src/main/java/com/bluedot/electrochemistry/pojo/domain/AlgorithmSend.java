@@ -1,6 +1,8 @@
 package com.bluedot.electrochemistry.pojo.domain;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * @author zero
@@ -9,7 +11,7 @@ import java.sql.Timestamp;
 public class AlgorithmSend {
     private Integer algSendId;        //算法审核条目的唯一标识
     private Integer algId;             //被审核的算法的id
-    private Timestamp applyTime;            //算法审核条目生成的时间
+    private String applyTime;            //算法审核条目生成的时间
     private Integer username;           //申请对算法进行操作的申请者账户
     private Integer classification;     //申请类别、0：添加算法、-1：删除算法、>0：修改算法
 
@@ -30,11 +32,17 @@ public class AlgorithmSend {
     }
 
     public Timestamp getApplyTime() {
-        return applyTime;
+        Timestamp ts = null;
+        try {
+            ts = Timestamp.valueOf(applyTime);
+        } catch (Exception ignored) {
+        }
+        return ts;
     }
 
     public void setApplyTime(Timestamp applyTime) {
-        this.applyTime = applyTime;
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.applyTime = sdf.format(applyTime);
     }
 
     public Integer getUsername() {

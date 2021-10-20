@@ -6,6 +6,8 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.bluedot.electrochemistry.pojo.domain.File;
+import com.bluedot.electrochemistry.pojo.vo.AlgorithmSendView;
+import com.bluedot.electrochemistry.pojo.vo.AlgorithmView;
 
 /**
  * @author zero
@@ -242,27 +244,28 @@ public interface BaseMapper {
     Algorithm getAlgorithmById(int id);
 
     /**
-     * 获取所有算法集合
+     * 获取所有算法视图实体集合
      *
      * @param pageStart 起始页码
      * @param pageSize  一页的数据量
      * @return 算法列表
      * @author zero
      */
-    List<Algorithm> getAlgorithms(int pageStart, int pageSize);
+    List<AlgorithmView> getAlgorithms(int pageStart, int pageSize);
 
     long getAlgorithmsCount();
 
     /**
-     * @param queryCondition 关键字
+     * @param queryCondition1 关键字1
+     * @param queryCondition2 关键字2
      * @param pageStart      起始页码
      * @param pageSize       一页的数据量
      * @return 算法列表
      * @author zero
      */
-    List<Algorithm> getAlgorithmsByQueryCondition(String queryCondition, int pageStart, int pageSize);
+    List<AlgorithmView> getAlgorithmsByQueryCondition(String queryCondition1, String queryCondition2, int pageStart, int pageSize);
 
-    long getAlgorithmsCountByQueryCondition(String queryCondition);
+    long getAlgorithmsCountByQueryCondition(String queryCondition1, String queryCondition2);
 
     /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓算法申请相关↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 
@@ -274,20 +277,21 @@ public interface BaseMapper {
      * @return 算法申请列表
      * @author zero
      */
-    List<AlgorithmSend> getAlgorithmSends(int pageStart, int pageSize);
+    List<AlgorithmSendView> getAlgorithmSends(int pageStart, int pageSize);
 
     long getAlgorithmSendsCount();
 
     /**
-     * @param queryCondition 关键字
+     * @param queryCondition1 关键字1
+     * @param queryCondition2 关键字2
      * @param pageStart      起始页码
      * @param pageSize       一页的数据量
      * @return 算法申请集合
      * @author zero
      */
-    List<AlgorithmSend> getAlgorithmSendsByQueryCondition(String queryCondition, int pageStart, int pageSize);
+    List<AlgorithmSendView> getAlgorithmSendsByQueryCondition(String queryCondition1, String queryCondition2, int pageStart, int pageSize);
 
-    long getAlgorithmSendsCountByQueryCondition(String queryCondition);
+    long getAlgorithmSendsCountByQueryCondition(String queryCondition1, String queryCondition2);
 
     /**
      * listFiles

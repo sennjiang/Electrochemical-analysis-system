@@ -4,6 +4,7 @@ import com.bluedot.electrochemistry.dao.base.BaseDao;
 import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.Algorithm;
+import com.bluedot.electrochemistry.pojo.vo.AlgorithmView;
 import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.annotation.Service;
@@ -155,7 +156,7 @@ public class AlgorithmService extends BaseService {
         BaseMapper mapper = mapperFactory.createMapper();
         Integer pageStart = Integer.parseInt((String) map.get("page"));
         Integer pageSize = Integer.parseInt((String) map.get("limit"));
-        List<Algorithm> algs = mapper.getAlgorithms((pageStart - 1) * pageSize,pageSize);
+        List<AlgorithmView> algs = mapper.getAlgorithms((pageStart - 1) * pageSize,pageSize);
         Long size = mapper.getAlgorithmsCount();
         if(algs!=null){
             map.put("message", "算法列表查询成功");
@@ -177,10 +178,10 @@ public class AlgorithmService extends BaseService {
             BaseMapper mapper = mapperFactory.createMapper();
             Integer pageStart = Integer.parseInt((String) map.get("page"));
             Integer pageSize = Integer.parseInt((String) map.get("limit"));
-            String queryCondition = (String) map.get("queryCondition");
+            String queryCondition = (String) map.get("title");
             Long size = null;
-            List<Algorithm> algorithms = mapper.getAlgorithmsByQueryCondition("%" + queryCondition + "%", (pageStart - 1) * pageSize, pageSize);
-            size = mapper.getAlgorithmsCountByQueryCondition("%" + queryCondition + "%");
+            List<AlgorithmView> algorithms = mapper.getAlgorithmsByQueryCondition("%"+queryCondition+"%", "%"+queryCondition+"%", (pageStart - 1) * pageSize, pageSize);
+            size = mapper.getAlgorithmsCountByQueryCondition("%"+queryCondition+"%", "%"+queryCondition+"%");
 
             map.put("data", algorithms);
             map.put("length", size);
