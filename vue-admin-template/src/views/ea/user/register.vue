@@ -59,9 +59,9 @@
           </el-form-item>
 
 
-          <el-form-item prop="smscode" class="code">
-            <el-input class="style-code-input" v-model="userForm.smscode" placeholder="请输入验证码"></el-input>
-            <el-button type="primary" :disabled='isDisabled' @click="sendCode">{{ buttonText }}</el-button>
+          <el-form-item prop="emailCode" class="code">
+            <el-input class="style-code-input" v-model="userForm.emailCode" placeholder="请输入验证码"></el-input>
+            <el-button type="primary" :disabled='isDisabled' @click="sendEmailCode">{{ buttonText }}</el-button>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm('userForm')" style="width:100%;">注册</el-button>
@@ -76,6 +76,7 @@
 <script>
 import store from "@/store";
 import global from "@/views/global";
+import {Message} from "element-ui";
 
 function isEmail(s) {
   return /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(s)
@@ -95,7 +96,7 @@ export default {
     //   }
     // }
     //  <!--验证码是否为空-->
-    // let checkSmscode = (rule, value, callback) => {
+    // let checkemailCode = (rule, value, callback) => {
     //   if (value === '') {
     //     callback(new Error('请输入邮箱验证码'))
     //   } else {
@@ -135,6 +136,15 @@ export default {
         callback()
       }
     };
+    // 校验邮箱验证码
+    let validateEmailCode = (rule, value, callback) => {
+      if (!this.userForm.emailCode === this.userForm.emailCodeResp) {
+        callback(new Error('验证码错误'))
+      } else {
+        this.$message.success("验证码正确")
+        callback()
+      }
+    };
     return {
       // 注册信息核验规则
       registerRules: {
@@ -154,8 +164,11 @@ export default {
         email: [
           {required: true, message: '邮箱不能为空', trigger: 'blur'},
           {validator: validateEmail, trigger: 'blur'}
+        ],
+        emailCode: [
+          {required: true, message: '验证码不能为空', trigger: 'blur'},
+          {validator: validateEmailCode, trigger: 'blur'}
         ]
-
 
       },
 
@@ -167,13 +180,14 @@ export default {
         gender: "",
         birth: "",
         email: '',
-        smscode: ""
+        emailCode: "",
+        emailCodeResp: ''
       },
       // rules2: {
       //   pass: [{validator: validatePass, trigger: 'change'}],
       //   checkPass: [{validator: validatePass2, trigger: 'change'}],
       //   tel: [{validator: checkTel, trigger: 'change'}],
-      //   smscode: [{validator: checkSmscode, trigger: 'change'}],
+      //   emailCode: [{validator: checkemailCode, trigger: 'change'}],
       // },
       buttonText: '发送验证码',
       isDisabled: false, // 是否禁止点击发送验证码按钮
@@ -206,9 +220,8 @@ export default {
       })
     },
 
-
-    // <!--发送验证码-->
-    sendCode() {
+    // <!--发送邮箱验证码-->
+    sendEmailCode() {
       let email = this.userForm.email
       if (this.checkEmail(email)) {
         console.log(email)
@@ -227,16 +240,19 @@ export default {
               this.flag = true;
             }
           }, 1000)
-          this.postRequest('/sendEmailCode', {boundary: '0107', email: email}).then(resp => {
-
+          this.postRequest('/sendEmail', {boundary: '0107', email: email}).then(resp => {
+            this.userForm.emailCodeResp = resp.emailCode
           })
         }
       }
     },
     // <!--提交注册-->
     submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate(async valid => {
         if (valid) {
+          await this.postRequest('/existUserByEmail', this.userForm).then(resp => {
+
+          })
           setTimeout(() => {
             alert('注册成功')
           }, 400);

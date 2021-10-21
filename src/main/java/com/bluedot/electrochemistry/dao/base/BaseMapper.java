@@ -55,6 +55,16 @@ public interface BaseMapper {
     Long countUserByEmail(String email);
 
     /**
+     * 根据username查询用户数
+     * @param username 账号
+     * @return 该username的用户数
+     */
+    Long countUserByUsername(int username);
+
+
+    Long addUser(int username, String password, String nickname,int gender, int age, String email, String birth, int status, String portrait, String gmt_created);
+
+    /**
      * 根据用户名查权限
      *
      */

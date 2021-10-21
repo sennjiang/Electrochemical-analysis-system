@@ -1,5 +1,6 @@
 package com.bluedot.electrochemistry.service;
 
+import com.bluedot.electrochemistry.dao.base.BaseDao;
 import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.User;
@@ -10,143 +11,223 @@ import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 用户业务
- * @version 1.0
+ *
  * @author KangLongPing
+ * @version 1.0
  * @date 2021/9/4 17:07
  **/
 @Service
 public class UserService extends BaseService {
 
-	@Autowired
-	MapperFactory mapperFactory;
+    @Autowired
+    MapperFactory mapperFactory;
+    @Autowired
+    BaseDao baseDao;
 
-	/**
-	 * 登录方法
-	 * @param map User实体类
-	 */
-	private void login(Map map) {
+    /**
+     * 登录方法
+     *
+     * @param map User实体类
+     */
+    private void login(Map map) {
 
-		int username = Integer.parseInt((String) map.get("username"));
-		String password = (String) map.get("password");
-		BaseMapper mapper = mapperFactory.createMapper();
-		User user = mapper.queryUserByUsername(username);
-		if(user != null && password.equals(user.getPassword())) {
-			map.put("userInfo", user);
-			map.put("code", 200);
-			map.put("message", "登录成功");
-		}else {
-			map.put("code", 500);
-			map.put("message", "账号或者密码错误");
-		}
-	}
+        int username = Integer.parseInt((String) map.get("username"));
+        String password = (String) map.get("password");
+        BaseMapper mapper = mapperFactory.createMapper();
+        User user = mapper.queryUserByUsername(username);
+        if (user != null && password.equals(user.getPassword())) {
+            map.put("userInfo", user);
+            map.put("code", 200);
+            map.put("message", "登录成功");
+        } else {
+            map.put("code", 500);
+            map.put("message", "账号或者密码错误");
+        }
+    }
 
-	/**
-	 * 根据用户名查询用户
-	 * @param map User实体类
-	 */
-	private void queryUser(Map map) {
-	}
+    /**
+     * 根据用户名查询用户
+     *
+     * @param map User实体类
+     */
+    private void queryUser(Map map) {
+    }
 
-	/**
-	 * 修改用户个人信息
-	 * @param map ResultBean实休类
-	 */
-	private void modifyUser(Map map) {
-	}
+    /**
+     * 修改用户个人信息
+     *
+     * @param map ResultBean实休类
+     */
+    private void modifyUser(Map map) {
+    }
 
-	/**
-	 * 添加用户
-	 * @param map User实体类
-	 */
-	private void addUSer(Map map) {
-	}
+    /**
+     * 添加用户
+     *
+     * @param map User实体类
+     */
+    private void addUSer(Map map) throws ParseException {
+        BaseMapper mapper = mapperFactory.createMapper();
 
-	/**
-	 * 用户申请解冻
-	 * @param map UnfreezeApplication实体类
-	 */
-	private void deleteUSerByUsername(Map map) {
-	}
+        // 1.生成username
+        int max = 99999999, min = 10000000;
+        long randomNum;
+        int username;
+        randomNum = System.currentTimeMillis();
+        username = (int) (randomNum % (max - min) + min);
+        while ((mapper.countUserByUsername(username) > 0)) {
+            randomNum = System.currentTimeMillis();
+            username = (int) (randomNum % (max - min) + min);
+        }
+        // 2.昵称
+        String nickname = (String) map.get("nickname");
+        // 3.密码
+        String password = (String) map.get("pwd1");
+        // 4.性别
+        String gender = (String) map.get("gender");
+        // 5.生日
+        String birth = (String) map.get("birth");
+        // 6.邮箱
+        String email = (String) map.get("email");
+        // 7.注册用户状态默认为1
+        int status = 1;
+        // 8.头像
+        String portrait = "https://typorasss2021.oss-cn-shenzhen.aliyuncs.com/mixue.png";
+        // 9.年龄
+        int age = 18;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date birthDay = sdf.parse(birth);
+            Calendar cal = Calendar.getInstance();
+            if (cal.before(birthDay)) { //出生日期晚于当前时间，无法计算
+                throw new IllegalArgumentException(
+                        "The birthDay is before Now.It's unbelievable!");
+            }
+            int yearNow = cal.get(Calendar.YEAR);  //当前年份
+            int monthNow = cal.get(Calendar.MONTH);  //当前月份
+            int dayOfMonthNow = cal.get(Calendar.DAY_OF_MONTH); //当前日期
+            cal.setTime(birthDay);
+            int yearBirth = cal.get(Calendar.YEAR);
+            int monthBirth = cal.get(Calendar.MONTH);
+            int dayOfMonthBirth = cal.get(Calendar.DAY_OF_MONTH);
+            age = yearNow - yearBirth;   //计算整岁数
+            if (monthNow <= monthBirth) {
+                if (monthNow == monthBirth) {
+                    if (dayOfMonthNow < dayOfMonthBirth) age--;//当前日期在生日之前，年龄减一
+                } else {
+                    age--;//当前月份在生日之前，年龄减一
+                }
+            }
 
-	/**
-	 * 是否存在该用户
-	 * @param map
-	 */
-	private void existUserByEmail(Map map) {
-		String email = (String) map.get("email");
-		BaseMapper mapper = mapperFactory.createMapper();
-		Long userCount = mapper.countUserByEmail(email);
-		if(userCount > 0) {
-			map.put("code", 500);
-			map.put("message", "用户已存在");
-		}else {
-			map.put("code", 200);
-			map.put("message", "可以注册");
-		}
-	}
+            System.out.println("我的age是:" + age);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // 10.记录创建时间
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        String gmtCreated = df.format(new Date());
+        ;// new Date()为获取当前系统时间
+        System.out.println("********************");
+        System.out.println(username + "\n" + password + "\n" + nickname + "\n" + gender + "\n" + age + "\n" + email + "\n" + birth + "\n" + status + "\n" + portrait + "\n" + gmtCreated);
+        Timestamp birthTime = new Timestamp(new SimpleDateFormat("yyyy-MM-dd").parse(birth).getTime());
+        Timestamp gmtCreatedTime = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(gmtCreated).getTime());
 
-	private void sendEmail(Map map) throws Exception {
-		// 创建Properties 类用于记录邮箱的一些属性
-		Properties props = new Properties();
-		// 表示SMTP发送邮件，必须进行身份验证
-		props.put("mail.smtp.auth", "true");
-		//此处填写SMTP服务器
-		props.put("mail.smtp.host", "smtp.163.com");
-		//端口号，QQ邮箱端口587
-		props.put("mail.smtp.port", "25");
-		// 此处填写，写信人的账号
-		props.put("mail.user", "klpjxau@163.com");
-		// 此处填写16位STMP口令
-		props.put("mail.password", "NWDATKARUUTXXKJY");
+        User newUser = new User(username, password, nickname, Integer.parseInt(gender), age, email, birthTime, status, portrait, gmtCreatedTime);
+        baseDao.insert(newUser);
+        // mapper.addUser(username, password, nickname, Integer.parseInt(gender), age, email, birth, status, portrait, gmtCreated);
+    }
 
-		// 构建授权信息，用于进行SMTP进行身份验证
-		Authenticator authenticator = new Authenticator() {
+    /**
+     * 用户申请解冻
+     *
+     * @param map UnfreezeApplication实体类
+     */
+    private void deleteUSerByUsername(Map map) {
+    }
 
-			protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-				// 用户名、密码
-				String userName = props.getProperty("mail.user");
-				String password = props.getProperty("mail.password");
-				return new PasswordAuthentication(userName, password);
-			}
-		};
-		// 使用环境属性和授权信息，创建邮件会话
-		Session mailSession = Session.getInstance(props, authenticator);
-		// 创建邮件消息
-		MimeMessage message = new MimeMessage(mailSession);
-		// 设置发件人
-		InternetAddress form = new InternetAddress(props.getProperty("mail.user"));
-		message.setFrom(form);
+    /**
+     * 是否存在该用户
+     *
+     * @param map
+     */
+    private void existUserByEmail(Map map) {
+        String email = (String) map.get("email");
+        BaseMapper mapper = mapperFactory.createMapper();
+        Long userCount = mapper.countUserByEmail(email);
+        if (userCount > 0) {
+            map.put("code", 500);
+            map.put("message", "用户已存在");
+        } else {
+            map.put("code", 200);
+            map.put("message", "可以注册");
+        }
+    }
 
-		// 设置收件人的邮箱
-		InternetAddress to = new InternetAddress((String) map.get("email"));
-		message.setRecipient(Message.RecipientType.TO, to);
+    private void sendEmail(Map map) throws Exception {
+        // 创建Properties 类用于记录邮箱的一些属性
+        Properties props = new Properties();
+        // 表示SMTP发送邮件，必须进行身份验证
+        props.put("mail.smtp.auth", "true");
+        //此处填写SMTP服务器
+        props.put("mail.smtp.host", "smtp.163.com");
+        //端口号，QQ邮箱端口587
+        props.put("mail.smtp.port", "25");
+        // 此处填写，写信人的账号
+        props.put("mail.user", "klpjxau@163.com");
+        // 此处填写16位STMP口令
+        props.put("mail.password", "NWDATKARUUTXXKJY");
 
-		// 设置邮件标题
-		message.setSubject("Hello");
+        // 构建授权信息，用于进行SMTP进行身份验证
+        Authenticator authenticator = new Authenticator() {
 
-		// 要发送的验证码
-		String s = UUID.randomUUID().toString().replace("-", "").toLowerCase().substring(0, 5);
+            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                // 用户名、密码
+                String userName = props.getProperty("mail.user");
+                String password = props.getProperty("mail.password");
+                return new PasswordAuthentication(userName, password);
+            }
+        };
+        // 使用环境属性和授权信息，创建邮件会话
+        Session mailSession = Session.getInstance(props, authenticator);
+        // 创建邮件消息
+        MimeMessage message = new MimeMessage(mailSession);
+        // 设置发件人
+        InternetAddress form = new InternetAddress(props.getProperty("mail.user"));
+        message.setFrom(form);
 
-		// 设置邮件的内容体
-		message.setContent("[电化学分析系统]你的验证码为：" + s, "text/html;charset=UTF-8");
+        // 设置收件人的邮箱
+        InternetAddress to = new InternetAddress((String) map.get("email"));
+        message.setRecipient(Message.RecipientType.TO, to);
 
-		// 最后当然就是发送邮件啦
-		Transport.send(message);
+        // 设置邮件标题
+        message.setSubject("[电化学分析系统] 注册验证码");
 
-		map.put("code", "200");
-		map.put("message", "邮件已发送");
-	}
+        // 要发送的验证码
+        String emailCode = UUID.randomUUID().toString().replace("-", "").toLowerCase().substring(0, 5);
 
-	/**
-	 * 添加管理员
-	 * @param map User实体类
-	 */
-	private void addAdmin(Map map) {
-	}
+        // 设置邮件的内容体
+        message.setContent("[电化学分析系统]您的验证码为：" + emailCode, "text/html;charset=UTF-8");
+
+        // 最后当然就是发送邮件啦
+        Transport.send(message);
+
+        map.put("code", "200");
+        map.put("emailCode", emailCode);
+        map.put("message", "邮件已发送");
+    }
+
+    /**
+     * 添加管理员
+     *
+     * @param map User实体类
+     */
+    private void addAdmin(Map map) {
+    }
 }

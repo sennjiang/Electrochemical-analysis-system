@@ -17,6 +17,13 @@
     <select id="countUserByEmail" resultType="java.lang.Long">
         select count(*) from user where email=#{email};
     </select>
+    <select id="countUserByUsername" resultType="java.lang.Long">
+        select count(*) from user where username=#{username};
+    </select>
+    <select id="addUser" resultType="java.lang.Long">
+        insert into user(username, password, nickname, gender, age, email, birth, status, portrait, gmt_created)
+        values(#{username},#{password},#{nickname},#{gender},#{age},#{email},#{birth},#{status},#{portrait},#{gmt_created});
+    </select>
 
     <!--超级管理员相关-->
     <!--根据用户名查权限-->
