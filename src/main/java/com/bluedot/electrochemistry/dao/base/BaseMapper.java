@@ -61,9 +61,6 @@ public interface BaseMapper {
      */
     Long countUserByUsername(int username);
 
-
-    Long addUser(int username, String password, String nickname,int gender, int age, String email, String birth, int status, String portrait, String gmt_created);
-
     /**
      * 根据用户名查权限
      *

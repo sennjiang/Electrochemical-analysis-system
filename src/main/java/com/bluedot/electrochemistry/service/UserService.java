@@ -134,14 +134,11 @@ public class UserService extends BaseService {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         String gmtCreated = df.format(new Date());
         ;// new Date()为获取当前系统时间
-        System.out.println("********************");
-        System.out.println(username + "\n" + password + "\n" + nickname + "\n" + gender + "\n" + age + "\n" + email + "\n" + birth + "\n" + status + "\n" + portrait + "\n" + gmtCreated);
         Timestamp birthTime = new Timestamp(new SimpleDateFormat("yyyy-MM-dd").parse(birth).getTime());
         Timestamp gmtCreatedTime = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(gmtCreated).getTime());
 
         User newUser = new User(username, password, nickname, Integer.parseInt(gender), age, email, birthTime, status, portrait, gmtCreatedTime);
         baseDao.insert(newUser);
-        // mapper.addUser(username, password, nickname, Integer.parseInt(gender), age, email, birth, status, portrait, gmtCreated);
     }
 
     /**
