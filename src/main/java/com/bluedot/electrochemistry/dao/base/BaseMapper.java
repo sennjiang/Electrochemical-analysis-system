@@ -40,6 +40,14 @@ public interface BaseMapper {
     User queryUserByUsername(int username);
 
     /**
+     *  登录
+     * @param username 用户名
+     * @param email 邮箱
+     * @return
+     */
+    User login(int username, String email);
+
+    /**
      * 根据email查询用户
      *
      * @param email 邮箱

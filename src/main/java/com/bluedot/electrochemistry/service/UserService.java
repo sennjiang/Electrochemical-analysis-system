@@ -38,10 +38,11 @@ public class UserService extends BaseService {
      */
     private void login(Map map) {
 
-        int username = Integer.parseInt((String) map.get("username"));
+        String username = (String) map.get("username");
         String password = (String) map.get("password");
         BaseMapper mapper = mapperFactory.createMapper();
-        User user = mapper.queryUserByUsername(username);
+        User user = mapper.queryUserByUsername(Integer.parseInt(username));
+        System.out.println(user);
         if (user != null && password.equals(user.getPassword())) {
             map.put("userInfo", user);
             map.put("code", 200);
