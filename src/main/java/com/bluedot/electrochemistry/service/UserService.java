@@ -82,6 +82,7 @@ public class UserService extends BaseService {
         int username;
         randomNum = System.currentTimeMillis();
         username = (int) (randomNum % (max - min) + min);
+        // 保证用户名的唯一性
         while ((mapper.countUserByUsername(username) > 0)) {
             randomNum = System.currentTimeMillis();
             username = (int) (randomNum % (max - min) + min);
@@ -136,9 +137,17 @@ public class UserService extends BaseService {
         ;// new Date()为获取当前系统时间
         Timestamp birthTime = new Timestamp(new SimpleDateFormat("yyyy-MM-dd").parse(birth).getTime());
         Timestamp gmtCreatedTime = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(gmtCreated).getTime());
-
+        System.out.println("******************************");
+        System.out.println(username + password + nickname + Integer.parseInt(gender) + age + email + birthTime + status + portrait + gmtCreatedTime);
         User newUser = new User(username, password, nickname, Integer.parseInt(gender), age, email, birthTime, status, portrait, gmtCreatedTime);
-        baseDao.insert(newUser);
+        int res = baseDao.insert(newUser);
+        if (res > 0) {
+            map.put("code", 200);
+            map.put("message", "注册成功啦");
+        } else {
+            map.put("code", 500);
+            map.put("message", "注册失败");
+        }
     }
 
     /**

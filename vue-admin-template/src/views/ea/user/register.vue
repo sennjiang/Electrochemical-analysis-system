@@ -47,6 +47,8 @@
               <el-date-picker
                 v-model="userForm.birth"
                 type="date"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
                 placeholder="选择日期">
               </el-date-picker>
             </div>
@@ -153,7 +155,7 @@ export default {
           // trigger:blur-触发方式，blur失去焦点，change数据改变
           {required: true, message: '请输入昵称', trigger: 'blur'},
           // min: 3, max: 5, message: '长度在3到5个字符', trigger: 'blur'
-          {min: 5, max: 12, message: '长度在5到8个字符', trigger: 'blur'}
+          {min: 1, max: 8, message: '长度在1到8个字符', trigger: 'blur'}
         ],
         //  校验密码
         pwd1: [
@@ -173,7 +175,7 @@ export default {
       },
 
       userForm: {
-        boundary: '0110',
+        boundary: '0106',
         nickname: "",
         pwd1: "",
         pwd2: "",
@@ -209,7 +211,7 @@ export default {
     // 是否存在该用户, 参数为email, true:存在, false:不存在
     async existUser() {
       // const {data: resp} = await this.$http.post('/existUserByEmail', this.userForm.email)
-      await this.postRequest('/existUserByEmail', this.userForm).then(resp => {
+      await this.postRequest('/existUserByEmail', {boundary: '0110', email: this.userForm.email}).then(resp => {
         if (resp.code === 200) {
           // 该email不存在, 可以注册
           return true;
@@ -247,20 +249,24 @@ export default {
       }
     },
     // <!--提交注册-->
-    submitForm(formName) {
-      this.$refs[formName].validate(async valid => {
-        if (valid) {
-          await this.postRequest('/existUserByEmail', this.userForm).then(resp => {
-
-          })
-          setTimeout(() => {
-            alert('注册成功')
-          }, 400);
+    async submitForm(formName) {
+      // this.$refs[formName].validate(async valid => {
+      //   if (valid) {
+      await this.postRequest('/addUser', this.userForm).then(resp => {
+        if (resp.code == 200) {
+          console.log("注册成功")
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log("注册失败")
         }
       })
+      setTimeout(() => {
+        alert('注册成功')
+      }, 400);
+      //   } else {
+      //     console.log("error submit!!");
+      //     return false;
+      //   }
+      // })
     },
     // <!--进入登录页-->
     gotoLogin() {
