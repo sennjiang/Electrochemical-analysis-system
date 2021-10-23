@@ -6,7 +6,8 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 import Register from '@/views/ea/user/register'
-
+import ModifyPasswordVerify from '@/views/ea/user/modifyPasswordVerify/index'
+import ModifyPasswordInfo from '@/views/ea/user/modifyPasswordInfo'
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -51,6 +52,22 @@ export const constantRoutes = [
     component: Register,
     hidden: true
   },
+
+  // 修改密码-验证
+  {
+    path: '/modifyPasswordVerify',
+    component: ModifyPasswordVerify,
+    hidden: true
+  },
+
+  // 修改密码-填写信息
+  {
+    path: '/modifyPasswordInfo',
+    component: ModifyPasswordInfo,
+    hidden: true
+  },
+
+
 
   {
     path: '/404',

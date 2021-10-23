@@ -3,8 +3,10 @@ package com.bluedot.electrochemistry.service;
 import com.bluedot.electrochemistry.dao.base.BaseDao;
 import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
+import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.pojo.domain.User;
 import com.bluedot.electrochemistry.service.base.BaseService;
+import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.annotation.Service;
 import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 
@@ -66,7 +68,13 @@ public class UserService extends BaseService {
      *
      * @param map ResultBean实休类
      */
-    private void modifyUser(Map map) {
+    private void modifyUser(Map<String, Object> map) {
+        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                return baseDao.update(parseToUser(map));
+            }
+        });
     }
 
     /**
@@ -128,7 +136,6 @@ public class UserService extends BaseService {
                 }
             }
 
-            System.out.println("我的age是:" + age);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -236,5 +243,25 @@ public class UserService extends BaseService {
      * @param map User实体类
      */
     private void addAdmin(Map map) {
+    }
+
+    /**
+     * 将请求数据中的信息封装成用户对象
+     *
+     * @param map
+     * @return
+     */
+    private User parseToUser(Map<String, Object> map) {
+        Integer username = Integer.parseInt((String) map.get("username"));
+        String password = (String) map.get("password");
+        String nickname = (String) map.get("nickname");
+        Integer gender = (Integer) map.get("gender");
+        Integer age = (Integer) map.get("age");
+        String email = (String) map.get("email");
+        Timestamp birth = (Timestamp) map.get("birth");
+        Integer status = (Integer) map.get("status");
+        String portrait = (String) map.get("portrait");
+        Timestamp gmtCreated = (Timestamp) map.get("gmtCreated");
+        return new User(username, password, nickname, gender, age, email, birth, status, portrait, gmtCreated);
     }
 }

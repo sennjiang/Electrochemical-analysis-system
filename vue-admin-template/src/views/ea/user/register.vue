@@ -37,7 +37,7 @@
             <div style="margin-left: 15px">
               <span class="demonstration">性别：</span>
               <el-radio v-model="userForm.gender" label="1" border size="medium">男</el-radio>
-              <el-radio v-model="userForm.gender" label="2" border size="medium">女</el-radio>
+              <el-radio v-model="userForm.gender" label="0" border size="medium">女</el-radio>
             </div>
           </el-form-item>
 
@@ -66,7 +66,7 @@
             <el-button type="primary" :disabled='isDisabled' @click="sendEmailCode">{{ buttonText }}</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('userForm')" style="width:100%;">注册</el-button>
+            <el-button type="primary" @click="submitForm" style="width:100%;">注册</el-button>
             <p class="login" @click="gotoLogin">已有账号？立即登录</p>
           </el-form-item>
         </el-form>
