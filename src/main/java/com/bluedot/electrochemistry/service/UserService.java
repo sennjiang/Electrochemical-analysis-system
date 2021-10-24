@@ -253,7 +253,12 @@ public class UserService extends BaseService {
         BaseMapper mapper = mapperFactory.createMapper();
         User user = mapper.queryUserByEmail(email);
         Freeze freeze = mapper.queryFreezeByUsername(user.getUsername());
+        // 时间格式化
+        String strDateFormat = "yyyy-MM-dd HH:mm:ss";
+        SimpleDateFormat sdf = new SimpleDateFormat(strDateFormat);
+        freeze.setFreezeTime(Timestamp.valueOf(sdf.format(freeze.getFreezeTime())));
         map.put("freeze",freeze);
+        map.put("nickname",user.getNickname());
     }
 
     /**
@@ -288,6 +293,8 @@ public class UserService extends BaseService {
         String email = (String) map.get("email");
         Integer handleStatus = Integer.parseInt((String) map.get("handleStatus"));
         String applicationReason = (String) map.get("applicationReason");
+        System.out.println("******************");
+        System.out.println(applicationReason);
         Unfreeze unfreeze = new Unfreeze();
         unfreeze.setFreezeId(freezeId);
         unfreeze.setUsername(username);
