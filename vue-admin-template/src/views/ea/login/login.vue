@@ -20,14 +20,14 @@
       <div class="msg">
         没有账号?
         <!--<router-link to="/admin/userManage/register">立即注册</router-link>-->
-        <a href="#/admin/userManage/register" target="_blank" rel="noopener" @click="">立即注册</a>
+        <a rel="noopener" @click="toRegister">立即注册</a>
         <!--<a @click="$router">立即注册</a>-->
       </div>
       <div>
         <div class="btn-forget-password">
           <a href="#" @click="forgetPassword()">忘记密码</a>
           &nbsp;
-          <a href="#">申请解冻</a>
+          <a @click="toUnfreeze">申请解冻</a>
         </div>
         <div>
 
@@ -128,10 +128,22 @@ export default {
     // to忘记密码页
     forgetPassword() {
       let tempUserKey = Math.round(Math.random()*99999999+10000000).toString()
-      // console.log(tempUserKey)
-      // const tokenStr = '666666'
       window.sessionStorage.setItem('tokenStr', tempUserKey)
       this.$router.push({path: '/forgetPasswordVerify'})
+    },
+
+    // to注册页
+    toRegister() {
+      let tempUserKey = Math.round(Math.random()*99999999+10000000).toString()
+      window.sessionStorage.setItem('tokenStr', tempUserKey)
+      this.$router.push({path: '/register'})
+    },
+
+    // to申请解冻页
+    toUnfreeze() {
+      let tempUserKey = Math.round(Math.random()*99999999+10000000).toString()
+      window.sessionStorage.setItem('tokenStr', tempUserKey)
+      this.$router.push({path: '/unfreezeApplicationVerify'})
     }
 
   }

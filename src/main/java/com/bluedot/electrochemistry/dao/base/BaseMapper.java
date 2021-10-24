@@ -70,6 +70,13 @@ public interface BaseMapper {
     Long countUserByUsername(int username);
 
     /**
+     * 根据用户名查询冻结表
+     * @param username  用户名
+     * @return Freeze
+     */
+    Freeze queryFreezeByUsername(int username);
+
+    /**
      * 根据用户名查权限
      *
      */

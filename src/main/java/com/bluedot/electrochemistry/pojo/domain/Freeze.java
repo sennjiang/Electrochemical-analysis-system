@@ -1,5 +1,7 @@
 package com.bluedot.electrochemistry.pojo.domain;
 
+import java.sql.Timestamp;
+
 /**
  * @author JDsen99
  * @description
@@ -9,7 +11,7 @@ public class Freeze {
     private Integer freezeId;
     private Integer username;
     private String freezeReason;
-    private String freezeTime;
+    private Timestamp freezeTime;
 
     public Freeze() {
     }
@@ -38,11 +40,11 @@ public class Freeze {
         this.freezeReason = freezeReason;
     }
 
-    public String getFreezeTime() {
+    public Timestamp getFreezeTime() {
         return freezeTime;
     }
 
-    public void setFreezeTime(String freezeTime) {
+    public void setFreezeTime(Timestamp freezeTime) {
         this.freezeTime = freezeTime;
     }
 }

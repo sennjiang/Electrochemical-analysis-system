@@ -10,6 +10,8 @@ import ModifyPasswordVerify from '@/views/ea/user/modifyPasswordVerify/index'
 import ModifyPasswordInfo from '@/views/ea/user/modifyPasswordInfo'
 import ModifyEmailVerify from '@/views/ea/user/modifyEmailVerify'
 import ModifyEmailInfo from '@/views/ea/user/modifyEmailInfo'
+import UnfreezeApplicationVerify from '@/views/ea/user/unfreezeApplicationVerify'
+import UnfreezeApplicationInfo from '@/views/ea/user/unfreezeApplicationInfo'
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -83,6 +85,19 @@ export const constantRoutes = [
     hidden: true
   },
 
+  //申请验证
+  {
+    path: '/unfreezeApplicationVerify',
+    component: UnfreezeApplicationVerify,
+    hidden: true
+  },
+
+  //申请解冻信息
+  {
+    path: '/unfreezeApplicationInfo',
+    component: UnfreezeApplicationInfo,
+    hidden: true
+  },
 
 
   {
@@ -219,20 +234,6 @@ export const constantRoutes = [
         meta: { title: '解冻审核', icon: 'user' }
       }
     ]
-  },
-
-  //申请验证
-  {
-    path: 'unfreezeApplicationVerify',
-    component: () => import('@/views/ea/admin/unfreezeAudit/unfreezeApplicationVerify'),
-    hidden: true
-  },
-
-  //申请解冻信息
-  {
-    path: 'unfreezeApplicationInfo',
-    component: () => import('@/views/ea/admin/unfreezeAudit/unfreezeApplicationInfo'),
-    hidden: true
   },
 
   {

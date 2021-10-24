@@ -51,6 +51,16 @@
         <method>existUserByEmail</method>
     </node>
     <node>
+        <number>0111</number>
+        <service>UserService</service>
+        <method>getFreezeInfo</method>
+    </node>
+    <node>
+        <number>0112</number>
+        <service>UserService</service>
+        <method>saveUnfreezeInfo</method>
+    </node>
+    <node>
         <number>0201</number>
         <service>FileService</service>
         <method>getReport</method>

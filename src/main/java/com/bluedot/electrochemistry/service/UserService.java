@@ -4,6 +4,8 @@ import com.bluedot.electrochemistry.dao.base.BaseDao;
 import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.File;
+import com.bluedot.electrochemistry.pojo.domain.Freeze;
+import com.bluedot.electrochemistry.pojo.domain.Unfreeze;
 import com.bluedot.electrochemistry.pojo.domain.User;
 import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
@@ -184,6 +186,11 @@ public class UserService extends BaseService {
         }
     }
 
+    /**
+     * 发送邮件
+     * @param map
+     * @throws Exception
+     */
     private void sendEmail(Map map) throws Exception {
         // 创建Properties 类用于记录邮箱的一些属性
         Properties props = new Properties();
@@ -238,11 +245,56 @@ public class UserService extends BaseService {
     }
 
     /**
+     * 根据username获取freeze信息
+     * @param map [username]
+     */
+    private void getFreezeInfo(Map map) {
+        String email = (String) map.get("email");
+        BaseMapper mapper = mapperFactory.createMapper();
+        User user = mapper.queryUserByEmail(email);
+        Freeze freeze = mapper.queryFreezeByUsername(user.getUsername());
+        map.put("freeze",freeze);
+    }
+
+    /**
+     * 存储解决申请信息
+     * @param map
+     */
+    private void saveUnfreezeInfo(Map map) {
+        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                return baseDao.insert(parseToUnfreeze(map));
+            }
+        });
+    }
+
+    /**
      * 添加管理员
      *
      * @param map User实体类
      */
     private void addAdmin(Map map) {
+    }
+
+    /**
+     * 封闭成unfreeze对象
+     * @param map
+     * @return
+     */
+    private Unfreeze parseToUnfreeze(Map<String, Object> map) {
+        Integer freezeId = Integer.parseInt((String) map.get("freezeId"));
+        Long username = Long.parseLong((String) map.get("username"));
+        String email = (String) map.get("email");
+        Integer handleStatus = Integer.parseInt((String) map.get("handleStatus"));
+        String applicationReason = (String) map.get("applicationReason");
+        Unfreeze unfreeze = new Unfreeze();
+        unfreeze.setFreezeId(freezeId);
+        unfreeze.setUsername(username);
+        unfreeze.setEmail(email);
+        unfreeze.setHandleStatus(handleStatus);
+        unfreeze.setApplicationReason(applicationReason);
+        return unfreeze;
     }
 
     /**
