@@ -4,42 +4,109 @@
     <hr class="style-hr"/>
     <div class="style-form-wrapper">
       <h2 class="style-h2-forget">填写新密码</h2>
-      <el-form style="text-align: center; margin-top: 50px;position: relative; top: 10%">
+      <el-form style="text-align: center; margin-top: 50px;position: relative; top: 10%" ref="passwordForm"
+               :rules="passwordFormRules" :model="passwordForm">
+        <el-form-item prop="password1">
+          <span>新的密码:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <el-input style="width: 300px;" type="password" v-model="passwordForm.password1"></el-input>
+        </el-form-item>
+        <br/>
+        <br/>
 
-          <el-form-item>
-            <span>新的密码:&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-input style="width: 300px;"></el-input>
-          </el-form-item>
-          <br/>
-          <br/>
-
-        <el-form-item>
+        <el-form-item prop="password2">
           <span>密码确认:&nbsp;&nbsp;&nbsp;&nbsp;</span>
-          <el-input style="width: 300px"></el-input>
+          <el-input style="width: 300px" v-model="passwordForm.password2" type="password"></el-input>
         </el-form-item>
         <br/>
         <br/>
         <br/>
-        <el-row><el-button  type="primary" size="medium" class="style-form-button" :loading="loadState" @click="load()">确定</el-button></el-row>
+        <el-row>
+          <el-button type="primary" size="medium" class="style-form-button" :loading="loadState" @click="submitForm">确定
+          </el-button>
+        </el-row>
       </el-form>
     </div>
   </div>
 </template>
 
 <script>
+import { resetRouter } from "@/router";
 export default {
-  name: "ForgetPasswordInfo",
+  name: "modifyPasswordInfo",
 
   data() {
+    //验证密码
+    let validatePwd1 = (rule, value, callback) => {
+      var reg = new RegExp(/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/);
+      if (!reg.test(this.passwordForm.password1)) {
+        callback(new Error("密码必须包含字母和数字!"));
+        return false;
+      } else {
+        callback();
+      }
+    };
+    // <!--二次验证密码-->
+    let validatePwd2 = (rule, value, callback) => {
+      var reg = new RegExp(/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/);
+      if (value !== this.passwordForm.password1) {
+        callback(new Error("两次输入密码不一致!"));
+      } else if (!reg.test(this.passwordForm.password1)) {
+        callback(new Error("密码必须包含字母和数字!"));
+        return false;
+      } else {
+        callback();
+      }
+    };
     return {
-      loadState: false
+      loadState: false,
+      passwordForm: {
+        password1: '',
+        password2: '',
+      },
+      userInfo: {
+        username: '',
+      },
+
+      passwordFormRules: {
+        //  校验密码
+        password1: [
+          {required: true, message: '请输入密码', trigger: 'blur'},
+          {validator: validatePwd1, trigger: 'blur'},
+          {min: 6, max: 18, message: '长度在 5 到 12 个字符', trigger: 'blur'}
+        ],
+        password2: {validator: validatePwd2, trigger: 'blur'},
+      }
+
     }
+
+  },
+
+  created() {
+    this.userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
   },
 
   methods: {
-    load() {
+    async submitForm() {
+      await this.$refs.passwordForm.validate(async valid => {
+        if (valid) {
+          this.postRequest('/modifyUser', {boundary: '0104', username: this.userInfo.username, password: this.passwordForm.password2}).then(resp => {
+            this.loadState = false;
+            this.toLogin()
+          })
+        }
+      })
       this.loadState = !this.loadState;
-    }
+    },
+
+    // 返回登录页
+     async toLogin() {
+       await this.$refs.passwordForm.validate(valid => {
+         if (valid) {
+           window.sessionStorage.removeItem('tokenStr')
+           this.$router.push('/login')
+         }
+       })
+     }
   }
 }
 </script>

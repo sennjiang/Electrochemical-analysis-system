@@ -25,7 +25,7 @@
       </div>
       <div>
         <div class="btn-forget-password">
-          <a href="#">忘记密码</a>
+          <a href="#" @click="forgetPassword()">忘记密码</a>
           &nbsp;
           <a href="#">申请解冻</a>
         </div>
@@ -90,7 +90,7 @@ export default {
                 this.$store.commit('modifyCurrentNickname', resp.nickname)
                 this.$store.commit('modifyCurrentStatus', resp.status)
                 this.$router.push({path: this.redirect || '/'})
-                console.log(window.sessionStorage.getItem(tokenStr))
+                // console.log(window.sessionStorage.getItem(tokenStr))
               }
 
               // 用户状态被冻结, 状态码为0
@@ -123,6 +123,15 @@ export default {
           return false
         }
       })
+    },
+
+    // to忘记密码页
+    forgetPassword() {
+      let tempUserKey = Math.round(Math.random()*99999999+10000000).toString()
+      // console.log(tempUserKey)
+      // const tokenStr = '666666'
+      window.sessionStorage.setItem('tokenStr', tempUserKey)
+      this.$router.push({path: '/forgetPasswordVerify'})
     }
 
   }

@@ -8,6 +8,8 @@ import Layout from '@/layout'
 import Register from '@/views/ea/user/register'
 import ModifyPasswordVerify from '@/views/ea/user/modifyPasswordVerify/index'
 import ModifyPasswordInfo from '@/views/ea/user/modifyPasswordInfo'
+import ModifyEmailVerify from '@/views/ea/user/modifyEmailVerify'
+import ModifyEmailInfo from '@/views/ea/user/modifyEmailInfo'
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -64,6 +66,20 @@ export const constantRoutes = [
   {
     path: '/modifyPasswordInfo',
     component: ModifyPasswordInfo,
+    hidden: true
+  },
+
+  // 修改email-验证邮箱
+  {
+    path: '/modifyEmailVerify',
+    component: ModifyEmailVerify,
+    hidden: true
+  },
+
+  // 修改email-填写信息
+  {
+    path: '/modifyEmailInfo',
+    component: ModifyEmailInfo,
     hidden: true
   },
 

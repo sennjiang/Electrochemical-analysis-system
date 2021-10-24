@@ -92,11 +92,11 @@ export default {
             boundary: '0104', username: this.userInfo.username, password: this.passwordForm.password2
           }).then(resp => {
             this.loadState = false;
+            this.$router.push('/')
           })
         }
       })
       this.loadState = !this.loadState;
-      this.$router.push('/')
     }
   }
 }

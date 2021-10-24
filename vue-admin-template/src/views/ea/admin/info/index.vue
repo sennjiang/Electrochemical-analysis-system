@@ -45,7 +45,7 @@
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <span v-text='userInfo.email'></span>
-          <el-button size="small" style="position: relative; left: 20%">修改邮箱</el-button>
+          <el-button size="small" style="position: relative; left: 20%"  @click="goToEmailVerify">修改邮箱</el-button>
         </el-form-item>
         <el-form-item label="密码" prop="pwd">
           <span>******</span>
@@ -141,9 +141,16 @@ export default {
     LogoutAccount() {
 
     },
+    // 跳转修改密码
     goToPasswordVerify() {
       this.$router.push({
         path: "/modifyPasswordVerify"
+      });
+    },
+    // 跳转修改邮箱
+    goToEmailVerify() {
+      this.$router.push({
+        path: "/modifyEmailVerify"
       });
     }
   }
