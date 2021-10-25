@@ -197,7 +197,7 @@ public interface BaseMapper {
      * @param username
      * @return
      */
-    long contrastFile(String File_hash, int username);
+    Long contrastFile(String File_hash, int username);
 
     /**
      * 按照条件查询
@@ -351,4 +351,8 @@ public interface BaseMapper {
     Long countOperationsByAdmin(String title0,String title1, short type);
 
     Long countOperationsByUser( Integer username,Integer type);
+
+    List<Operation> listOperationsByAdmin(Integer type, int pageStart, Integer pageSize);
+
+    Long countAdminOperations(Integer type);
 }

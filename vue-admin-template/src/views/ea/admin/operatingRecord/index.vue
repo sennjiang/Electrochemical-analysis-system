@@ -155,7 +155,7 @@ export default {
         limit: 20,
         boundary: '0901',
         title: undefined,
-        type: 1,
+        type: 2,
       },
       importanceOptions: ['正常','已删除'],
       calendarTypeOptions,
