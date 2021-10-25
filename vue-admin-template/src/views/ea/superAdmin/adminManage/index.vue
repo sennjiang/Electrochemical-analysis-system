@@ -34,7 +34,7 @@
           <!-- 作用域插槽 -->
           <template slot-scope="scope">
             <!-- {{scope.row}}每一行封存的数据 -->
-            <el-switch v-model="scope.row.state" @change="userStateChanged(scope.row)"></el-switch>
+            <el-switch v-model="scope.row.status" @change="userStateChanged(scope.row)"></el-switch>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -173,11 +173,23 @@
     methods:{
 
       //获取所有管理员
-      getUserList(){
+      getUserList: function () {
         this.queryInfo.boundary = '1001'
-        this.postRequest("/admin/list",this.queryInfo).then(res=>{
+        this.postRequest("/admin/list", this.queryInfo).then(res => {
+
 
           this.userList = res.data;//管理员列表数据封装
+          //console.log(this.userList);
+          //console.log(this.userList[0].status);
+
+          for (var i = 0; i < this.userList.length; i++) {
+            //console.log(this.userList[i].status);
+            //this.userList[i].status = this.userList[i].status === "1" ?  Boolean("true") : Boolean("false");
+            if(this.userList[i].status === 1) this.userList[i].status = true;
+            //console.log(this.userList[i].status)
+
+          }
+          //console.log(this.userList);
           this.total = res.numbers;//总管理员数封装
 
         })
