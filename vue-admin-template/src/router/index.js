@@ -6,7 +6,12 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 import Register from '@/views/ea/user/register'
-
+import ModifyPasswordVerify from '@/views/ea/user/modifyPasswordVerify/index'
+import ModifyPasswordInfo from '@/views/ea/user/modifyPasswordInfo'
+import ModifyEmailVerify from '@/views/ea/user/modifyEmailVerify'
+import ModifyEmailInfo from '@/views/ea/user/modifyEmailInfo'
+import UnfreezeApplicationVerify from '@/views/ea/user/unfreezeApplicationVerify'
+import UnfreezeApplicationInfo from '@/views/ea/user/unfreezeApplicationInfo'
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -51,6 +56,49 @@ export const constantRoutes = [
     component: Register,
     hidden: true
   },
+
+  // 修改密码-验证
+  {
+    path: '/modifyPasswordVerify',
+    component: ModifyPasswordVerify,
+    hidden: true
+  },
+
+  // 修改密码-填写信息
+  {
+    path: '/modifyPasswordInfo',
+    component: ModifyPasswordInfo,
+    hidden: true
+  },
+
+  // 修改email-验证邮箱
+  {
+    path: '/modifyEmailVerify',
+    component: ModifyEmailVerify,
+    hidden: true
+  },
+
+  // 修改email-填写信息
+  {
+    path: '/modifyEmailInfo',
+    component: ModifyEmailInfo,
+    hidden: true
+  },
+
+  //申请验证
+  {
+    path: '/unfreezeApplicationVerify',
+    component: UnfreezeApplicationVerify,
+    hidden: true
+  },
+
+  //申请解冻信息
+  {
+    path: '/unfreezeApplicationInfo',
+    component: UnfreezeApplicationInfo,
+    hidden: true
+  },
+
 
   {
     path: '/404',
@@ -186,20 +234,6 @@ export const constantRoutes = [
         meta: { title: '解冻审核', icon: 'user' }
       }
     ]
-  },
-
-  //申请验证
-  {
-    path: 'unfreezeApplicationVerify',
-    component: () => import('@/views/ea/admin/unfreezeAudit/unfreezeApplicationVerify'),
-    hidden: true
-  },
-
-  //申请解冻信息
-  {
-    path: 'unfreezeApplicationInfo',
-    component: () => import('@/views/ea/admin/unfreezeAudit/unfreezeApplicationInfo'),
-    hidden: true
   },
 
   {

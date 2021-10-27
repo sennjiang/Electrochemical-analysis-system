@@ -20,14 +20,14 @@
       <div class="msg">
         没有账号?
         <!--<router-link to="/admin/userManage/register">立即注册</router-link>-->
-        <a href="#/admin/userManage/register" target="_blank" rel="noopener" @click="">立即注册</a>
+        <a rel="noopener" @click="toRegister">立即注册</a>
         <!--<a @click="$router">立即注册</a>-->
       </div>
       <div>
         <div class="btn-forget-password">
-          <a href="#">忘记密码</a>
+          <a href="#" @click="forgetPassword()">忘记密码</a>
           &nbsp;
-          <a href="#">申请解冻</a>
+          <a @click="toUnfreeze">申请解冻</a>
         </div>
         <div>
 
@@ -75,8 +75,7 @@ export default {
       this.$refs.loginForm.validate(async valid => {
         if (valid) {
           this.loading = true
-
-          await this.postRequest('/login', this.loginForm).then(resp => {
+          this.postRequest('/login', this.loginForm).then(resp => {
             if (resp.code === 200) {
               // 用户状态正常,状态码为1,正常登录
               if (resp.userInfo.status === 1) {
@@ -89,8 +88,22 @@ export default {
                 this.$store.commit('modifyCurrentUsername', resp.username)
                 this.$store.commit('modifyCurrentNickname', resp.nickname)
                 this.$store.commit('modifyCurrentStatus', resp.status)
+
+                // 获得用户名后查找用户权限加载侧边栏
+                this.postRequest('/roles', { boundary : '1101', username : store.state.currentUsername }).then(resp => {
+                  for(let i = 0; i < resp.rightIdList.length; i ++) {
+                    let roleId = resp.rightIdList[i].rightId;
+                    this.currentRoles.push(global.map.get(roleId.toString()))
+                  }
+                  this.$store.commit('modifyRouters', this.currentRoles)
+                })
+
+
+
                 this.$router.push({path: this.redirect || '/'})
-                console.log(window.sessionStorage.getItem(tokenStr))
+                // console.log(window.sessionStorage.getItem(tokenStr))
+
+
               }
 
               // 用户状态被冻结, 状态码为0
@@ -102,18 +115,10 @@ export default {
               if (resp.userInfo.status === 2) {
                 this.$message.error('用户不存在')
               }
-
             }
           })
 
-          // 获得用户名后查找用户权限加载侧边栏
-          await this.postRequest('/roles', { boundary : '1101', username : store.state.currentUsername }).then(resp => {
-            for(let i = 0; i < resp.rightIdList.length; i ++) {
-              let roleId = resp.rightIdList[i].rightId;
-              this.currentRoles.push(global.map.get(roleId.toString()))
-            }
-            this.$store.commit('modifyRouters', this.currentRoles)
-          })
+
 
           setTimeout(() => {
             this.loading = false
@@ -123,6 +128,27 @@ export default {
           return false
         }
       })
+    },
+
+    // to忘记密码页
+    forgetPassword() {
+      let tempUserKey = Math.round(Math.random()*99999999+10000000).toString()
+      window.sessionStorage.setItem('tokenStr', tempUserKey)
+      this.$router.push({path: '/forgetPasswordVerify'})
+    },
+
+    // to注册页
+    toRegister() {
+      let tempUserKey = Math.round(Math.random()*99999999+10000000).toString()
+      window.sessionStorage.setItem('tokenStr', tempUserKey)
+      this.$router.push({path: '/register'})
+    },
+
+    // to申请解冻页
+    toUnfreeze() {
+      let tempUserKey = Math.round(Math.random()*99999999+10000000).toString()
+      window.sessionStorage.setItem('tokenStr', tempUserKey)
+      this.$router.push({path: '/unfreezeApplicationVerify'})
     }
 
   }

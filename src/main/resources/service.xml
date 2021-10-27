@@ -51,6 +51,16 @@
         <method>existUserByEmail</method>
     </node>
     <node>
+        <number>0111</number>
+        <service>UserService</service>
+        <method>getFreezeInfo</method>
+    </node>
+    <node>
+        <number>0112</number>
+        <service>UserService</service>
+        <method>saveUnfreezeInfo</method>
+    </node>
+    <node>
         <number>0201</number>
         <service>FileService</service>
         <method>getReport</method>
@@ -333,6 +343,24 @@
         <number>1101</number>
         <service>LoginRightService</service>
         <method>queryRightByUser</method>
+    </node>
+
+    <node>
+        <number>1201</number>
+        <service>FreezeService</service>
+        <method>insertFreeze</method>
+    </node>
+
+    <node>
+        <number>1301</number>
+        <service>UnfreezeService</service>
+        <method>insertUnfreeze</method>
+    </node>
+
+    <node>
+        <number>1302</number>
+        <service>UnfreezeService</service>
+        <method>updateUnfreeze</method>
     </node>
 
 </service_mapping>

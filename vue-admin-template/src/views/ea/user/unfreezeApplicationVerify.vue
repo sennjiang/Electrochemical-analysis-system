@@ -39,17 +39,17 @@ function isEmail(s) {
 }
 
 export default {
-  name: "forgetPasswordVerify",
+  name: "modifyEmailInfo",
 
   data() {
     // 校验邮箱
     let validateEmail = (rule, value, callback) => {
       if (!isEmail(value)) {
         callback(new Error('邮箱格式错误'))
-      } else if (this.existUser()) {
-        callback()
+      } else if (!this.existUser()) {
+        callback(new Error('邮箱已存在'))
       } else {
-        callback(new Error('邮箱不存在'))
+        callback()
       }
     };
     // 校验邮箱验证码
@@ -125,34 +125,30 @@ export default {
       })
     },
     // <!--发送邮箱验证码-->
-    async sendEmailCode() {
-      // await this.$refs.emailFormRef.validate(valid => {
-      //   if (valid) {
-          let email = this.userInfo.email
-          if (this.checkEmail(email)) {
-            console.log(email)
-            let time = 60
-            this.buttonText = '已发送'
-            this.isDisabled = true
-            if (this.flag) {
-              this.flag = false;
-              let timer = setInterval(() => {
-                time--;
-                this.buttonText = time + ' 秒'
-                if (time === 0) {
-                  clearInterval(timer);
-                  this.buttonText = '重新获取'
-                  this.isDisabled = false
-                  this.flag = true;
-                }
-              }, 1000)
-              this.postRequest('/sendEmail', {boundary: '0107', email: email}).then(resp => {
-                this.emailForm.emailCodeResp = resp.emailCode
-              })
+    sendEmailCode() {
+      let email = this.emailForm.email
+      if (this.checkEmail(email)) {
+        console.log(email)
+        let time = 60
+        this.buttonText = '已发送'
+        this.isDisabled = true
+        if (this.flag) {
+          this.flag = false;
+          let timer = setInterval(() => {
+            time--;
+            this.buttonText = time + ' 秒'
+            if (time === 0) {
+              clearInterval(timer);
+              this.buttonText = '重新获取'
+              this.isDisabled = false
+              this.flag = true;
             }
-          }
-      //   }
-      // })
+          }, 1000)
+          this.postRequest('/sendEmail', {boundary: '0107', email: email}).then(resp => {
+            this.emailForm.emailCodeResp = resp.emailCode
+          })
+        }
+      }
     },
 
     // 是否存在该用户, 参数为email, true:存在, false:不存在
@@ -181,8 +177,9 @@ export default {
     async goToInfo() {
       await this.$refs.emailFormRef.validate(async valid => {
         if (valid) {
+          window.sessionStorage.setItem('currentEmail', this.emailForm.email)
           this.$router.push({
-            path: '/forgetPasswordInfo'
+            path: '/UnfreezeApplicationInfo'
           })
         }
       });

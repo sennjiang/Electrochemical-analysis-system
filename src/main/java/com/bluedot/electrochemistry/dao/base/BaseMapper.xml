@@ -20,6 +20,9 @@
     <select id="countUserByUsername" resultType="java.lang.Long">
         select count(*) from user where username=#{username};
     </select>
+    <select id="queryFreezeByUsername" resultType="com.bluedot.electrochemistry.pojo.domain.Freeze">
+        select * from freeze where username = #{username}
+    </select>
     <!--超级管理员相关-->
     <!--根据用户名查权限-->
     <select id="queryRightByUser" resultType="com.bluedot.electrochemistry.pojo.domain.RoleRight">

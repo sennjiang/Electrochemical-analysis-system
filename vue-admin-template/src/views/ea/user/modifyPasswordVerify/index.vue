@@ -4,30 +4,25 @@
     <hr class="style-hr"/>
     <div class="style-form-wrapper">
       <h2 class="style-h2-forget">邮箱验证</h2>
-      <el-form style="text-align: center; margin-top: 50px;position: relative; top: 10%" ref="emailFormRef"
-               :rules="emailRules" :model="emailForm">
+      <el-form style="text-align: center; margin-top: 50px;position: relative; top: 10%" ref="emailFormRef" :rules="emailRules" :model="emailForm">
 
         <el-form-item prop="email">
           <label style="font-size: large;">邮箱:&nbsp;&nbsp;&nbsp;&nbsp;</label>
-          <el-input style="width: 300px;" v-model="emailForm.email"></el-input>
-          <!--<span style="width: 300px; font-size: large" v-text="userInfo.email"></span>-->
+         <!--<el-input style="width: 300px;" v-model="userInfo.email" disabled="disable"></el-input>-->
+          <span style="width: 300px; font-size: large" v-text="userInfo.email"></span>
         </el-form-item>
         <br/>
         <br/>
 
         <el-form-item prop="emailCode" class="code">
-          <el-input class="style-code-input" placeholder="请输入验证码" v-model="emailForm.emailCode"></el-input>
+          <el-input class="style-code-input"  placeholder="请输入验证码" v-model="emailForm.emailCode"></el-input>
           <el-button type="primary" :disabled='isDisabled' @click="sendEmailCode">{{ buttonText }}</el-button>
         </el-form-item>
 
         <br/>
         <br/>
         <br/>
-        <el-row>
-          <el-button type="primary" size="medium" class="style-form-button" :loading="loadState" @click="goToInfo">
-            确定
-          </el-button>
-        </el-row>
+        <el-row><el-button  type="primary" size="medium" class="style-form-button" :loading="loadState" @click="goToInfo">确定</el-button></el-row>
       </el-form>
     </div>
   </div>
@@ -37,19 +32,18 @@
 function isEmail(s) {
   return /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(s)
 }
-
 export default {
-  name: "forgetPasswordVerify",
+  name: "ForgetPasswordVerify",
 
   data() {
     // 校验邮箱
     let validateEmail = (rule, value, callback) => {
       if (!isEmail(value)) {
         callback(new Error('邮箱格式错误'))
-      } else if (this.existUser()) {
-        callback()
+      } else if (!this.existUser()) {
+        callback(new Error('邮箱已存在'))
       } else {
-        callback(new Error('邮箱不存在'))
+        callback()
       }
     };
     // 校验邮箱验证码
@@ -78,11 +72,11 @@ export default {
       },
       // email表单验证对象
       emailRules: {
-        //  校验email
-        email: [
-          {required: true, message: '邮箱不能为空', trigger: 'blur'},
-          {validator: validateEmail, trigger: 'blur'}
-        ],
+        //  校验用户名
+        // email: [
+        //   {required: true, message: '邮箱不能为空', trigger: 'blur'},
+        //   {validator: validateEmail, trigger: 'blur'}
+        // ],
         emailCode: [
           {required: true, message: '验证码不能为空', trigger: 'blur'},
           {validator: validateEmailCode, trigger: 'blur'}
@@ -115,44 +109,39 @@ export default {
     async submitForm() {
       await this.$refs.emailFormRef.validate(async valid => {
         if (valid) {
-          this.postRequest('/modifyUser', {
-            boundary: '0104', username: this.userInfo.username, email: this.emailForm.email
+          this.postRequest('/modifyUser', {boundary: '0104', username: this.userInfo.username, email: this.emailForm.email
           }).then(resp => {
             this.loadState = false;
-            this.$router.push('/')
           })
         }
       })
     },
+
     // <!--发送邮箱验证码-->
-    async sendEmailCode() {
-      // await this.$refs.emailFormRef.validate(valid => {
-      //   if (valid) {
-          let email = this.userInfo.email
-          if (this.checkEmail(email)) {
-            console.log(email)
-            let time = 60
-            this.buttonText = '已发送'
-            this.isDisabled = true
-            if (this.flag) {
-              this.flag = false;
-              let timer = setInterval(() => {
-                time--;
-                this.buttonText = time + ' 秒'
-                if (time === 0) {
-                  clearInterval(timer);
-                  this.buttonText = '重新获取'
-                  this.isDisabled = false
-                  this.flag = true;
-                }
-              }, 1000)
-              this.postRequest('/sendEmail', {boundary: '0107', email: email}).then(resp => {
-                this.emailForm.emailCodeResp = resp.emailCode
-              })
+    sendEmailCode() {
+      let email = this.userInfo.email
+      if (this.checkEmail(email)) {
+        console.log(email)
+        let time = 60
+        this.buttonText = '已发送'
+        this.isDisabled = true
+        if (this.flag) {
+          this.flag = false;
+          let timer = setInterval(() => {
+            time--;
+            this.buttonText = time + ' 秒'
+            if (time === 0) {
+              clearInterval(timer);
+              this.buttonText = '重新获取'
+              this.isDisabled = false
+              this.flag = true;
             }
-          }
-      //   }
-      // })
+          }, 1000)
+          this.postRequest('/sendEmail', {boundary: '0107', email: email}).then(resp => {
+            this.emailForm.emailCodeResp = resp.emailCode
+          })
+        }
+      }
     },
 
     // 是否存在该用户, 参数为email, true:存在, false:不存在
@@ -182,7 +171,7 @@ export default {
       await this.$refs.emailFormRef.validate(async valid => {
         if (valid) {
           this.$router.push({
-            path: '/forgetPasswordInfo'
+            path: '/modifyPasswordInfo'
           })
         }
       });
@@ -207,7 +196,7 @@ body {
 }
 
 .container {
-  background-image: url("../../../assets/image/backgroud-green.jpg");
+  background-image: url("../../../../assets/image/backgroud-green.jpg");
   background-size: 100%;
   height: 100%;
   width: 100%;
@@ -268,4 +257,3 @@ body {
   text-align: center;
 }
 </style>
-
