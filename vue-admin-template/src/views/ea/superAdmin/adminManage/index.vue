@@ -128,6 +128,12 @@
           pageNum:1,//当前页
           pageSize:5,//每页最大数
         },
+        //修改状态信息实体{
+        editStatusInfo:{
+          boundary: '1002',
+          id:"",
+          status:"",
+        },
         userList:[],//管理员列表
         total: 0,//总记录数
 
@@ -191,7 +197,7 @@
           }
           //console.log(this.userList);
           this.total = res.numbers;//总管理员数封装
-
+          this.$message.success("管理员列表加载成功！！！");
         })
       },
 
@@ -209,13 +215,17 @@
 
       //修改管理员状态
       async userStateChanged(userInfo){
+        this.editStatusInfo.boundary = '1002';
+        this.editStatusInfo.id = userInfo.id;
+        this.editStatusInfo.status = userInfo.status;
+        this.postRequest("/admin/adminStatusChanged", this.editStatusInfo).then(res => {
+          if(res!="success"){
+            userInfo.id = !userInfo.id;
+            return this.$message.error("操作失败！！！");
+          }
+          this.$message.success("操作成功！！！");
+        })
 
-        const { data:res } = await this.$http.post(`userstate?id=${userInfo.id}&state=${userInfo.state}`);
-        if(res!="success"){
-          userInfo.id = !userInfo.id;
-          return this.$message.error("操作失败！！！");
-        }
-        this.$message.success("操作成功！！！");
       },
 
       //监听添加管理员

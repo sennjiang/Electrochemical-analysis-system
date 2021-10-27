@@ -67,13 +67,16 @@ public class AdminService extends BaseService {
      *
      * @param map
      */
+//    private void modifyAdminState(Map<String , Object> map){
+//        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
+//            @Override
+//            public int doDataModifyExecutor(BaseDao baseDao) {
+//                return baseDao.update(packagingUser(map));
+//            }
+//        });
+//    }
     private void modifyAdminState(Map<String , Object> map){
-        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
-            @Override
-            public int doDataModifyExecutor(BaseDao baseDao) {
-                return baseDao.update(packagingUser(map));
-            }
-        });
+
     }
 
     /**

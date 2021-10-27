@@ -324,6 +324,12 @@
     </node>
 
     <node>
+        <number>1002</number>
+        <service>AdminService</service>
+        <method>modifyAdminState</method>
+    </node>
+
+    <node>
         <number>1101</number>
         <service>LoginRightService</service>
         <method>queryRightByUser</method>
