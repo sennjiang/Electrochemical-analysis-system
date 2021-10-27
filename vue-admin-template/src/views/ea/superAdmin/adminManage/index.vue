@@ -131,7 +131,7 @@
         //修改状态信息实体{
         editStatusInfo:{
           boundary: '1002',
-          id:"",
+          username:"",
           status:"",
         },
         userList:[],//管理员列表
@@ -216,14 +216,12 @@
       //修改管理员状态
       async userStateChanged(userInfo){
         this.editStatusInfo.boundary = '1002';
-        this.editStatusInfo.id = userInfo.id;
+        this.editStatusInfo.username = userInfo.username;
         this.editStatusInfo.status = userInfo.status;
         this.postRequest("/admin/adminStatusChanged", this.editStatusInfo).then(res => {
-          if(res!="success"){
-            userInfo.id = !userInfo.id;
+          if(res.data!=1){
             return this.$message.error("操作失败！！！");
-          }
-          this.$message.success("操作成功！！！");
+          } else return this.$message.success("操作成功！！！");
         })
 
       },
