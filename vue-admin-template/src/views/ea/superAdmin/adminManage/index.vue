@@ -140,6 +140,7 @@
         addDialogVisible: false,//对话框状态
         //添加表单信息
         addForm: {
+          boundary: '1003',
           username:'',
           password:'',
           email:''
@@ -220,8 +221,8 @@
         this.editStatusInfo.status = userInfo.status;
         this.postRequest("/admin/adminStatusChanged", this.editStatusInfo).then(res => {
           if(res.data!=1){
-            return this.$message.error("操作失败！！！");
-          } else return this.$message.success("操作成功！！！");
+            return this.$message.error("修改失败！！！");
+          } else return this.$message.success("修改成功！！！");
         })
 
       },
@@ -230,14 +231,16 @@
       addDialogClosed(){
         this.$refs.addFormRef.resetFields();
       },
-      addUser(){
+      async addUser(){
         this.$refs.addFormRef.validate(async valid=>{
           if(!valid) return;
-          const {data:res} = await this.$http.post("addUser",this.addForm);
-          if(res!="success"){
-            return this.$message.error("操作失败！！！");
-          }
-          this.$message.success("操作成功！！！");
+          this.boundary = '1003'
+          this.postRequest("admin/addAdmin",this.addForm).then(res=> {
+            if(res.data!=2){
+              return this.$message.success("添加失败！！！");
+            }
+            this.$message.success("添加成功！！！");
+          })
           this.addDialogVisible = false;
           this.getUserList();
         });

@@ -93,6 +93,7 @@ public class AdminService extends BaseService {
                 User user = packagingUser(map);
                 int addUserRole = baseDao.insert(new UserRole(user.getUsername(),200));
                 int addUser = baseDao.insert(user);
+                map.put("data",addUser + addUserRole);
                 return addUser + addUserRole;
             }
         });

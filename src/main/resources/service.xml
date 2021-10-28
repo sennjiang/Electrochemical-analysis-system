@@ -340,6 +340,12 @@
     </node>
 
     <node>
+        <number>1003</number>
+        <service>AdminService</service>
+        <method>addAdmin</method>
+    </node>
+
+    <node>
         <number>1101</number>
         <service>LoginRightService</service>
         <method>queryRightByUser</method>
