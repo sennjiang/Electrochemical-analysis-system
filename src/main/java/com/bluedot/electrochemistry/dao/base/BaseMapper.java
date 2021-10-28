@@ -115,6 +115,14 @@ public interface BaseMapper {
     Long getAdminCountByQuery(String query);
 
     /**
+     *
+     * @param username
+     * @param roleId
+     * @return UserRoleId
+     */
+    Integer getUserRoleId(int username,int roleId);
+
+    /**
      * 根据查询条件获取用户信息列表
      *
      * @param queryCondition 查询条件（字段）

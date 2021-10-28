@@ -111,10 +111,38 @@ public class AdminService extends BaseService {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
                 User user = packagingUser(map);
+
                 int addUserRole = baseDao.insert(new UserRole(user.getUsername(),200));
                 int addUser = baseDao.insert(user);
-                map.put("data",addUser + addUserRole);
-                return addUser + addUserRole;
+
+                map.put("data",addUserRole+addUser);
+                return addUserRole+addUser;
+            }
+        });
+    }
+
+    /**
+     *
+     * 删除该用户的管理员角色
+     * @param map
+     */
+    private void deleteAdmin(Map<String , Object> map){
+
+        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                //查询该用户的管理员角色的ID
+                User user = packagingUser(map);
+                BaseMapper mapper = mapperFactory.createMapper();
+                Integer userRoleId = mapper.getUserRoleId(user.getUsername(),200);
+                //System.out.println(userRoleId);
+
+                UserRole userRole = new UserRole(user.getUsername(),200);
+                userRole.setUserRoleId(userRoleId);
+                int deleteUserRole = baseDao.delete(userRole);
+
+                map.put("data",deleteUserRole);
+                return deleteUserRole;
             }
         });
     }
@@ -126,11 +154,11 @@ public class AdminService extends BaseService {
      * @return
      */
     private User packagingUser(Map<String , Object> map){
-        Integer username = Integer.parseInt((String)map.get("username"));
+        Integer username = Integer.parseInt((String) map.get("username"));
         String password = (String) map.get("password");
         String nickname  = (String) map.get("nickname");
-        Integer gender = Integer.parseInt((String) map.get("gender"));
-        Integer age = Integer.parseInt((String) map.get("age"));
+        Integer gender = (Integer) map.get("gender");
+        Integer age = (Integer) map.get("age");
         String email = (String) map.get("email");
         Timestamp birth = (Timestamp) map.get("birth");
 

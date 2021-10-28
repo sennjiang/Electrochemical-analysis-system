@@ -346,6 +346,12 @@
     </node>
 
     <node>
+        <number>1004</number>
+        <service>AdminService</service>
+        <method>deleteAdmin</method>
+    </node>
+
+    <node>
         <number>1101</number>
         <service>LoginRightService</service>
         <method>queryRightByUser</method>
