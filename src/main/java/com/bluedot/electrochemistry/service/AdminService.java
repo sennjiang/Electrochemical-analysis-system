@@ -12,6 +12,7 @@ import com.bluedot.framework.simplespring.core.annotation.Service;
 import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +33,27 @@ public class AdminService extends BaseService {
 
     private void queryAdmins(Map<String, Object> map) {
         BaseMapper mapper = mapperFactory.createMapper();
-        List<User> adminlist = mapper.getAdmins();
+        List<User> adminlist = new ArrayList<>();
+
+        Integer pageNum = Integer.parseInt((String) map.get("pageNum"));
+        Integer pageSize = Integer.parseInt((String) map.get("pageSize"));
+        //获取当前编号
+        int pageStart = (pageNum-1)*pageSize;
+
+
+        //System.out.println(map.get("query"));
+        //query为""则查询所有用户，否则支持模糊查询
+        long numbers = 0 ;
+        if(map.get("query").equals("")){
+            numbers = mapper.getAdminCount();
+            adminlist = mapper.getAdmins(pageStart,pageSize);
+        }else {
+            numbers = mapper.getAdminCountByQuery((String)map.get("query"));
+            adminlist = mapper.getAdminsByQuery((String) map.get("query"),pageStart,pageSize);
+        }
+
         map.put("data",adminlist);
+        map.put("numbers",numbers);
 
 
     }
@@ -109,8 +129,8 @@ public class AdminService extends BaseService {
         Integer username = Integer.parseInt((String)map.get("username"));
         String password = (String) map.get("password");
         String nickname  = (String) map.get("nickname");
-        Integer gender = (Integer) map.get("gender");
-        Integer age = (Integer) map.get("age");
+        Integer gender = Integer.parseInt((String) map.get("gender"));
+        Integer age = Integer.parseInt((String) map.get("age"));
         String email = (String) map.get("email");
         Timestamp birth = (Timestamp) map.get("birth");
 
