@@ -231,18 +231,22 @@
       addDialogClosed(){
         this.$refs.addFormRef.resetFields();
       },
-      async addUser(){
+
+      //添加管理员
+      addUser(){
         this.$refs.addFormRef.validate(async valid=>{
           if(!valid) return;
-          this.boundary = '1003'
-          this.postRequest("admin/addAdmin",this.addForm).then(res=> {
+          this.addForm.boundary = '1003'
+          this.postRequest("/admin/addAdmin",this.addForm).then(res=> {
             if(res.data!=2){
-              return this.$message.success("添加失败！！！");
+              return this.$message.error("添加失败！！！");
+            }else{
+              this.$message.success("添加成功！！！");
+              this.addDialogVisible = false;
+              this.getUserList();
             }
-            this.$message.success("添加成功！！！");
+
           })
-          this.addDialogVisible = false;
-          this.getUserList();
         });
       },
 

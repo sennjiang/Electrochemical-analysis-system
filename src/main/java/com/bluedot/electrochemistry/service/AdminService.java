@@ -114,7 +114,12 @@ public class AdminService extends BaseService {
         String email = (String) map.get("email");
         Timestamp birth = (Timestamp) map.get("birth");
 
-        Integer status = map.get("status").equals("true")?1:0;
+        String statusTmp = (String)map.get("status");
+        //添加用户时statusTmp == null，给status赋初值
+        Integer status = -1;
+        if(statusTmp == null) status=1;
+        else status = statusTmp.equals("true")?1:0;
+
         String portrait = (String) map.get("portrait");
         Timestamp gmtCreated = (Timestamp) map.get("gmtCreated");
         return new User(username,password,nickname,gender,age,email,birth,status,portrait,gmtCreated);
