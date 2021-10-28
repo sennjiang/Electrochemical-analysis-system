@@ -71,10 +71,15 @@ public class AdminService extends BaseService {
         doSimpleModifyTemplate(map, new ServiceCallback<User>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
-                return baseDao.update(packagingUser(map));
+                int update = baseDao.update(packagingUser(map));
+                //System.out.println(update);
+                map.put("data",update);
+                return update;
             }
         });
+
     }
+
 
     /**
      * 添加管理员，同时为该管理员添加一个管理员角色
@@ -100,14 +105,15 @@ public class AdminService extends BaseService {
      * @return
      */
     private User packagingUser(Map<String , Object> map){
-        Integer username = (Integer) map.get("username");
+        Integer username = Integer.parseInt((String)map.get("username"));
         String password = (String) map.get("password");
         String nickname  = (String) map.get("nickname");
         Integer gender = (Integer) map.get("gender");
         Integer age = (Integer) map.get("age");
         String email = (String) map.get("email");
         Timestamp birth = (Timestamp) map.get("birth");
-        Integer status = (Integer) map.get("status");
+
+        Integer status = map.get("status").equals("true")?1:0;
         String portrait = (String) map.get("portrait");
         Timestamp gmtCreated = (Timestamp) map.get("gmtCreated");
         return new User(username,password,nickname,gender,age,email,birth,status,portrait,gmtCreated);

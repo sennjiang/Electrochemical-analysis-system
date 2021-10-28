@@ -34,7 +34,7 @@
           <!-- 作用域插槽 -->
           <template slot-scope="scope">
             <!-- {{scope.row}}每一行封存的数据 -->
-            <el-switch v-model="scope.row.state" @change="userStateChanged(scope.row)"></el-switch>
+            <el-switch v-model="scope.row.status" @change="userStateChanged(scope.row)"></el-switch>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -128,6 +128,12 @@
           pageNum:1,//当前页
           pageSize:5,//每页最大数
         },
+        //修改状态信息实体{
+        editStatusInfo:{
+          boundary: '1002',
+          username:"",
+          status:"",
+        },
         userList:[],//管理员列表
         total: 0,//总记录数
 
@@ -173,13 +179,25 @@
     methods:{
 
       //获取所有管理员
-      getUserList(){
+      getUserList: function () {
         this.queryInfo.boundary = '1001'
-        this.postRequest("/admin/list",this.queryInfo).then(res=>{
+        this.postRequest("/admin/list", this.queryInfo).then(res => {
+
 
           this.userList = res.data;//管理员列表数据封装
-          this.total = res.numbers;//总管理员数封装
+          //console.log(this.userList);
+          //console.log(this.userList[0].status);
 
+          for (var i = 0; i < this.userList.length; i++) {
+            //console.log(this.userList[i].status);
+            //this.userList[i].status = this.userList[i].status === "1" ?  Boolean("true") : Boolean("false");
+            if(this.userList[i].status === 1) this.userList[i].status = true;
+            //console.log(this.userList[i].status)
+
+          }
+          //console.log(this.userList);
+          this.total = res.numbers;//总管理员数封装
+          this.$message.success("管理员列表加载成功！！！");
         })
       },
 
@@ -197,13 +215,15 @@
 
       //修改管理员状态
       async userStateChanged(userInfo){
+        this.editStatusInfo.boundary = '1002';
+        this.editStatusInfo.username = userInfo.username;
+        this.editStatusInfo.status = userInfo.status;
+        this.postRequest("/admin/adminStatusChanged", this.editStatusInfo).then(res => {
+          if(res.data!=1){
+            return this.$message.error("操作失败！！！");
+          } else return this.$message.success("操作成功！！！");
+        })
 
-        const { data:res } = await this.$http.post(`userstate?id=${userInfo.id}&state=${userInfo.state}`);
-        if(res!="success"){
-          userInfo.id = !userInfo.id;
-          return this.$message.error("操作失败！！！");
-        }
-        this.$message.success("操作成功！！！");
       },
 
       //监听添加管理员

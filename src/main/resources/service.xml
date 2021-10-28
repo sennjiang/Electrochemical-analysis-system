@@ -334,9 +334,33 @@
     </node>
 
     <node>
+        <number>1002</number>
+        <service>AdminService</service>
+        <method>modifyAdminState</method>
+    </node>
+
+    <node>
         <number>1101</number>
         <service>LoginRightService</service>
         <method>queryRightByUser</method>
+    </node>
+
+    <node>
+        <number>1201</number>
+        <service>FreezeService</service>
+        <method>insertFreeze</method>
+    </node>
+
+    <node>
+        <number>1301</number>
+        <service>UnfreezeService</service>
+        <method>insertUnfreeze</method>
+    </node>
+
+    <node>
+        <number>1302</number>
+        <service>UnfreezeService</service>
+        <method>updateUnfreeze</method>
     </node>
 
 </service_mapping>
