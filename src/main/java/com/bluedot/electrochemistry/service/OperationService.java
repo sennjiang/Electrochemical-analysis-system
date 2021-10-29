@@ -49,7 +49,7 @@ public class OperationService extends BaseService {
                 list = baseMapper.listOperationsByAdmin(type,(pageStart - 1) * pageSize,pageSize);
                 length = baseMapper.countAdminOperations(type);
             }else {
-                list = baseMapper.listOperations(type,(pageStart - 1) * pageSize,pageSize);
+                list = baseMapper.listOperationsBySuperAdmin(type,(pageStart - 1) * pageSize,pageSize);
                 length = baseMapper.countOperations(type);
             }
             map.put("data",list);

@@ -353,7 +353,7 @@ public interface BaseMapper {
 
     Long countFiles(short type, short status, int username);
 
-    List<Operation> listOperations(Integer type, Integer pageStart, Integer pageSize);
+    List<Operation> listOperationsBySuperAdmin(Integer type, Integer pageStart, Integer pageSize);
 
     List<Operation> listOperationsByUser(Integer type, Integer username, Integer pageStart, Integer pageSize);
 
@@ -377,7 +377,7 @@ public interface BaseMapper {
 
     Long countOperationsByUser( Integer username,Integer type);
 
-    List<Operation> listOperationsByAdmin(Integer type, int pageStart, Integer pageSize);
+    List<Operation> listOperationsByAdmin(Integer type, Integer pageStart, Integer pageSize);
 
     Long countAdminOperations(Integer type);
 }

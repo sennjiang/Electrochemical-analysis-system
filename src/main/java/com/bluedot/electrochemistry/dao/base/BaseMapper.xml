@@ -107,8 +107,8 @@
         select count(*) from file where type = #{type} and status = #{status} and owner = #{username};
     </select>
 
-    <select id="listOperations" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
-        select * from operation where type = #{type};
+    <select id="listOperationsBySuperAdmin" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
+        <![CDATA[ select * from operation where 1 < type <= #{type} limit #{pageStart},#{pageSize}; ]]>
     </select>
 
 
