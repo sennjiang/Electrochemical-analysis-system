@@ -8,12 +8,14 @@ import java.util.List;
 import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.pojo.vo.AlgorithmSendView;
 import com.bluedot.electrochemistry.pojo.vo.AlgorithmView;
+import com.bluedot.framework.simplespring.core.annotation.Repository;
 
 /**
  * @author zero
  * @description 所有 查询方法 的接口
  * @createDate 2021/8/25-14:36
  */
+
 public interface BaseMapper {
 
     /**
@@ -88,7 +90,7 @@ public interface BaseMapper {
      *
      * @return 管理员列表
      */
-    List<User> getAdmins();
+    List<User> getAdmins(int pageStart , int pageSize);
 
     /**
      * 获取管理员数据总数
@@ -96,6 +98,29 @@ public interface BaseMapper {
      * @return 管理员总数
      */
     Long getAdminCount();
+
+    /**
+     * 根据查询信息获取管理员列表
+     * @return管理员列表
+     */
+    List<User> getAdminsByQuery(String query , int pageStart , int pageSize);
+
+
+    /**
+     *
+     * 根据查询信息获取管理员数据总数
+     * @param query
+     * @return
+     */
+    Long getAdminCountByQuery(String query);
+
+    /**
+     *
+     * @param username
+     * @param roleId
+     * @return UserRoleId
+     */
+    Integer getUserRoleId(int username,int roleId);
 
     /**
      * 根据查询条件获取用户信息列表

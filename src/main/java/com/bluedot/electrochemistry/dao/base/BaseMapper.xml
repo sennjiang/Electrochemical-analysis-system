@@ -30,14 +30,20 @@
     </select>
     <!--查询管理员相关-->
     <select id="getAdmins" resultType="com.bluedot.electrochemistry.pojo.domain.User">
-        select a.* from user as a left join user_role as b on a.username = b.username where b.role_id = '200'
+        select a.* from user as a left join user_role as b on a.username = b.username where b.role_id = '200' limit #{pageStart},#{pageSize}
     </select>
+    <select id="getAdminCount" resultType="java.lang.Long">
+        select count(*) from user as a left join user_role as b on a.username = b.username where b.role_id = '200'
+    </select>
+
+    <select id="getUserRoleId" resultType="java.lang.Integer">
+        select user_role_id from user_role where username = #{username} and role_id = #{roleId}
+    </select>
+
     <select id="getAdminByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user where #{queryCondition}=#{queryValue} limit #{pageStart},#{pageSize}
     </select>
-    <select id="getAdminCount" resultType="java.lang.Long">
-        select count(*) from user
-    </select>
+
     <select id="getAdminCountByQueryCondition" resultType="java.lang.Long">
         select count(*) from user where #{queryCondition}=#{queryValue}
     </select>
