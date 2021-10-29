@@ -166,6 +166,12 @@ public class UserService extends BaseService {
      * @param map UnfreezeApplication实体类
      */
     private void deleteUSerByUsername(Map map) {
+        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                return baseDao.delete(parseToUser(map));
+            }
+        });
     }
 
     /**

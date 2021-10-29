@@ -12,6 +12,8 @@ import ModifyEmailVerify from '@/views/ea/user/modifyEmailVerify'
 import ModifyEmailInfo from '@/views/ea/user/modifyEmailInfo'
 import UnfreezeApplicationVerify from '@/views/ea/user/unfreezeApplicationVerify'
 import UnfreezeApplicationInfo from '@/views/ea/user/unfreezeApplicationInfo'
+import LogoutUserVerify from '@/views/ea/user/logoutUserVerify'
+import LogoutUserInfo from '@/views/ea/user/logoutUserInfo'
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -96,6 +98,20 @@ export const constantRoutes = [
   {
     path: '/unfreezeApplicationInfo',
     component: UnfreezeApplicationInfo,
+    hidden: true
+  },
+
+  // 注销账户验证
+  {
+    path: '/logoutUserVerify',
+    component: LogoutUserVerify,
+    hidden: true
+  },
+
+  //注销账户填写信息
+  {
+    path: '/logoutUserInfo',
+    component: LogoutUserInfo,
     hidden: true
   },
 
