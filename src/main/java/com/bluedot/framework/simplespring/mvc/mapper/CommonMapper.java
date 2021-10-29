@@ -1,10 +1,6 @@
 package com.bluedot.framework.simplespring.mvc.mapper;
 
-import com.bluedot.electrochemistry.service.base.BaseService;
-import com.bluedot.framework.simplespring.core.annotation.Bean;
-import com.bluedot.framework.simplespring.core.annotation.Component;
 import com.bluedot.framework.simplespring.util.LogUtil;
-import com.sun.org.apache.xml.internal.security.Init;
 import javafx.util.Pair;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -13,10 +9,7 @@ import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author JDsen99
@@ -30,24 +23,40 @@ public class CommonMapper {
     /**
      * Service 映射字典
      */
-    public static Map<String, Pair<Class, String>> methodMapper;
+    public  static Map<String, Pair<Class, String>> methodMapper;
 
     /**
      * 文件操作类型
      */
-    public  static Map<String,Integer> fileTypeMapper;
+    public static Map<String,Integer> fileTypeMapper;
 
     /**
      * 操作的 角色级别
      */
-    public  static Map<String,Integer> typeMapper;
+    public static Map<String,Integer> typeMapper;
+
+
+    public final static List<String> fileList = new ArrayList<>();
 
     public void initMapper(Properties contextConfig) {
         logger.debug("start init mapper ... ");
         initFileTypeMapper();
         initTypeMapper();
         initMethodMapper(contextConfig);
+        initFileList(contextConfig);
         logger.debug("end init mapper ... ");
+    }
+
+    private void initFileList(Properties contextConfig) {
+        String boundary = contextConfig.getProperty("fileBoundary");
+        //排除空格
+        boundary = boundary.trim();
+        //分割 ，
+        if (boundary.contains(",")){
+            if (boundary.endsWith(",")) boundary = boundary.substring(0,boundary.length()-1);
+            String[] split = boundary.split(",");
+            fileList.addAll(Arrays.asList(split));
+        }
     }
 
     private void initFileTypeMapper() {

@@ -222,7 +222,7 @@ public class MQRequestProcessor implements RequestProcessor {
         data.put("boundary",boundary);
         logger.info("parameterMap ---> data : {}",data);
         if (username == null || boundary == null) {
-            if (!"0205".equals(boundary) && !writeList.contains(boundary)){
+            if (!CommonMapper.fileList.contains(boundary) && !writeList.contains(boundary)){
                 return null;
             }
         }
@@ -236,7 +236,7 @@ public class MQRequestProcessor implements RequestProcessor {
         }
 
         //0205 文件上传的编号 对请求进行特殊处理
-        if ("0205".equals(boundary)){
+        if (CommonMapper.fileList.contains(boundary)){
             logger.debug("start parse file request ... ");
             String realPath =  projectPath +"/uploads";
             logger.info("projectPath ---- {}",projectPath);
