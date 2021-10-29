@@ -117,7 +117,7 @@ public class AlgorithmSendService extends BaseService {
                 });
             }
         }
-        //无论审核通过与否都删除审核完成后的申请条目！！！！待修改
+        //todo 无论审核通过与否都删除审核完成后的申请条目！！！！待修改
         doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
@@ -147,9 +147,9 @@ public class AlgorithmSendService extends BaseService {
      *       注：算法申请的发起时间以添加到数据库的时间为准，由添加数据库表时默认生成，所以不在传递的参数计量之内
      */
     private void addAlgorithmSend(Map<String, Object> map){
-        Integer algorithmId = (Integer) map.get("algorithmId");
-        Integer classification = (Integer) map.get("type");
-        Integer username = (Integer) map.get("username");
+        Integer algorithmId = Integer.parseInt((String) map.get("algorithmId"));
+        Integer classification = Integer.parseInt((String) map.get("type"));
+        Integer username = Integer.parseInt((String) map.get("username"));
         AlgorithmSend algSend = new AlgorithmSend();
         algSend.setClassification(classification);
         algSend.setAlgId(algorithmId);
