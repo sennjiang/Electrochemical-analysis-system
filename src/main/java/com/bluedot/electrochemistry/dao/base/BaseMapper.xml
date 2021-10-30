@@ -5,12 +5,21 @@
     <!--    <select id="listUser" resultType="com.bluedot.electrochemistry.pojo.domain.User">-->
     <!--        select * from user;-->
     <!--    </select>-->
+    <select id="queryUser" resultType="com.bluedot.electrochemistry.pojo.domain.User">
+        select * from user
+    </select>
     <select id="listUser" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user limit #{currentPage},#{pageSize}
     </select>
+
     <select id="queryUserByUsername" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user where username = #{username};
     </select>
+
+    <select id="queryUsersByUsername" resultType="com.bluedot.electrochemistry.pojo.domain.User">
+        select * from user where username like #{username};
+    </select>
+
     <select id="queryUserByEmail" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user where email = #{email};
     </select>

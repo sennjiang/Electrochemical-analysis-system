@@ -23,7 +23,7 @@
     <node>
         <number>0105</number>
         <service>UserService</service>
-        <method>deleteUSerByUsername</method>
+        <method>deleteUserByUsername</method>
     </node>
     <node>
         <number>0106</number>
@@ -59,6 +59,11 @@
         <number>0112</number>
         <service>UserService</service>
         <method>saveUnfreezeInfo</method>
+    </node>
+    <node>
+        <number>0113</number>
+        <service>UserService</service>
+        <method>queryUsersByUsername</method>
     </node>
     <node>
         <number>0201</number>

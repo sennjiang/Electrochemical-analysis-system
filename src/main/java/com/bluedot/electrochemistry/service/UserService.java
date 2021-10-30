@@ -41,7 +41,6 @@ public class UserService extends BaseService {
      * @param map User实体类
      */
     private void login(Map map) {
-
         String username = (String) map.get("username");
         String password = (String) map.get("password");
         BaseMapper mapper = mapperFactory.createMapper();
@@ -58,12 +57,40 @@ public class UserService extends BaseService {
     }
 
     /**
-     * 根据用户名查询用户
+     * 查询用户
      *
      * @param map User实体类
      */
     private void queryUser(Map map) {
+        try {
+            BaseMapper mapper = mapperFactory.createMapper();
+            List<User> users = mapper.queryUser();
+            System.out.println(users);
+            map.put("users", users);
+            map.put("code", 200);
+        }catch (Exception e) {
+            map.put("code", 500);
+            map.put("message", "查询失败");
+        }
     }
+
+    /**
+     * 模糊查询用户集合
+     *
+     * @param map User实体类
+     */
+    private void queryUsersByUsername(Map map) {
+        try {
+            BaseMapper mapper = mapperFactory.createMapper();
+            List<User> users = mapper.queryUsersByUsername(Integer.parseInt((String) map.get("key")));
+            map.put("users", users);
+            map.put("code", 200);
+        }catch (Exception e) {
+            map.put("code", 500);
+            map.put("message", "查询失败");
+        }
+    }
+
 
     /**
      * 修改用户个人信息
@@ -86,7 +113,6 @@ public class UserService extends BaseService {
      */
     private void addUSer(Map map) throws ParseException {
         BaseMapper mapper = mapperFactory.createMapper();
-
         // 1.生成username
         int max = 99999999, min = 10000000;
         long randomNum;
@@ -165,7 +191,15 @@ public class UserService extends BaseService {
      *
      * @param map UnfreezeApplication实体类
      */
-    private void deleteUSerByUsername(Map map) {
+    private void deleteUserByUsername(Map map) {
+        try {
+            User user = new User();
+            user.setUsername(Integer.parseInt((String) map.get("userId")));
+            baseDao.delete(user);
+        }catch (Exception e) {
+            map.put("code", 500);
+            map.put("message", "删除失败");
+        }
     }
 
     /**

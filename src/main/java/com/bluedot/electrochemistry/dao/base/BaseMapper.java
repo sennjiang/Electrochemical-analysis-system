@@ -21,7 +21,7 @@ public interface BaseMapper {
      *
      * @return
      */
-    List<User> listUser();
+    List<User> queryUser();
 
     /**
      * @param pageSize    页面大小
@@ -38,6 +38,14 @@ public interface BaseMapper {
      * @return User实体类
      */
     User queryUserByUsername(int username);
+
+    /**
+     * 根据username模糊查询用户
+     *
+     * @param username 用户名
+     * @return User实体类
+     */
+    List<User> queryUsersByUsername(int username);
 
     /**
      *  登录

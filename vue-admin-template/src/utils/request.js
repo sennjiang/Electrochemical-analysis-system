@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
+import store from "@/store";
 
 
 // 请求拦截器
@@ -7,6 +8,7 @@ axios.interceptors.request.use(config => {
   // 判断token是否存在，存在则携带token
   if (window.sessionStorage.getItem('tokenStr')) {
     config.headers.Authorization = window.sessionStorage.getItem('tokenStr')
+    config.headers.UserStatus = store.state.currentStatus
   }
   return config
 }, error => {

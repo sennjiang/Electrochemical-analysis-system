@@ -87,14 +87,15 @@ export default {
                 // 将userInfo存入session
                 this.$store.commit('modifyCurrentUsername', resp.username)
                 this.$store.commit('modifyCurrentNickname', resp.nickname)
-                this.$store.commit('modifyCurrentStatus', resp.status)
-
+                let currentStatus = undefined
                 // 获得用户名后查找用户权限加载侧边栏
                 this.postRequest('/roles', { boundary : '1101', username : store.state.currentUsername }).then(resp => {
                   for(let i = 0; i < resp.rightIdList.length; i ++) {
                     let roleId = resp.rightIdList[i].rightId;
                     this.currentRoles.push(global.map.get(roleId.toString()))
+                    currentStatus = roleId.toString()[0]
                   }
+                  this.$store.commit('modifyCurrentStatus', currentStatus)
                   this.$store.commit('modifyRouters', this.currentRoles)
                 })
 
