@@ -301,20 +301,26 @@
         <service>RoleService</service>
         <method>deleteRole</method>
     </node>
+    <!--算法申请相关-->
     <node>
         <number>0801</number>
-        <service>SearchService</service>
-        <method>search</method>
+        <service>AlgorithmSendService</service>
+        <method>searchAlgorithmSends</method>
     </node>
     <node>
         <number>0802</number>
-        <service>SearchService</service>
-        <method>list</method>
+        <service>AlgorithmSendService</service>
+        <method>listAlgorithmSends</method>
     </node>
     <node>
         <number>0803</number>
         <service>AlgorithmSendService</service>
         <method>judgementAlgorithmSend</method>
+    </node>
+    <node>
+        <number>0804</number>
+        <service>AlgorithmSendService</service>
+        <method>addAlgorithmSend</method>
     </node>
     <node>
         <number>0901</number>
@@ -336,6 +342,24 @@
         <number>1001</number>
         <service>AdminService</service>
         <method>queryAdmins</method>
+    </node>
+
+    <node>
+        <number>1002</number>
+        <service>AdminService</service>
+        <method>modifyAdminState</method>
+    </node>
+
+    <node>
+        <number>1003</number>
+        <service>AdminService</service>
+        <method>addAdmin</method>
+    </node>
+
+    <node>
+        <number>1004</number>
+        <service>AdminService</service>
+        <method>deleteAdmin</method>
     </node>
 
     <node>

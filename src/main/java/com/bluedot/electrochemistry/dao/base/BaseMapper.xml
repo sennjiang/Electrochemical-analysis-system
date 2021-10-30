@@ -39,14 +39,20 @@
     </select>
     <!--查询管理员相关-->
     <select id="getAdmins" resultType="com.bluedot.electrochemistry.pojo.domain.User">
-        select a.* from user as a left join user_role as b on a.username = b.username where b.role_id = '200'
+        select a.* from user as a left join user_role as b on a.username = b.username where b.role_id = '200' limit #{pageStart},#{pageSize}
     </select>
+    <select id="getAdminCount" resultType="java.lang.Long">
+        select count(*) from user as a left join user_role as b on a.username = b.username where b.role_id = '200'
+    </select>
+
+    <select id="getUserRoleId" resultType="java.lang.Integer">
+        select user_role_id from user_role where username = #{username} and role_id = #{roleId}
+    </select>
+
     <select id="getAdminByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user where #{queryCondition}=#{queryValue} limit #{pageStart},#{pageSize}
     </select>
-    <select id="getAdminCount" resultType="java.lang.Long">
-        select count(*) from user
-    </select>
+
     <select id="getAdminCountByQueryCondition" resultType="java.lang.Long">
         select count(*) from user where #{queryCondition}=#{queryValue}
     </select>
@@ -110,8 +116,8 @@
         select count(*) from file where type = #{type} and status = #{status} and owner = #{username};
     </select>
 
-    <select id="listOperations" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
-        select * from operation where type = #{type};
+    <select id="listOperationsBySuperAdmin" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
+        <![CDATA[ select * from operation where 1 < type <= #{type} limit #{pageStart},#{pageSize}; ]]>
     </select>
 
 
@@ -193,12 +199,18 @@
         select count(*) from t_algorithm where #{queryCondition}=#{queryValue}
     </select>-->
 
-    <select id="contrastFile">
+    <select id="contrastFile" resultType="Long">
 
     </select>
 
 
     <select id="countOperationsByUser" resultType="Long">
         select count(*) from operation where user = #{username} and type = #{type};
+    </select>
+    <select id="listOperationsByAdmin" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
+    <![CDATA[ select * from operation where type <= #{type} limit #{pageStart},#{pageSize}; ]]>
+    </select>
+    <select id="countAdminOperations" resultType="java.lang.Long">
+        <![CDATA[    select count(*) from operation where type <= #{type}; ]]>
     </select>
 </mapper>

@@ -60,14 +60,20 @@ public class BaseService {
      * @param <T>             泛型
      */
     protected <T> void doSimpleModifyTemplate(Map<String, Object> map, ServiceCallback<T> serviceCallback){
-        BaseDao baseDao = (BaseDao) beanContainer.getBean(BaseDao.class);
-        int affectedRows = serviceCallback.doDataModifyExecutor(baseDao);
-        if (affectedRows == 0) {
-            map.put("error", "数据库信息操作失败！受影响的行数为0");
-        }else {
-            map.put("code", 200);
+        try {
+            BaseDao baseDao = (BaseDao) beanContainer.getBean(BaseDao.class);
+            int affectedRows = serviceCallback.doDataModifyExecutor(baseDao);
+            if (affectedRows == 0) {
+                map.put("error", "数据库信息操作失败！受影响的行数为0");
+            }else {
+                map.put("code", 200);
+                map.put("message", "执行成功");
+            }
+        }catch (Exception e) {
+            map.put("code", 500);
             map.put("message", "执行成功");
         }
+
     }
 
     /**

@@ -140,7 +140,9 @@ export default {
 
     },
     LogoutAccount() {
-
+      this.$router.push({
+        path: "/logoutUserVerify"
+      });
     },
     // 跳转修改密码
     goToPasswordVerify() {

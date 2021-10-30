@@ -8,12 +8,14 @@ import java.util.List;
 import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.pojo.vo.AlgorithmSendView;
 import com.bluedot.electrochemistry.pojo.vo.AlgorithmView;
+import com.bluedot.framework.simplespring.core.annotation.Repository;
 
 /**
  * @author zero
  * @description 所有 查询方法 的接口
  * @createDate 2021/8/25-14:36
  */
+
 public interface BaseMapper {
 
     /**
@@ -96,7 +98,7 @@ public interface BaseMapper {
      *
      * @return 管理员列表
      */
-    List<User> getAdmins();
+    List<User> getAdmins(int pageStart , int pageSize);
 
     /**
      * 获取管理员数据总数
@@ -104,6 +106,29 @@ public interface BaseMapper {
      * @return 管理员总数
      */
     Long getAdminCount();
+
+    /**
+     * 根据查询信息获取管理员列表
+     * @return管理员列表
+     */
+    List<User> getAdminsByQuery(String query , int pageStart , int pageSize);
+
+
+    /**
+     *
+     * 根据查询信息获取管理员数据总数
+     * @param query
+     * @return
+     */
+    Long getAdminCountByQuery(String query);
+
+    /**
+     *
+     * @param username
+     * @param roleId
+     * @return UserRoleId
+     */
+    Integer getUserRoleId(int username,int roleId);
 
     /**
      * 根据查询条件获取用户信息列表
@@ -205,7 +230,7 @@ public interface BaseMapper {
      * @param username
      * @return
      */
-    long contrastFile(String File_hash, int username);
+    Long contrastFile(String File_hash, int username);
 
     /**
      * 按照条件查询
@@ -311,7 +336,9 @@ public interface BaseMapper {
 
     long getAlgorithmSendsCount();
 
-    /**
+    /** TODO
+     * 根据关键字进行模糊查询，并返回查询到的算法申请集合，
+     * 说明一下，关键字1和关键字2都是同样的，只是对应不同的数据库字段，待框架完善后在进行改进
      * @param queryCondition1 关键字1
      * @param queryCondition2 关键字2
      * @param pageStart      起始页码
@@ -336,7 +363,7 @@ public interface BaseMapper {
 
     Long countFiles(short type, short status, int username);
 
-    List<Operation> listOperations(Integer type, Integer pageStart, Integer pageSize);
+    List<Operation> listOperationsBySuperAdmin(Integer type, Integer pageStart, Integer pageSize);
 
     List<Operation> listOperationsByUser(Integer type, Integer username, Integer pageStart, Integer pageSize);
 
@@ -359,4 +386,8 @@ public interface BaseMapper {
     Long countOperationsByAdmin(String title0,String title1, short type);
 
     Long countOperationsByUser( Integer username,Integer type);
+
+    List<Operation> listOperationsByAdmin(Integer type, Integer pageStart, Integer pageSize);
+
+    Long countAdminOperations(Integer type);
 }

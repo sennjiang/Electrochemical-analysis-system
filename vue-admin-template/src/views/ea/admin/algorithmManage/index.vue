@@ -38,7 +38,7 @@
       </el-table-column>
       <el-table-column label="创建时间" min-width="110px" align="center">
         <template slot-scope="{row}">
-          <span >{{ row.createdTime+"" }}</span>
+          <span >{{ row.createdTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="算法类型" min-width="80px" align="center">
@@ -54,7 +54,7 @@
       </el-table-column>
       <el-table-column label="上次修改时间" min-width="110px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.changeTime+"" }}</span>
+          <span>{{ row.changeTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="是否启用" min-width="80px" align="center">
@@ -70,10 +70,10 @@
           </el-button>
           <!--TODO 单击事件记得修改-->
           <el-button type="primary" size="mini" @click="handleDetail(row)">
-            修改
+            修改申请
           </el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            删除
+            删除申请
           </el-button>
         </template>
       </el-table-column>
@@ -167,7 +167,7 @@ export default {
       list: null,
       total: 0,
       // 懒加载的数据
-      detail: {dataBottom: 0,dataCycle: 0,dataEnd: 0,dataPeak: 0,dataPrecision: 0,dataRate: 0,dataResult: 0,dataStart: 0,id: 1,modifiedTime: "Oct 8, 2021 4:38:09 PM",name: "a.txt",owner: 1234567890,produceTime: "Oct 8, 2021 4:38:09 PM",size: 100,status: 1,type: 1,url: "/qwe"},
+      detail: {algorithmName: null,nickname: null,createdTime: null,changeTime: null,algCode: null},
       owner: '',
       listLoading: true,
       listQuery: {
@@ -178,7 +178,7 @@ export default {
         type: 1,
         status: 1
       },
-      fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/file/upload?boundary=0205&username='+this.owner,
+      fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/algorithm/addAlgorithm?boundary=0406&username='+this.owner,
       importanceOptions: ['正常','已删除'],
       /*calendarTypeOptions,*/
       statusOptions,
@@ -232,15 +232,33 @@ export default {
     handleImport() {
       this.algorithmUploadVisible = true;
     },
+    /*todo 懒加载数据*/
     handleDetail(row) {
       this.dialogDetailVisible = true;
-      this.detail = row
-    },
-    handleDelete(row, index) {
-      let deleteData = {boundary:"0209",fileId:row.id};
-      this.getRequest('/file/delete', deleteData).then(response => {
+      this.detail = row;
+      this.detail.algCode =
+
+      this.loading = true;
+      this.listQuery.boundary = b;
+      this.postRequest(path, this.listQuery).then(response => {
         if (response) {
-          this.getList('file/list','0208')
+          this.list = response.data;
+          console.log(this.list);
+          this.total = response.length;
+        }
+      });
+      this.listLoading = false;
+      setTimeout(() => {
+        this.loading = false
+      }, 750)
+    },
+    /*删除算法，这里的删除是提交删除申请*/
+    handleDelete(row, index) {
+      /*type:是申请的类型，-1代表删除*/
+      let deleteData = {boundary:"0804", algorithmId:row.algId, type:"-1", username:this.$store.state.currentUsername};
+      this.getRequest('/algorithmSend/addAlgorithmSend', deleteData).then(response => {
+        if (response) {
+          this.getList('/algorithm/list','0404')
         }
       })
     },

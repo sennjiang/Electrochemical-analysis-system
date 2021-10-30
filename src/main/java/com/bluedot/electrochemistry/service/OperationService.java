@@ -45,8 +45,11 @@ public class OperationService extends BaseService {
             if (type == 1) {
                 list = baseMapper.listOperationsByUser(type,username,(pageStart - 1) * pageSize,pageSize);
                 length = baseMapper.countOperationsByUser(username,type);
+            }else if(type == 2){
+                list = baseMapper.listOperationsByAdmin(type,(pageStart - 1) * pageSize,pageSize);
+                length = baseMapper.countAdminOperations(type);
             }else {
-                list = baseMapper.listOperations(type,(pageStart - 1) * pageSize,pageSize);
+                list = baseMapper.listOperationsBySuperAdmin(type,(pageStart - 1) * pageSize,pageSize);
                 length = baseMapper.countOperations(type);
             }
             map.put("data",list);
