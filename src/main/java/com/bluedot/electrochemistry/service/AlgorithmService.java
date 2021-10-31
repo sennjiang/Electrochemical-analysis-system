@@ -59,10 +59,10 @@ public class AlgorithmService extends BaseService {
     *  2.算法数据编译处理，这个也还没有做
     * */
     private void addAlgorithm(Map<String, Object> map){
-        File file  = (File) map.get("file");
+        File oldFile  = (File) map.get("file");
         BufferedReader reader = null;
         try {
-            reader = new  BufferedReader(new FileReader(file));
+            reader = new  BufferedReader(new FileReader(oldFile));
             StringBuffer str = new StringBuffer();
             String temp = "";
             while ((temp = reader.readLine()) != null) {
@@ -75,9 +75,9 @@ public class AlgorithmService extends BaseService {
                 @Override
                 public int doDataModifyExecutor(BaseDao baseDao) {
                     Algorithm algorithm = new Algorithm();
-                    algorithm.setAlgorithmName((String) map.get("algorithmName"));
-                    algorithm.setClassification((Integer) map.get("classification"));
-                    algorithm.setUrl(file.getAbsolutePath());
+                    algorithm.setAlgorithmName((String) map.get("fileName"));
+                    algorithm.setClassification(Integer.parseInt((String) map.get("classification")));
+                    algorithm.setUrl(oldFile.getAbsolutePath());
                     algorithm.setUsername((Integer) map.get("username"));
                     int insert = baseDao.insert(algorithm);
                     if (insert != 1) {
