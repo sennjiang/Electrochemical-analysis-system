@@ -78,7 +78,8 @@ public class AlgorithmService extends BaseService {
                     algorithm.setAlgorithmName((String) map.get("fileName"));
                     algorithm.setClassification(Integer.parseInt((String) map.get("classification")));
                     algorithm.setUrl(oldFile.getAbsolutePath());
-                    algorithm.setUsername((Integer) map.get("username"));
+                    algorithm.setUsername(Integer.parseInt((String) map.get("username")));
+                    algorithm.setAlgorithmName((String) map.get("fileName"));
                     int insert = baseDao.insert(algorithm);
                     if (insert != 1) {
                         map.put("code", 500);
@@ -92,14 +93,14 @@ public class AlgorithmService extends BaseService {
             });
         }catch (Exception e) {
             map.put("message",e.getMessage());
-            map.put("code",404);
+            map.put("code",500);
         }finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
                     map.put("message",e.getMessage());
-                    map.put("code",404);
+                    map.put("code",500);
                 }
             }
         }

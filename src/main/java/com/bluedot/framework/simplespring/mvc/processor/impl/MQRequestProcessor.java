@@ -249,22 +249,17 @@ public class MQRequestProcessor implements RequestProcessor {
             ServletFileUpload upload = new ServletFileUpload(factory);
             List<FileItem> items = upload.parseRequest(request);
             for (FileItem item : items) {
-                //如果是普通的表单域
                 if (item.isFormField()) {
-                    //文件内容
                     String value = item.getString();
                     String name = item.getFieldName();
-                    //获取上传文件的文件名,不包含后缀名
-                    String fileName = item.getName().split(".")[0];
-
-                    //将数据放入到data容器内
                     data.put(name,value);
-                    data.put("fileName",fileName);
                 } else {
                     String filename = item.getName();
                     File file1 = new File(realPath, filename);
                     logger.info("file1  ---- {}",file1.getAbsolutePath());
                     data.put("file",file1);
+                    //文件名
+                    data.put("fileName",filename);
                     data.put("filePath","/uploads");
                     item.write(file1);
                     item.delete();
