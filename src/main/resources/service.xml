@@ -61,6 +61,12 @@
         <method>saveUnfreezeInfo</method>
     </node>
     <node>
+        <number>0113</number>
+        <service>UserService</service>
+        <method>uploadAvatar</method>
+    </node>
+
+    <node>
         <number>0201</number>
         <service>FileService</service>
         <method>getReport</method>

@@ -15,6 +15,9 @@ import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -308,6 +311,40 @@ public class UserService extends BaseService {
         unfreeze.setHandleStatus(handleStatus);
         unfreeze.setApplicationReason(applicationReason);
         return unfreeze;
+    }
+
+    /**
+     * 上传头像
+     * @param map 头像图片
+     */
+    private void uploadAvatar(Map<String, Object> map) {
+        System.out.println("hellohellohellohellohellohellohellohellohellohellohellohellohellohellohello");
+        java.io.File file = (java.io.File) map.get("file");
+        System.out.println("hellohellohellohellohellohellohellohellohellohellohellohellohellohellohello");
+        System.out.println(file.getName());
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            StringBuffer str = new StringBuffer();
+            String temp = "";
+            while ((temp = reader.readLine()) != null) {
+                str.append(temp).append("\n");
+                //TODO 文件数据处理
+            }
+            System.out.println("file ---------------- " + str);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            map.put("code", 401);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    map.put("message", e.getMessage());
+                    map.put("code", 401);
+                }
+            }
+        }
     }
 
     /**
