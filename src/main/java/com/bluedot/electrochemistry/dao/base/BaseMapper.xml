@@ -80,7 +80,7 @@
 
     <!--算法相关-->
     <select id="getAlgorithmById" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
-        select * from algorithm_view where alg_id = #{id}
+        select * from algorithm where alg_id = #{id}
     </select>
      <select id="getAlgorithms" resultType="com.bluedot.electrochemistry.pojo.vo.AlgorithmView">
          select * from algorithm_view limit #{pageStart},#{pageSize}
