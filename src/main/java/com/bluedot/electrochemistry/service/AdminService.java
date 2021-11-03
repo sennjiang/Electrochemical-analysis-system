@@ -134,11 +134,11 @@ public class AdminService extends BaseService {
                 //查询该用户的管理员角色的ID
                 User user = packagingUser(map);
                 BaseMapper mapper = mapperFactory.createMapper();
-                Integer userRoleId = mapper.getUserRoleId(user.getUsername(),200);
-                //System.out.println(userRoleId);
+                UserRole userRole = mapper.getUserRoleId(user.getUsername(),200);
+                System.out.println(userRole.getUserRoleId());
 
-                UserRole userRole = new UserRole(user.getUsername(),200);
-                userRole.setUserRoleId(userRoleId);
+                //UserRole userRole = new UserRole(user.getUsername(),200);
+
                 int deleteUserRole = baseDao.delete(userRole);
 
                 map.put("data",deleteUserRole);

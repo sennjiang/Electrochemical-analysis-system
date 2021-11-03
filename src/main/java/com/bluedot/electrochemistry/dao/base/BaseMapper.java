@@ -120,7 +120,7 @@ public interface BaseMapper {
      * @param roleId
      * @return UserRoleId
      */
-    Integer getUserRoleId(int username,int roleId);
+    UserRole getUserRoleId(int username,int roleId);
 
     /**
      * 根据查询条件获取用户信息列表

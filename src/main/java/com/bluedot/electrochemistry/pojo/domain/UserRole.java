@@ -17,7 +17,11 @@ public class UserRole {
     private Integer roleId;
 
 
-
+    public UserRole(Integer userRoleId, Integer username, Integer roleId) {
+        this.userRoleId = userRoleId;
+        this.username = username;
+        this.roleId = roleId;
+    }
 
     public UserRole() {
     }
