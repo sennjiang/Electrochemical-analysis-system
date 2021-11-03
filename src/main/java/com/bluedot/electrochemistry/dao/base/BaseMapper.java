@@ -103,16 +103,16 @@ public interface BaseMapper {
      * 根据查询信息获取管理员列表
      * @return管理员列表
      */
-    List<User> getAdminsByQuery(String query , int pageStart , int pageSize);
+    List<User> getAdminsByQuery(String query1 ,String query2, int pageStart , int pageSize);
 
 
     /**
      *
      * 根据查询信息获取管理员数据总数
-     * @param query
+     * @param
      * @return
      */
-    Long getAdminCountByQuery(String query);
+    Long getAdminCountByQuery(String query1 , String query2);
 
     /**
      *

@@ -30,10 +30,12 @@
     </select>
     <!--查询管理员相关-->
     <select id="getAdmins" resultType="com.bluedot.electrochemistry.pojo.domain.User">
-        select a.* from user as a left join user_role as b on a.username = b.username where b.role_id = '200' limit #{pageStart},#{pageSize}
+        select a.* from user as a left join user_role as b on a.username = b.username
+        where b.role_id = '200' limit #{pageStart},#{pageSize}
     </select>
     <select id="getAdminCount" resultType="java.lang.Long">
-        select count(*) from user as a left join user_role as b on a.username = b.username where b.role_id = '200'
+        select count(*) from user as a left join user_role as b on a.username = b.username
+        where b.role_id = '200'
     </select>
 
     <select id="getUserRoleId" resultType="com.bluedot.electrochemistry.pojo.domain.UserRole">
@@ -44,8 +46,15 @@
         select * from user where username = #{username}
     </select>
 
-    <select id="getAdminByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.User">
-        select * from user where #{queryCondition}=#{queryValue} limit #{pageStart},#{pageSize}
+    <select id="getAdminsByQuery" resultType="com.bluedot.electrochemistry.pojo.domain.User">
+
+        select a.* from user as a left join user_role as b on a.username = b.username
+        where (a.username like #{query1} or nickname like #{query2}) and b.role_id = '200' limit #{pageStart},#{pageSize}
+    </select>
+
+    <select id="getAdminCountByQuery" resultType="java.lang.Long">
+        select count(*) from user as a left join user_role as b on a.username = b.username
+        where (a.username like #{query1} or nickname like #{query2}) and b.role_id = '200'
     </select>
 
     <select id="getAdminCountByQueryCondition" resultType="java.lang.Long">

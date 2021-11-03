@@ -44,12 +44,13 @@ public class AdminService extends BaseService {
         //System.out.println(map.get("query"));
         //query为""则查询所有用户，否则支持模糊查询
         long numbers = 0 ;
-        if(map.get("query").equals("")){
+        String query = (String) map.get("query");
+        if(query.equals("")){
             numbers = mapper.getAdminCount();
             adminlist = mapper.getAdmins(pageStart,pageSize);
         }else {
-            numbers = mapper.getAdminCountByQuery((String)map.get("query"));
-            adminlist = mapper.getAdminsByQuery((String) map.get("query"),pageStart,pageSize);
+            numbers = mapper.getAdminCountByQuery("%"+query+"%","%"+query+"%");
+            adminlist = mapper.getAdminsByQuery("%"+query+"%","%"+query+"%",pageStart,pageSize);
         }
 
         map.put("data",adminlist);
