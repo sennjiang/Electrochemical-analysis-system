@@ -161,17 +161,17 @@
         <service>SearchService</service>
         <method>search</method>
     </node>
+    <!--算法相关-->
     <node>
         <number>0401</number>
-        <service>SearchService</service>
-        <method>search</method>
+        <service>AlgorithmService</service>
+        <method>test</method>
     </node>
     <node>
         <number>0402</number>
-        <service>SearchService</service>
-        <method>list</method>
+        <service>AlgorithmService</service>
+        <method>compileAndRun</method>
     </node>
-    <!--算法相关-->
     <node>
         <number>0403</number>
         <service>AlgorithmService</service>
@@ -197,6 +197,7 @@
         <service>AlgorithmService</service>
         <method>searchAlgorithms</method>
     </node>
+
     <node>
         <number>0408</number>
         <service>SearchService</service>
