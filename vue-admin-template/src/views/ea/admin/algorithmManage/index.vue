@@ -178,7 +178,10 @@ export default {
         type: 1,
         status: 1
       },
-      fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/algorithm/addAlgorithm?boundary=0406&username='+this.$store.state.currentUsername,
+      //TODO 算法类型待修改
+      fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/algorithm/addAlgorithm?boundary=0406&username='
+        +this.$store.state.currentUsername
+        +'&classification=2',
       importanceOptions: ['正常','已删除'],
       /*calendarTypeOptions,*/
       statusOptions,
