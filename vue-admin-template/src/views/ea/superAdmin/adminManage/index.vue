@@ -150,8 +150,19 @@
           boundary: '1004',
           username:'',
         },
+
+        //查询要修改的管理员的信息
+        queryEditUserInfo:{
+          boundary: '1005',
+          username:'',
+        },
         //修改管理员的信息
-        editForm:{},
+        editForm:{
+          boundary: '1006',
+          username:'',
+          password:'',
+          email:''
+        },
         //显示和隐藏修改管理员栏
         editDialogVisible:false,
         //添加的表单验证
@@ -279,29 +290,38 @@
 
       },
 
-      //显示对话框
-      async showEditDialog(id){
-        const {data:res} = await this.$http.get("getupdate?id="+id);
-        this.editForm = res;//查询出管理员信息反填回编辑表单
-        this.editDialogVisible = true;//开始编辑对话框
+      //显示修改对话框
+      async showEditDialog(username){
+
+        this.queryEditUserInfo.boundary = '1005';
+        this.queryEditUserInfo.username = username;
+        this.postRequest("/admin/queryEditAdmin" , this.queryEditUserInfo).then(res=>{
+          this.editForm = res.data;//查询出管理员信息反填回编辑表单
+          this.editDialogVisible = true;//开始编辑对话框
+        });
+
       },
       //关闭窗口
       getDialogClosed(){
         this.$refs.editFormRef.resetFields();//重置信息
       },
       //确认修改
-      editUserInfo(){
-        this.$refs.editFormRef.validate(async valid =>{
-          if(!valid) return;
+      editUserInfo() {
+        this.$refs.editFormRef.validate(async valid => {
+          if (!valid) return;
           //发起修改的请求
-          const {data:res} =  await this.$http.post("edituser",this.editForm);
-          if(res!="success") return this.$message.error("操作失败！！！");
-          this.$message.success("操作成功！！！");
-          //隐藏
-          this.editDialogVisible = false;
-          this.getUserList();
-        })
-      },
+          this.editForm.boundary = '1006'
+          this.postRequest("/admin/editAdmin", this.editForm).then(res => {
+            if (res.data != 1) {
+              return this.$message.error("修改失败！！！");
+            } else {
+              this.$message.success("修改成功！！！");
+              this.editDialogVisible = false;
+              this.getUserList();
+            }
+          })
+        });
+      }
     },
 
   }

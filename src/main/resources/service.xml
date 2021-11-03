@@ -364,6 +364,18 @@
     </node>
 
     <node>
+        <number>1005</number>
+        <service>AdminService</service>
+        <method>queryEditAdmin</method>
+    </node>
+
+    <node>
+        <number>1006</number>
+        <service>AdminService</service>
+        <method>editAdmin</method>
+    </node>
+
+    <node>
         <number>1101</number>
         <service>LoginRightService</service>
         <method>queryRightByUser</method>

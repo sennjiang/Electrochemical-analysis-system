@@ -40,6 +40,10 @@
         select * from user_role where username = #{username} and role_id = #{roleId}
     </select>
 
+    <select id="getQueryEditAdmin" resultType="com.bluedot.electrochemistry.pojo.domain.User">
+        select * from user where username = #{username}
+    </select>
+
     <select id="getAdminByQueryCondition" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user where #{queryCondition}=#{queryValue} limit #{pageStart},#{pageSize}
     </select>

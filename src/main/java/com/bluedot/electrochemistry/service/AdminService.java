@@ -147,6 +147,13 @@ public class AdminService extends BaseService {
         });
     }
 
+    private void queryEditAdmin(Map<String, Object> map){
+        BaseMapper mapper = mapperFactory.createMapper();
+        User user = mapper.getQueryEditAdmin(Integer.parseInt((String) map.get("username")));
+
+        map.put("data",user);
+    }
+
     /**
      * 将请求数据中的信息封装成用户对象
      *
@@ -174,6 +181,19 @@ public class AdminService extends BaseService {
 
     }
 
+
+    private void editAdmin(Map<String , Object> map){
+        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                User user = packagingUser(map);
+
+                int editAdmin = baseDao.update(user);
+                map.put("data",editAdmin);
+                return editAdmin;
+            }
+        });
+    }
 
     /**
      * 封装用户角色中间表的信息

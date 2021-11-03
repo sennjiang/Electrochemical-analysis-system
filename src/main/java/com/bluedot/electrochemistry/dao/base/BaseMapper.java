@@ -116,11 +116,20 @@ public interface BaseMapper {
 
     /**
      *
+     * 根据用户名和权限编号，查询权限id
      * @param username
      * @param roleId
      * @return UserRoleId
      */
     UserRole getUserRoleId(int username,int roleId);
+
+    /**
+     *
+     * 根据用户名查询用户
+     * @param username
+     * @return
+     */
+    User getQueryEditAdmin(int username);
 
     /**
      * 根据查询条件获取用户信息列表
