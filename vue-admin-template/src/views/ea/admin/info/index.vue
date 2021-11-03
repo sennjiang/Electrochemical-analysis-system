@@ -12,14 +12,28 @@
             <div class="block">
               <el-avatar :size="100" :src="userInfo.portrait" class="style-avatar-div"></el-avatar>
             </div>
-            <el-button>更换头像</el-button>
+            <el-button @click="">更换头像</el-button>
           </div>
         </el-col>
       </el-row>
+
+      <!--上传头像-->
+      <!--<el-upload-->
+      <!--  class="upload-demo"-->
+      <!--  action="http://localhost:8080/Electrochemical_Analysis_System_war/uploadAvatar?boundary=0113&username=20190002"-->
+      <!--  :on-preview="handlePreview"-->
+      <!--  :on-remove="handleRemove"-->
+      <!--  :before-remove="beforeRemove"-->
+      <!--  multiple-->
+      <!--  :limit="3"-->
+      <!--  :on-exceed="handleExceed"-->
+      <!--  :file-list="fileList">-->
+      <!--  <el-button size="small" type="primary">点击上传</el-button>-->
+      <!--  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
+      <!--</el-upload>-->
     </div>
 
     <div class="style-right-div">
-
       <el-form :model="userInfo" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="账号" prop="username">
           <span v-text='userInfo.username'></span>
@@ -45,7 +59,7 @@
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <span v-text='userInfo.email'></span>
-          <el-button size="small" style="position: relative; left: 20%"  @click="goToEmailVerify">修改邮箱</el-button>
+          <el-button size="small" style="position: relative; left: 20%" @click="goToEmailVerify">修改邮箱</el-button>
         </el-form-item>
         <el-form-item label="密码" prop="pwd">
           <span>******</span>
@@ -65,7 +79,6 @@
 <script>
 import {mapGetters} from 'vuex'
 
-
 export default {
   name: 'Info',
   computed: {
@@ -76,6 +89,11 @@ export default {
   data() {
     return {
 
+      // 上传头像
+      // {name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}
+      fileList: [],
+
+      // 用户信息
       userInfo: {
         boundary: '0104',
         username: '',
@@ -120,12 +138,31 @@ export default {
   },
 
   methods: {
+
+    // 上传头像
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${ file.name }？`);
+    },
+
     // 提交表单
     // <!--提交注册-->
     submitForm() {
       // this.$refs[formName].validate(async valid => {
       //   if (valid) {
-      this.postRequest('/modifyUser', {boundary: '0104', username: this.userInfo.username, nickname: this.userInfo.nickname, portrait: this.userInfo.portrait
+      this.postRequest('/modifyUser', {
+        boundary: '0104',
+        username: this.userInfo.username,
+        nickname: this.userInfo.nickname,
+        portrait: this.userInfo.portrait
       }).then(resp => {
       })
     },
@@ -140,7 +177,9 @@ export default {
 
     },
     LogoutAccount() {
-
+      this.$router.push({
+        path: "/logoutUserVerify"
+      });
     },
     // 跳转修改密码
     goToPasswordVerify() {

@@ -21,12 +21,12 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="ID" prop="id" align="center" width="80">
+      <el-table-column label="ID" prop="id" align="center" width="40">
         <template slot-scope="{row}">
           <span>{{ row.algId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="算法名" width="150px" align="center">
+      <el-table-column label="算法名" width="110px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.algorithmName }}</span>
         </template>
@@ -36,12 +36,12 @@
           <span>{{ row.nickname }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" min-width="110px" align="center">
+      <el-table-column label="创建时间" min-width="20px" align="center">
         <template slot-scope="{row}">
-          <span >{{ row.createdTime+"" }}</span>
+          <span >{{ row.createdTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="算法类型" min-width="80px" align="center">
+      <el-table-column label="算法类型" min-width="20px" align="center">
         <template slot-scope="{row}">
           <span v-if="1 == row.classification">平滑处理</span>
           <span v-else-if="2 == row.classification">滤波处理</span>
@@ -52,18 +52,18 @@
           <span v-else>未知</span>
         </template>
       </el-table-column>
-      <el-table-column label="上次修改时间" min-width="110px" align="center">
+      <el-table-column label="上次修改时间" min-width="20px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.changeTime+"" }}</span>
+          <span>{{ row.changeTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否启用" min-width="80px" align="center">
+      <el-table-column label="是否启用" min-width="20px" align="center">
         <template slot-scope="{row}">
           <span v-if="1 == row.isUsed"><el-tag type="success">启用</el-tag></span>
           <span v-if="2 == row.isUsed"><el-tag type="info">未启用</el-tag></span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="230px" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleDetail(row)">
             详情
@@ -90,7 +90,7 @@
       :total="total">
     </el-pagination>
     <!--算法上传对话框-->
-    <el-dialog :visible.sync="fileUploadVisible">
+    <el-dialog :visible.sync="algorithmUploadVisible">
       <el-upload
         align="center"
         class="upload-demo"
@@ -102,7 +102,7 @@
         <div class="el-upload__tip" slot="tip">只能上传txt文件，且不超过500kb</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="fileUploadVisible = false">
+        <el-button type="primary" @click="algorithmUploadVisible = false">
           确认
         </el-button>
       </div>
@@ -167,7 +167,7 @@ export default {
       list: null,
       total: 0,
       // 懒加载的数据
-      detail: {dataBottom: 0,dataCycle: 0,dataEnd: 0,dataPeak: 0,dataPrecision: 0,dataRate: 0,dataResult: 0,dataStart: 0,id: 1,modifiedTime: "Oct 8, 2021 4:38:09 PM",name: "a.txt",owner: 1234567890,produceTime: "Oct 8, 2021 4:38:09 PM",size: 100,status: 1,type: 1,url: "/qwe"},
+      detail: {algorithmName: null,nickname: null,createdTime: null,changeTime: null,algCode: null},
       owner: '',
       listLoading: true,
       listQuery: {
@@ -178,7 +178,7 @@ export default {
         type: 1,
         status: 1
       },
-      fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/file/upload?boundary=0205&username='+this.owner,
+      fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/algorithm/addAlgorithm?boundary=0406&username='+this.$store.state.currentUsername,
       importanceOptions: ['正常','已删除'],
       /*calendarTypeOptions,*/
       statusOptions,
@@ -232,15 +232,33 @@ export default {
     handleImport() {
       this.algorithmUploadVisible = true;
     },
+    /*todo 懒加载数据*/
     handleDetail(row) {
       this.dialogDetailVisible = true;
-      this.detail = row
-    },
-    handleDelete(row, index) {
-      let deleteData = {boundary:"0209",fileId:row.id};
-      this.getRequest('/file/delete', deleteData).then(response => {
+      this.detail = row;
+      this.detail.algCode =
+
+      this.loading = true;
+      this.listQuery.boundary = b;
+      this.postRequest(path, this.listQuery).then(response => {
         if (response) {
-          this.getList('file/list','0208')
+          this.list = response.data;
+          console.log(this.list);
+          this.total = response.length;
+        }
+      });
+      this.listLoading = false;
+      setTimeout(() => {
+        this.loading = false
+      }, 750)
+    },
+    /*删除算法，这里的删除是提交删除申请*/
+    handleDelete(row, index) {
+      /*type:是申请的类型，-1代表删除*/
+      let deleteData = {boundary:"0804", algorithmId:row.algId, type:"-1", username:this.$store.state.currentUsername};
+      this.getRequest('/algorithmSend/addAlgorithmSend', deleteData).then(response => {
+        if (response) {
+          this.getList('/algorithm/list','0404')
         }
       })
     },

@@ -61,6 +61,12 @@
         <method>saveUnfreezeInfo</method>
     </node>
     <node>
+        <number>0113</number>
+        <service>UserService</service>
+        <method>uploadAvatar</method>
+    </node>
+
+    <node>
         <number>0201</number>
         <service>FileService</service>
         <method>getReport</method>
@@ -296,20 +302,26 @@
         <service>RoleService</service>
         <method>deleteRole</method>
     </node>
+    <!--算法申请相关-->
     <node>
         <number>0801</number>
-        <service>SearchService</service>
-        <method>search</method>
+        <service>AlgorithmSendService</service>
+        <method>searchAlgorithmSends</method>
     </node>
     <node>
         <number>0802</number>
-        <service>SearchService</service>
-        <method>list</method>
+        <service>AlgorithmSendService</service>
+        <method>listAlgorithmSends</method>
     </node>
     <node>
         <number>0803</number>
         <service>AlgorithmSendService</service>
         <method>judgementAlgorithmSend</method>
+    </node>
+    <node>
+        <number>0804</number>
+        <service>AlgorithmSendService</service>
+        <method>addAlgorithmSend</method>
     </node>
     <node>
         <number>0901</number>

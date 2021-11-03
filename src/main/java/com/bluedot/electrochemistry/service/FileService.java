@@ -77,7 +77,7 @@ public class FileService extends BaseService {
             map.put("length", size);
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("code", 401);
+            map.put("code", 500);
             map.put("message", "文件列表加载失败");
         }
 
@@ -114,7 +114,7 @@ public class FileService extends BaseService {
             map.put("message", "文件列表加载完成");
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("code", 401);
+            map.put("code", 500);
             map.put("message", "文件列表加载失败");
         }
 

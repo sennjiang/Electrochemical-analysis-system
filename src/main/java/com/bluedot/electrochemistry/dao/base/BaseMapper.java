@@ -222,7 +222,7 @@ public interface BaseMapper {
      * @param username
      * @return
      */
-    long contrastFile(String File_hash, int username);
+    Long contrastFile(String File_hash, int username);
 
     /**
      * 按照条件查询
@@ -328,7 +328,9 @@ public interface BaseMapper {
 
     long getAlgorithmSendsCount();
 
-    /**
+    /** TODO
+     * 根据关键字进行模糊查询，并返回查询到的算法申请集合，
+     * 说明一下，关键字1和关键字2都是同样的，只是对应不同的数据库字段，待框架完善后在进行改进
      * @param queryCondition1 关键字1
      * @param queryCondition2 关键字2
      * @param pageStart      起始页码
@@ -353,7 +355,7 @@ public interface BaseMapper {
 
     Long countFiles(short type, short status, int username);
 
-    List<Operation> listOperations(Integer type, Integer pageStart, Integer pageSize);
+    List<Operation> listOperationsBySuperAdmin(Integer type, Integer pageStart, Integer pageSize);
 
     List<Operation> listOperationsByUser(Integer type, Integer username, Integer pageStart, Integer pageSize);
 
@@ -376,4 +378,8 @@ public interface BaseMapper {
     Long countOperationsByAdmin(String title0,String title1, short type);
 
     Long countOperationsByUser( Integer username,Integer type);
+
+    List<Operation> listOperationsByAdmin(Integer type, Integer pageStart, Integer pageSize);
+
+    Long countAdminOperations(Integer type);
 }

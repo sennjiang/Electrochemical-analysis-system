@@ -222,7 +222,7 @@ public class MQRequestProcessor implements RequestProcessor {
         data.put("boundary",boundary);
         logger.info("parameterMap ---> data : {}",data);
         if (username == null || boundary == null) {
-            if (!"0205".equals(boundary) && !writeList.contains(boundary)){
+            if (!CommonMapper.fileList.contains(boundary) && !writeList.contains(boundary)){
                 return null;
             }
         }
@@ -236,8 +236,9 @@ public class MQRequestProcessor implements RequestProcessor {
         }
 
         //0205 文件上传的编号 对请求进行特殊处理
-        if ("0205".equals(boundary)){
+        if (CommonMapper.fileList.contains(boundary)){
             logger.debug("start parse file request ... ");
+            //上传文件存放在服务器上的路径
             String realPath =  projectPath +"/uploads";
             logger.info("projectPath ---- {}",projectPath);
             java.io.File file = new java.io.File(realPath);
@@ -257,6 +258,8 @@ public class MQRequestProcessor implements RequestProcessor {
                     File file1 = new File(realPath, filename);
                     logger.info("file1  ---- {}",file1.getAbsolutePath());
                     data.put("file",file1);
+                    //文件名
+                    data.put("fileName",filename);
                     data.put("filePath","/uploads");
                     item.write(file1);
                     item.delete();

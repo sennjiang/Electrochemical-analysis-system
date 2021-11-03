@@ -107,8 +107,8 @@
         select count(*) from file where type = #{type} and status = #{status} and owner = #{username};
     </select>
 
-    <select id="listOperations" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
-        select * from operation where type = #{type};
+    <select id="listOperationsBySuperAdmin" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
+        <![CDATA[ select * from operation where 1 < type <= #{type} limit #{pageStart},#{pageSize}; ]]>
     </select>
 
 
@@ -190,12 +190,18 @@
         select count(*) from t_algorithm where #{queryCondition}=#{queryValue}
     </select>-->
 
-    <select id="contrastFile">
+    <select id="contrastFile" resultType="Long">
 
     </select>
 
 
     <select id="countOperationsByUser" resultType="Long">
         select count(*) from operation where user = #{username} and type = #{type};
+    </select>
+    <select id="listOperationsByAdmin" resultType="com.bluedot.electrochemistry.pojo.domain.Operation">
+    <![CDATA[ select * from operation where type <= #{type} limit #{pageStart},#{pageSize}; ]]>
+    </select>
+    <select id="countAdminOperations" resultType="java.lang.Long">
+        <![CDATA[    select count(*) from operation where type <= #{type}; ]]>
     </select>
 </mapper>
