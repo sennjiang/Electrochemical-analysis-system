@@ -35,6 +35,11 @@ public class CommonMapper {
      */
     public static Map<String,Integer> typeMapper;
 
+    /**
+     * 文件上传时的路径 在项目路径下 /uploads/  需在配置文件里配置
+     */
+    public static Map<String,String> filePathMapper;
+
 
     public final static List<String> fileList = new ArrayList<>();
 
@@ -44,7 +49,23 @@ public class CommonMapper {
         initTypeMapper();
         initMethodMapper(contextConfig);
         initFileList(contextConfig);
+        initFilePathMapper(contextConfig);
         logger.debug("end init mapper ... ");
+    }
+
+    private void initFilePathMapper(Properties contextConfig) {
+        filePathMapper = new HashMap<>();
+        String filePath = contextConfig.getProperty("filePath");
+        if (filePath.contains(";")){
+            String[] filePaths = filePath.split(";");
+            for (String path : filePaths) {
+                if (path.contains(",")){
+                    String[] str = path.split(",");
+                    filePathMapper.put(str[0], "/uploads" + str[1]);
+                }
+            }
+
+        }
     }
 
     private void initFileList(Properties contextConfig) {
