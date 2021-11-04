@@ -26,12 +26,29 @@ public interface BaseMapper {
     List<User> queryUser();
 
     /**
+     * 没有key
+     * @param pageSize
+     * @param currentPage
+     * @param key
+     * @return
+     */
+    List<User> listUser(int pageSize, int currentPage, String key);
+
+    /**
+     * 根据三个参数获得user集合
      * @param pageSize    页面大小
      * @param currentPage 当前页
      * @param key         key
      * @return User实体类
      */
-    List<User> listUser(int pageSize, int currentPage, String key);
+    List<User> queryUserByPageAndKey(String key, int currentPage, int pageSize);
+
+    /**
+     * 根据key查总数
+     * @param key
+     * @return
+     */
+    Long countUserByKey(String key);
 
     /**
      * 根据username查询用户
@@ -390,4 +407,18 @@ public interface BaseMapper {
     List<Operation> listOperationsByAdmin(Integer type, Integer pageStart, Integer pageSize);
 
     Long countAdminOperations(Integer type);
+
+
+    /**
+     * 查询处理中的解冻申请
+     * @return
+     */
+    List<Unfreeze> queryUnfreezeByCurrent(String key, int currentPage, int pageSize);
+
+    /**
+     * 查询总共数量
+     * @param key
+     * @return
+     */
+    Long countUnfreezeByKey (String key);
 }

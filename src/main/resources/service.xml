@@ -375,6 +375,12 @@
     </node>
 
     <node>
+        <number>1202</number>
+        <service>UserService</service>
+        <method>updateUserStatus</method>
+    </node>
+
+    <node>
         <number>1301</number>
         <service>UnfreezeService</service>
         <method>insertUnfreeze</method>
@@ -385,5 +391,13 @@
         <service>UnfreezeService</service>
         <method>updateUnfreeze</method>
     </node>
+
+    <node>
+        <number>1303</number>
+        <service>UnfreezeService</service>
+        <method>searchUnfreeze</method>
+    </node>
+
+
 
 </service_mapping>

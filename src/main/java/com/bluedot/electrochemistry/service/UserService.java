@@ -58,11 +58,46 @@ public class UserService extends BaseService {
     }
 
     /**
-     * 根据用户名查询用户
+     * 查询用户(分页)
      *
      * @param map User实体类
      */
     private void queryUser(Map map) {
+        try {
+            BaseMapper mapper = mapperFactory.createMapper();
+            int currentPage = Integer.parseInt((String) map.get("currentPage"));
+            int pageSize = Integer.parseInt((String) map.get("pageSize"));
+            currentPage = (currentPage - 1) * pageSize;
+            String key = (String) map.get("key");
+            if(key == null || key.length() == 0) {
+                key = "";
+            }
+            List<User> users = mapper.queryUserByPageAndKey(key,currentPage,pageSize);
+            long total = mapper.countUserByKey(key);
+            map.put("total", total);
+            map.put("users", users);
+            map.put("code", 200);
+        }catch (Exception e) {
+            map.put("code", 500);
+            map.put("message", "查询失败");
+        }
+    }
+
+    /**
+     * 模糊查询用户集合
+     *
+     * @param map User实体类
+     */
+    private void queryUsersByUsername(Map map) {
+        try {
+            BaseMapper mapper = mapperFactory.createMapper();
+            List<User> users = mapper.queryUsersByUsername(Integer.parseInt((String) map.get("key")));
+            map.put("users", users);
+            map.put("code", 200);
+        }catch (Exception e) {
+            map.put("code", 500);
+            map.put("message", "查询失败");
+        }
     }
 
     /**
@@ -71,12 +106,40 @@ public class UserService extends BaseService {
      * @param map ResultBean实休类
      */
     private void modifyUser(Map<String, Object> map) {
-        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
-            @Override
-            public int doDataModifyExecutor(BaseDao baseDao) {
-                return baseDao.update(parseToUser(map));
-            }
-        });
+        try {
+            User user = new User();
+            user.setUsername(Integer.parseInt((String) map.get("username")));
+            user.setNickname((String) map.get("nickname"));
+            user.setPassword((String) map.get("password"));
+            user.setEmail((String) map.get("email"));
+            baseDao.update(user);
+            map.put("code", 200);
+            map.put("message", "修改成功");
+        }catch (Exception e) {
+            map.put("code", 500);
+            map.put("message", "修改失败");
+        }
+    }
+
+    /**
+     * 冻结用户
+     *
+     * @param map ResultBean实休类
+     */
+    private void updateUserStatus(Map<String, Object> map) {
+        try {
+            User user = new User();
+            int username = Integer.parseInt((String)map.get("username"));
+            int status = Integer.parseInt((String)map.get("status"));
+            user.setUsername(username);
+            user.setStatus(status);
+            baseDao.update(user);
+            map.put("code", 200);
+            map.put("message", "更新用户状态成功");
+        }catch (Exception e) {
+            map.put("code", 500);
+            map.put("message", "更新用户状态失败");
+        }
     }
 
     /**
@@ -161,7 +224,7 @@ public class UserService extends BaseService {
     }
 
     /**
-     * 用户申请解冻
+     * 删除用户根据id
      *
      * @param map UnfreezeApplication实体类
      */
@@ -295,7 +358,7 @@ public class UserService extends BaseService {
      */
     private Unfreeze parseToUnfreeze(Map<String, Object> map) {
         Integer freezeId = Integer.parseInt((String) map.get("freezeId"));
-        Long username = Long.parseLong((String) map.get("username"));
+        Integer username = Integer.parseInt((String) map.get("username"));
         String email = (String) map.get("email");
         Integer handleStatus = Integer.parseInt((String) map.get("handleStatus"));
         String applicationReason = (String) map.get("applicationReason");
