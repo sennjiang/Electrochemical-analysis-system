@@ -21,12 +21,12 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="ID" prop="id" align="center" width="80">
+      <el-table-column label="ID" prop="id" align="center" width="40">
         <template slot-scope="{row}">
           <span>{{ row.algId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="算法名" width="150px" align="center">
+      <el-table-column label="算法名" width="110px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.algorithmName }}</span>
         </template>
@@ -36,12 +36,12 @@
           <span>{{ row.nickname }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" min-width="110px" align="center">
+      <el-table-column label="创建时间" min-width="20px" align="center">
         <template slot-scope="{row}">
           <span >{{ row.createdTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="算法类型" min-width="80px" align="center">
+      <el-table-column label="算法类型" min-width="20px" align="center">
         <template slot-scope="{row}">
           <span v-if="1 == row.classification">平滑处理</span>
           <span v-else-if="2 == row.classification">滤波处理</span>
@@ -52,28 +52,28 @@
           <span v-else>未知</span>
         </template>
       </el-table-column>
-      <el-table-column label="上次修改时间" min-width="110px" align="center">
+      <el-table-column label="上次修改时间" min-width="20px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.changeTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否启用" min-width="80px" align="center">
+      <el-table-column label="是否启用" min-width="20px" align="center">
         <template slot-scope="{row}">
           <span v-if="1 == row.isUsed"><el-tag type="success">启用</el-tag></span>
           <span v-if="2 == row.isUsed"><el-tag type="info">未启用</el-tag></span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="230px" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleDetail(row)">
             详情
           </el-button>
           <!--TODO 单击事件记得修改-->
           <el-button type="primary" size="mini" @click="handleDetail(row)">
-            修改申请
+            修改
           </el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            删除申请
+            删除
           </el-button>
         </template>
       </el-table-column>
@@ -90,7 +90,7 @@
       :total="total">
     </el-pagination>
     <!--算法上传对话框-->
-    <el-dialog :visible.sync="fileUploadVisible">
+    <el-dialog :visible.sync="algorithmUploadVisible">
       <el-upload
         align="center"
         class="upload-demo"
@@ -102,7 +102,7 @@
         <div class="el-upload__tip" slot="tip">只能上传txt文件，且不超过500kb</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="fileUploadVisible = false">
+        <el-button type="primary" @click="algorithmUploadVisible = false">
           确认
         </el-button>
       </div>
@@ -178,7 +178,10 @@ export default {
         type: 1,
         status: 1
       },
-      fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/algorithm/addAlgorithm?boundary=0406&username='+this.owner,
+      //TODO 算法类型待修改
+      fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/algorithm/addAlgorithm?boundary=0406&username='
+        +this.$store.state.currentUsername
+        +'&classification=2',
       importanceOptions: ['正常','已删除'],
       /*calendarTypeOptions,*/
       statusOptions,

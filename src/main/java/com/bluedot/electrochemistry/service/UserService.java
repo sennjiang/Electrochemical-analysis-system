@@ -15,6 +15,9 @@ import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -371,6 +374,25 @@ public class UserService extends BaseService {
         unfreeze.setHandleStatus(handleStatus);
         unfreeze.setApplicationReason(applicationReason);
         return unfreeze;
+    }
+
+    /**
+     * 上传头像
+     * @param map 头像图片
+     */
+    private void uploadAvatar(Map<String, Object> map) {
+        java.io.File file = (java.io.File) map.get("file");
+        String portraitPath = "avatar/" + file.getName();
+        Integer username = Integer.parseInt((String) map.get("username"));
+        User user = new User();
+        user.setUsername(username);
+        user.setPortrait(portraitPath);
+        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                return baseDao.update(user);
+            }
+        });
     }
 
     /**

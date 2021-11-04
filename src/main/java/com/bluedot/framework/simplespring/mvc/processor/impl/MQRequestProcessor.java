@@ -43,11 +43,6 @@ public class MQRequestProcessor implements RequestProcessor {
     private Logger logger = LogUtil.getLogger();
 
     /**
-     * test baseBoundary
-     */
-    private String baseBoundary;
-
-    /**
      * 请求白名单（以 boundary 为 键）
      */
     private static List<String> writeList = new ArrayList<>();
@@ -164,7 +159,6 @@ public class MQRequestProcessor implements RequestProcessor {
 
 
     public MQRequestProcessor(Properties config) {
-        baseBoundary = config.getProperty("boundary");
         projectPath = config.getProperty("projectPath");
     }
 
@@ -219,8 +213,7 @@ public class MQRequestProcessor implements RequestProcessor {
 
         String boundary = (String) data.get("boundary");
         data.setRequest(request);
-        data.put("boundary",boundary);
-        logger.info("parameterMap ---> data : {}",data);
+
         if (username == null || boundary == null) {
             if (!CommonMapper.fileList.contains(boundary) && !writeList.contains(boundary)){
                 return null;
@@ -234,12 +227,13 @@ public class MQRequestProcessor implements RequestProcessor {
         if (!data.containsKey("username")){
             data.put("username",username);
         }
-
+        logger.info("parameterMap ---> data : {}",data);
         //0205 文件上传的编号 对请求进行特殊处理
         if (CommonMapper.fileList.contains(boundary)){
-            logger.debug("start parse file request ... ");
-            String realPath =  projectPath +"/uploads";
-            logger.info("projectPath ---- {}",projectPath);
+            logger.debug("开始处理文件上传 ... ");
+            //上传文件存放在服务器上的路径
+            String realPath =  projectPath + CommonMapper.filePathMapper.getOrDefault(boundary,"/uploads");
+            logger.info("realPath ---- {}",realPath);
             java.io.File file = new java.io.File(realPath);
             if (!file.exists()) {
                 file.mkdirs();
@@ -255,8 +249,9 @@ public class MQRequestProcessor implements RequestProcessor {
                 } else {
                     String filename = item.getName();
                     File file1 = new File(realPath, filename);
-                    logger.info("file1  ---- {}",file1.getAbsolutePath());
                     data.put("file",file1);
+                    //文件名
+                    data.put("fileName",filename);
                     data.put("filePath","/uploads");
                     item.write(file1);
                     item.delete();

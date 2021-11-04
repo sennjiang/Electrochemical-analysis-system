@@ -44,12 +44,13 @@ public class AdminService extends BaseService {
         //System.out.println(map.get("query"));
         //query为""则查询所有用户，否则支持模糊查询
         long numbers = 0 ;
-        if(map.get("query").equals("")){
+        String query = (String) map.get("query");
+        if(query.equals("")){
             numbers = mapper.getAdminCount();
             adminlist = mapper.getAdmins(pageStart,pageSize);
         }else {
-            numbers = mapper.getAdminCountByQuery((String)map.get("query"));
-            adminlist = mapper.getAdminsByQuery((String) map.get("query"),pageStart,pageSize);
+            numbers = mapper.getAdminCountByQuery("%"+query+"%","%"+query+"%");
+            adminlist = mapper.getAdminsByQuery("%"+query+"%","%"+query+"%",pageStart,pageSize);
         }
 
         map.put("data",adminlist);
@@ -134,17 +135,24 @@ public class AdminService extends BaseService {
                 //查询该用户的管理员角色的ID
                 User user = packagingUser(map);
                 BaseMapper mapper = mapperFactory.createMapper();
-                Integer userRoleId = mapper.getUserRoleId(user.getUsername(),200);
-                //System.out.println(userRoleId);
+                UserRole userRole = mapper.getUserRoleId(user.getUsername(),200);
+                System.out.println(userRole.getUserRoleId());
 
-                UserRole userRole = new UserRole(user.getUsername(),200);
-                userRole.setUserRoleId(userRoleId);
+                //UserRole userRole = new UserRole(user.getUsername(),200);
+
                 int deleteUserRole = baseDao.delete(userRole);
 
                 map.put("data",deleteUserRole);
                 return deleteUserRole;
             }
         });
+    }
+
+    private void queryEditAdmin(Map<String, Object> map){
+        BaseMapper mapper = mapperFactory.createMapper();
+        User user = mapper.getQueryEditAdmin(Integer.parseInt((String) map.get("username")));
+
+        map.put("data",user);
     }
 
     /**
@@ -174,6 +182,19 @@ public class AdminService extends BaseService {
 
     }
 
+
+    private void editAdmin(Map<String , Object> map){
+        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                User user = packagingUser(map);
+
+                int editAdmin = baseDao.update(user);
+                map.put("data",editAdmin);
+                return editAdmin;
+            }
+        });
+    }
 
     /**
      * 封装用户角色中间表的信息

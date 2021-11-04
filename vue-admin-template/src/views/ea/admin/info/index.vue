@@ -12,14 +12,31 @@
             <div class="block">
               <el-avatar :size="100" :src="userInfo.portrait" class="style-avatar-div"></el-avatar>
             </div>
-            <el-button>更换头像</el-button>
+
+            <el-upload
+              class="upload-demo"
+              :action="fileUploadPath"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :before-remove="beforeRemove"
+              multiple
+              :limit="3"
+              :on-exceed="handleExceed"
+              :file-list="fileList"
+              @change="changPath"
+            >
+              <el-button>点击上传</el-button>
+              <div slot="tip" class="el-upload__tip"></div>
+            </el-upload>
           </div>
         </el-col>
       </el-row>
+
+
+
     </div>
 
     <div class="style-right-div">
-
       <el-form :model="userInfo" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="账号" prop="username">
           <span v-text='userInfo.username'></span>
@@ -45,7 +62,7 @@
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <span v-text='userInfo.email'></span>
-          <el-button size="small" style="position: relative; left: 20%"  @click="goToEmailVerify">修改邮箱</el-button>
+          <el-button size="small" style="position: relative; left: 20%" @click="goToEmailVerify">修改邮箱</el-button>
         </el-form-item>
         <el-form-item label="密码" prop="pwd">
           <span>******</span>
@@ -65,7 +82,6 @@
 <script>
 import {mapGetters} from 'vuex'
 
-
 export default {
   name: 'Info',
   computed: {
@@ -76,6 +92,11 @@ export default {
   data() {
     return {
 
+      // 上传头像
+      // {name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}
+      fileList: [],
+
+      // 用户信息
       userInfo: {
         boundary: '0104',
         username: '',
@@ -86,10 +107,16 @@ export default {
         email: '',
         birth: '',
         status: '',
-        portrait: 'https://typorasss2021.oss-cn-shenzhen.aliyuncs.com/avatar/man.jpeg',
+        // portrait: 'https://typorasss2021.oss-cn-shenzhen.aliyuncs.com/avatar/man.jpeg',
+        portrait: 'http://192.168.70.128/img/qingning.png',
         gmtCreated: '',
         gmtModified: ''
       },
+
+      // 头像上传路径
+      // fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/uploadAvatar?boundary=0113&username='+this.username,
+      fileUploadPath: '',
+      username: '20190002',
 
       genderText: '女',
 
@@ -117,15 +144,34 @@ export default {
   created() {
     this.userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
     this.genderDisplay()
+    this.fileUploadPath = "http://localhost:8080/Electrochemical_Analysis_System_war/uploadAvatar?boundary=0113&username=" + this.userInfo.username
   },
 
   methods: {
+
+    // 上传头像
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${ file.name }？`);
+    },
     // 提交表单
     // <!--提交注册-->
     submitForm() {
       // this.$refs[formName].validate(async valid => {
       //   if (valid) {
-      this.postRequest('/modifyUser', {boundary: '0104', username: this.userInfo.username, nickname: this.userInfo.nickname, portrait: this.userInfo.portrait
+      this.postRequest('/modifyUser', {
+        boundary: '0104',
+        username: this.userInfo.username,
+        nickname: this.userInfo.nickname,
+        portrait: this.userInfo.portrait
       }).then(resp => {
       })
     },

@@ -128,24 +128,33 @@ public interface BaseMapper {
      * 根据查询信息获取管理员列表
      * @return管理员列表
      */
-    List<User> getAdminsByQuery(String query , int pageStart , int pageSize);
+    List<User> getAdminsByQuery(String query1 ,String query2, int pageStart , int pageSize);
 
 
     /**
      *
      * 根据查询信息获取管理员数据总数
-     * @param query
+     * @param
      * @return
      */
-    Long getAdminCountByQuery(String query);
+    Long getAdminCountByQuery(String query1 , String query2);
 
     /**
      *
+     * 根据用户名和权限编号，查询权限id
      * @param username
      * @param roleId
      * @return UserRoleId
      */
-    Integer getUserRoleId(int username,int roleId);
+    UserRole getUserRoleId(int username,int roleId);
+
+    /**
+     *
+     * 根据用户名查询用户
+     * @param username
+     * @return
+     */
+    User getQueryEditAdmin(int username);
 
     /**
      * 根据查询条件获取用户信息列表

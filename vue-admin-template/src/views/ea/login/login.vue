@@ -14,6 +14,15 @@
           <el-input type="password" name="password" placeholder="密码" class="input-item" v-model="loginForm.password"/>
         </el-form-item>
 
+        <!--滑动验证-->
+        <div class="jc-component__range">
+          <div class="jc-range" :class="rangeStatus?'success':''" >
+            <i @mousedown="rangeMove" :class="rangeStatus?successIcon:startIcon"></i>
+            {{rangeStatus?successText:startText}}
+          </div>
+
+        </div>
+
         <div class="btn btn-login" @click="login">登录</div>
       </el-form>
 
@@ -44,8 +53,50 @@ import global from "@/views/global";
 export default {
   name: "Login",
 
+  // 滑动验证
+  props: {
+    // 成功之后的函数
+    successFun: {
+      type: Function,
+    },
+    //成功图标
+    successIcon: {
+      type: String,
+      default: 'el-icon-success'
+    },
+    //成功文字
+    successText: {
+      type: String,
+      default: '验证成功'
+    },
+    //开始的图标
+    startIcon: {
+      type: String,
+      default: 'el-icon-d-arrow-right'
+    },
+    //开始的文字
+    startText: {
+      type: String,
+      default: '拖动滑块到最右边'
+    },
+    //失败之后的函数
+    errorFun: {
+      type: Function
+    },
+    //或者用值来进行监听
+    status: {
+      type: String
+    }
+  },
+
   data() {
     return {
+
+      //滑动验证
+      disX : 0,
+      rangeStatus: false,
+      verifyStatus: false,
+
       loginForm: {
         boundary: '0101',
         username: '20190002',
@@ -69,66 +120,112 @@ export default {
     }
 
   },
+
   methods: {
     //  登陆
     login() {
       this.$refs.loginForm.validate(async valid => {
         if (valid) {
-          this.loading = true
-          this.postRequest('/login', this.loginForm).then(resp => {
-            if (resp.code === 200) {
-              // 用户状态正常,状态码为1,正常登录
-              if (resp.userInfo.status === 1) {
-                // 将服务器返回的token存储到sessionStorage
-                const tokenStr = resp.username
 
-                window.sessionStorage.setItem('tokenStr', tokenStr)
-                window.sessionStorage.setItem('userInfo', JSON.stringify(resp.userInfo))
-                // 将userInfo存入session
-                this.$store.commit('modifyCurrentUsername', resp.username)
-                this.$store.commit('modifyCurrentNickname', resp.nickname)
-                let currentStatus = undefined
-                // 获得用户名后查找用户权限加载侧边栏
-                this.postRequest('/roles', { boundary : '1101', username : store.state.currentUsername }).then(resp => {
-                  for(let i = 0; i < resp.rightIdList.length; i ++) {
-                    let roleId = resp.rightIdList[i].rightId;
-                    this.currentRoles.push(global.map.get(roleId.toString()))
-                    currentStatus = roleId.toString()[0]
-                  }
-                  this.$store.commit('modifyCurrentStatus', currentStatus)
-                  this.$store.commit('modifyRouters', this.currentRoles)
-                })
+          if (this.verifyStatus) {
+            this.loading = true
+            this.postRequest('/login', this.loginForm).then(resp => {
+              if (resp.code === 200) {
+                // 用户状态正常,状态码为1,正常登录
+                if (resp.userInfo.status === 1) {
+                  // 将服务器返回的token存储到sessionStorage
+                  const tokenStr = resp.username
 
+                  window.sessionStorage.setItem('tokenStr', tokenStr)
+                  window.sessionStorage.setItem('userInfo', JSON.stringify(resp.userInfo))
+                  // 将userInfo存入session
+                  this.$store.commit('modifyCurrentUsername', resp.username)
+                  this.$store.commit('modifyCurrentNickname', resp.nickname)
+                  this.$store.commit('modifyCurrentStatus', resp.status)
 
+                  // 获得用户名后查找用户权限加载侧边栏
+                  this.postRequest('/roles', { boundary : '1101', username : store.state.currentUsername }).then(resp => {
+                    for(let i = 0; i < resp.rightIdList.length; i ++) {
+                      let roleId = resp.rightIdList[i].rightId;
+                      this.currentRoles.push(global.map.get(roleId.toString()))
+                    }
+                    this.$store.commit('modifyRouters', this.currentRoles)
+                  })
+                  this.$router.push({path: this.redirect || '/'})
 
-                this.$router.push({path: this.redirect || '/'})
-                // console.log(window.sessionStorage.getItem(tokenStr))
+                }
 
+                // 用户状态被冻结, 状态码为0
+                if (resp.userInfo.status === 0) {
+                  // todo 跳转到解冻申请页
+                }
 
+                // 剩下被删除状态, 状态码为2
+                if (resp.userInfo.status === 2) {
+                  this.$message.error('用户不存在')
+                }
               }
+            })
 
-              // 用户状态被冻结, 状态码为0
-              if (resp.userInfo.status === 0) {
-                // todo 跳转到解冻申请页
-              }
+            setTimeout(() => {
+              this.loading = false
+            }, 750)
+          } else {
+            console.log('error submit!!')
+            return false
+          }
 
-              // 剩下被删除状态, 状态码为2
-              if (resp.userInfo.status === 2) {
-                this.$message.error('用户不存在')
-              }
-            }
-          })
+          }
 
-
-
-          setTimeout(() => {
-            this.loading = false
-          }, 750)
-        } else {
-          console.log('error submit!!')
-          return false
-        }
       })
+    },
+
+    // 滑动验证-start
+    // 滑动验证文档 https://blog.csdn.net/qq_43487181/article/details/94143663?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522163585538016780261927285%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=163585538016780261927285&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-2-94143663.pc_search_mgc_flag&utm_term=%E6%BB%91%E5%8A%A8%E9%AA%8C%E8%AF%81vue&spm=1018.2226.3001.4187
+    // 改变验证状态
+    changeStatus() {
+      this.verifyStatus = true;
+    },
+    //滑块移动
+    rangeMove(e){
+      let ele = e.target;
+      let startX = e.clientX;
+      let eleWidth = ele.offsetWidth;
+      let parentWidth =  ele.parentElement.offsetWidth;
+      let MaxX = parentWidth - eleWidth;
+      if(this.rangeStatus){//不运行
+        return false;
+      }
+      document.onmousemove = (e) => {
+        let endX = e.clientX;
+        this.disX = endX - startX;
+        if(this.disX<=0){
+          this.disX = 0;
+        }
+        if(this.disX>=MaxX-eleWidth){//减去滑块的宽度,体验效果更好
+          this.disX = MaxX;
+        }
+        ele.style.transition = '.1s all';
+        ele.style.transform = 'translateX('+this.disX+'px)';
+        e.preventDefault();
+      }
+      document.onmouseup = ()=> {
+        if(this.disX !== MaxX){
+          ele.style.transition = '.5s all';
+          ele.style.transform = 'translateX(0)';
+          //执行成功的函数
+          this.errorFun && this.errorFun();
+        }else{
+          this.rangeStatus = true;
+          if(this.status){
+            this.$parent[this.status] = true;
+          }
+          //执行成功的函数
+          this.changeStatus && this.changeStatus();
+        }
+        document.onmousemove = null;
+        document.onmouseup = null;
+      }
     },
 
     // to忘记密码页
@@ -151,7 +248,6 @@ export default {
       window.sessionStorage.setItem('tokenStr', tempUserKey)
       this.$router.push({path: '/unfreezeApplicationVerify'})
     }
-
   }
 }
 </script>
@@ -272,7 +368,7 @@ a {
 
 .btn-login:hover {
   cursor: pointer;
-  background: #fbc2eb;
+  background: #e3e3e3;
   color: white;
 }
 
@@ -308,5 +404,41 @@ a {
   padding: 40px 20px;
   box-sizing: border-box;
   margin-right: 20px;
+}
+
+// 滑动验证
+@mixin jc-flex{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.jc-component__range{
+  .jc-range{
+    background-color: #e3e3e3;
+    position: relative;
+    transition: 1s all;
+    user-select: none;
+    color: #333;
+    @include jc-flex;
+    height: 45px; /*no*/
+    &.success{
+      background-color: #7AC23C;
+      color: #fff;
+      i{
+        color: #7AC23C;
+      }
+    }
+    i{
+      position: absolute;
+      left: 0;
+      width: 60px;/*no*/
+      height: 100%;
+      color: #919191;
+      background-color: #fff;
+      border: 1px solid #bbb;
+      cursor: pointer;
+      @include jc-flex;
+    }
+  }
 }
 </style>

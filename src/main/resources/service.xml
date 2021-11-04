@@ -63,6 +63,12 @@
     <node>
         <number>0113</number>
         <service>UserService</service>
+        <method>uploadAvatar</method>
+    </node>
+
+    <node>
+        <number>0113</number>
+        <service>UserService</service>
         <method>queryUsersByUsername</method>
     </node>
     <node>
@@ -160,17 +166,17 @@
         <service>SearchService</service>
         <method>search</method>
     </node>
+    <!--算法相关-->
     <node>
         <number>0401</number>
-        <service>SearchService</service>
-        <method>search</method>
+        <service>AlgorithmService</service>
+        <method>test</method>
     </node>
     <node>
         <number>0402</number>
-        <service>SearchService</service>
-        <method>list</method>
+        <service>AlgorithmService</service>
+        <method>compileAndRun</method>
     </node>
-    <!--算法相关-->
     <node>
         <number>0403</number>
         <service>AlgorithmService</service>
@@ -196,6 +202,7 @@
         <service>AlgorithmService</service>
         <method>searchAlgorithms</method>
     </node>
+
     <node>
         <number>0408</number>
         <service>SearchService</service>
@@ -360,6 +367,18 @@
         <number>1004</number>
         <service>AdminService</service>
         <method>deleteAdmin</method>
+    </node>
+
+    <node>
+        <number>1005</number>
+        <service>AdminService</service>
+        <method>queryEditAdmin</method>
+    </node>
+
+    <node>
+        <number>1006</number>
+        <service>AdminService</service>
+        <method>editAdmin</method>
     </node>
 
     <node>
