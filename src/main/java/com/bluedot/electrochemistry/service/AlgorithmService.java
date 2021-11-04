@@ -10,14 +10,11 @@ import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.annotation.Service;
 import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 import com.bluedot.framework.simplespring.util.PathUtil;
-import org.springframework.util.ResourceUtils;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
@@ -36,12 +33,10 @@ public class AlgorithmService extends BaseService {
     /*//项目路径
     private String projectPath = null;*/
 
-    /**算法上传到服务器磁盘的存放目录*/
-    private final String uploadPath = null;
-
     /**算法进行动态编译后存放class文件的位置*/
     private final String compilePath = null;
 
+    //todo 待测试
     /**
      * 加载文件中的数据
      * @author zero
@@ -52,9 +47,36 @@ public class AlgorithmService extends BaseService {
         int algorithmId = (Integer) map.get("algorithmId");
         BaseMapper mapper = mapperFactory.createMapper();
         Algorithm algorithm = mapper.getAlgorithmById(algorithmId);
-//        new File(algorithm.getUrl());
-        //todo 核心代码提取，加载到容器并传给前端
+        BufferedReader br = null;
 
+        try {
+            br = new BufferedReader(new FileReader(new File(algorithm.getUrl())));
+            StringBuffer sb = new StringBuffer();
+            String temp = null;
+            while((temp = br.readLine())!=null){
+                sb.append(temp);
+                sb.append(System.getProperty("line.separator"));
+            }
+            map.put("code", 200);
+            map.put("message", "数据懒加载成功o(*≧▽≦)ツ");
+            map.put("algCode", sb.toString());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            map.put("code",500);
+            map.put("message","文件莫得~o(╥﹏╥)o");
+        } catch (IOException e) {
+            map.put("code",500);
+            map.put("message","文件读取失败~o(╥﹏╥)o");
+        }finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    map.put("message","读取流关闭失败o(╥﹏╥)o"+e.getMessage());
+                    map.put("code",500);
+                }
+            }
+        }
     }
 
     /**
@@ -73,32 +95,14 @@ public class AlgorithmService extends BaseService {
        1.事务处理还没有做,数据库中的数据要和文件上传做事务同步提交
     * */
     private void addAlgorithm(Map<String, Object> map){
-        File oldFile  = (File) map.get("file");
-        File uploadPath = new File(getUploadPath());
-        File newFile = new File(uploadPath, (String) map.get("fileName"));
-        if (!uploadPath.exists()) { uploadPath.mkdirs(); }
-        if (!newFile.exists()) {
-            try {
-                newFile.createNewFile();
-            } catch (IOException e) {
-                map.put("code", 500);
-                map.put("message", "文件创建失败");
-                oldFile.delete();
-                return;
-            }
-        }
+        File file  = (File) map.get("file");
         BufferedReader reader = null;
-        BufferedWriter writer = null;
         try {
-            reader = new BufferedReader(new FileReader(oldFile));
-            writer = new BufferedWriter(new FileWriter(newFile));
+            reader = new BufferedReader(new FileReader(file));
             StringBuffer str = new StringBuffer();
             String temp = "";
             while ((temp = reader.readLine()) != null) {
                 str.append(temp);
-                writer.write(temp);
-                writer.newLine();
-                writer.flush();
             }
             System.out.println("file ---------------- " + str);
             //数据库数据添加
@@ -106,12 +110,12 @@ public class AlgorithmService extends BaseService {
                 @Override
                 public int doDataModifyExecutor(BaseDao baseDao) {
                     Algorithm algorithm = new Algorithm();
-                    //删除文件的后缀.java
+                    //去除文件的后缀.java
                     StringBuffer sb = new StringBuffer((String) map.get("fileName"));
                     sb.delete(sb.length()-5,sb.length());
                     algorithm.setAlgorithmName(sb.toString());
                     algorithm.setClassification(Integer.parseInt((String) map.get("classification")));
-                    algorithm.setUrl(newFile.toString());
+                    algorithm.setUrl(file.toString());
                     algorithm.setUsername(Integer.parseInt((String) map.get("username")));
                     int insert = baseDao.insert(algorithm);
                     if (insert != 1) {
@@ -136,17 +140,6 @@ public class AlgorithmService extends BaseService {
                     map.put("code",500);
                 }
             }
-            if(writer != null) {
-                try {
-                    writer.close();
-                }catch (IOException e) {
-                    map.put("message",e.getMessage());
-                    map.put("code",500);
-                }
-            }
-        }
-        if(oldFile.exists()){
-            oldFile.delete();
         }
     }
 
@@ -304,20 +297,4 @@ public class AlgorithmService extends BaseService {
         }
     }
 
-    /**
-     * 获取上传路径
-     * @return 上传路径
-     */
-    private String getUploadPath(){
-        if(this.uploadPath != null) return this.uploadPath;
-        else {
-            StringBuffer sb = new StringBuffer(this.getClass().getResource("/").getPath());
-            //去除'target/Electrochemical-Analysis-System/WEB-INF/classes/'
-            sb.delete(sb.length()-55,sb.length());
-            //去除初始的'/'
-            sb.delete(0,1);
-            sb.append("uploads/uploadAlgorithms");
-            return sb.toString();
-        }
-    }
 }

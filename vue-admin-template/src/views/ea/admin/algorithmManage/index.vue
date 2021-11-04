@@ -171,7 +171,7 @@ export default {
       owner: '',
       listLoading: true,
       listQuery: {
-        boundary: '0208',
+        boundary: '0404',
         page: 1,
         limit: 10,
         title: undefined,
@@ -239,8 +239,8 @@ export default {
     handleDetail(row) {
       this.dialogDetailVisible = true;
       this.detail = row;
-      this.detail.algCode =
-
+      // this.detail.algCode =
+      this.postRequest(path, )
       this.loading = true;
       this.listQuery.boundary = b;
       this.postRequest(path, this.listQuery).then(response => {
