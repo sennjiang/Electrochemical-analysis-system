@@ -12,25 +12,28 @@
             <div class="block">
               <el-avatar :size="100" :src="userInfo.portrait" class="style-avatar-div"></el-avatar>
             </div>
-            <el-button @click="">更换头像</el-button>
+
+            <el-upload
+              class="upload-demo"
+              :action="fileUploadPath"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :before-remove="beforeRemove"
+              multiple
+              :limit="3"
+              :on-exceed="handleExceed"
+              :file-list="fileList"
+              @change="changPath"
+            >
+              <el-button>点击上传</el-button>
+              <div slot="tip" class="el-upload__tip"></div>
+            </el-upload>
           </div>
         </el-col>
       </el-row>
 
-      <!--上传头像-->
-      <!--<el-upload-->
-      <!--  class="upload-demo"-->
-      <!--  action="http://localhost:8080/Electrochemical_Analysis_System_war/uploadAvatar?boundary=0113&username=20190002"-->
-      <!--  :on-preview="handlePreview"-->
-      <!--  :on-remove="handleRemove"-->
-      <!--  :before-remove="beforeRemove"-->
-      <!--  multiple-->
-      <!--  :limit="3"-->
-      <!--  :on-exceed="handleExceed"-->
-      <!--  :file-list="fileList">-->
-      <!--  <el-button size="small" type="primary">点击上传</el-button>-->
-      <!--  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
-      <!--</el-upload>-->
+
+
     </div>
 
     <div class="style-right-div">
@@ -104,10 +107,16 @@ export default {
         email: '',
         birth: '',
         status: '',
-        portrait: 'https://typorasss2021.oss-cn-shenzhen.aliyuncs.com/avatar/man.jpeg',
+        // portrait: 'https://typorasss2021.oss-cn-shenzhen.aliyuncs.com/avatar/man.jpeg',
+        portrait: 'http://192.168.70.128/img/qingning.png',
         gmtCreated: '',
         gmtModified: ''
       },
+
+      // 头像上传路径
+      // fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/uploadAvatar?boundary=0113&username='+this.username,
+      fileUploadPath: '',
+      username: '20190002',
 
       genderText: '女',
 
@@ -135,6 +144,7 @@ export default {
   created() {
     this.userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
     this.genderDisplay()
+    this.fileUploadPath = "http://localhost:8080/Electrochemical_Analysis_System_war/uploadAvatar?boundary=0113&username=" + this.userInfo.username
   },
 
   methods: {
@@ -152,7 +162,6 @@ export default {
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${ file.name }？`);
     },
-
     // 提交表单
     // <!--提交注册-->
     submitForm() {

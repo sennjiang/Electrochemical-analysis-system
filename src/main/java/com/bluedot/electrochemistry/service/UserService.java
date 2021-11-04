@@ -318,33 +318,18 @@ public class UserService extends BaseService {
      * @param map 头像图片
      */
     private void uploadAvatar(Map<String, Object> map) {
-        System.out.println("hellohellohellohellohellohellohellohellohellohellohellohellohellohellohello");
         java.io.File file = (java.io.File) map.get("file");
-        System.out.println("hellohellohellohellohellohellohellohellohellohellohellohellohellohellohello");
-        System.out.println(file.getName());
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(file));
-            StringBuffer str = new StringBuffer();
-            String temp = "";
-            while ((temp = reader.readLine()) != null) {
-                str.append(temp).append("\n");
-                //TODO 文件数据处理
+        String portraitPath = "avatar/" + file.getName();
+        Integer username = Integer.parseInt((String) map.get("username"));
+        User user = new User();
+        user.setUsername(username);
+        user.setPortrait(portraitPath);
+        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                return baseDao.update(user);
             }
-            System.out.println("file ---------------- " + str);
-        } catch (Exception e) {
-            map.put("message", e.getMessage());
-            map.put("code", 401);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    map.put("message", e.getMessage());
-                    map.put("code", 401);
-                }
-            }
-        }
+        });
     }
 
     /**
