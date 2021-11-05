@@ -36,7 +36,6 @@ public class AlgorithmService extends BaseService {
     /**算法进行动态编译后存放class文件的位置*/
     private final String compilePath = null;
 
-    //todo 待测试
     /**
      * 加载文件中的数据
      * @author zero
@@ -44,7 +43,7 @@ public class AlgorithmService extends BaseService {
      * 会将加载完数据的算法实体在函数体内放入到map中去
      */
     private void loadingData(Map<String, Object> map){
-        int algorithmId = (Integer) map.get("algorithmId");
+        int algorithmId = Integer.parseInt((String) map.get("algorithmId"));
         BaseMapper mapper = mapperFactory.createMapper();
         Algorithm algorithm = mapper.getAlgorithmById(algorithmId);
         BufferedReader br = null;

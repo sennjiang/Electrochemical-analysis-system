@@ -118,7 +118,7 @@
         <tr align="center"><td>上传者昵称</td> <td>{{ detail.nickname }}</td></tr>
         <tr align="center"><td>上传时间</td> <td>{{ detail.createdTime }}</td></tr>
         <tr align="center"><td>上一次修改时间</td> <td>{{ detail.changeTime }}</td></tr>
-        <tr align="center"><td>算法代码</td> <td>{{ detail.algcode }}</td></tr><!--todo 算法代码懒加载-->
+        <tr align="center"><td>算法代码</td> <td><textarea style="width: 468px; height: 209px" disabled v-bind:value="detail.algCode"></textarea></td></tr><!--todo 算法代码懒加载-->
       </table>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogDetailVisible = false">
@@ -170,6 +170,10 @@ export default {
       detail: {algorithmName: null,nickname: null,createdTime: null,changeTime: null,algCode: null},
       owner: '',
       listLoading: true,
+      loadingSet:{
+        boundary: '0403',
+        algorithmId: undefined
+      },
       listQuery: {
         boundary: '0404',
         page: 1,
@@ -237,23 +241,19 @@ export default {
     },
     /*todo 懒加载数据*/
     handleDetail(row) {
-      this.dialogDetailVisible = true;
       this.detail = row;
       // this.detail.algCode =
-      this.postRequest(path, )
-      this.loading = true;
-      this.listQuery.boundary = b;
-      this.postRequest(path, this.listQuery).then(response => {
+      //待修改
+      this.loadingSet.algorithmId = row.algId;
+      this.postRequest('/algorithm/loadingCode', this.loadingSet).then(response => {
         if (response) {
-          this.list = response.data;
-          console.log(this.list);
-          this.total = response.length;
+          this.detail.algCode = response.algCode;
+          console.log(this.detail.algCode);
         }
       });
-      this.listLoading = false;
       setTimeout(() => {
-        this.loading = false
-      }, 750)
+        this.dialogDetailVisible = true;
+      }, 70)
     },
     /*删除算法，这里的删除是提交删除申请*/
     handleDelete(row, index) {
