@@ -8,7 +8,7 @@ public class RoleRight {
     private Integer rrId;
     private Integer roleId;
     private Integer rightId;
-    private Integer rightType;
+
 
     public RoleRight() {
     }
@@ -17,7 +17,11 @@ public class RoleRight {
         this.rrId = rrId;
         this.roleId = roleId;
         this.rightId = rightId;
-        this.rightType = rightType;
+    }
+
+    public RoleRight(Integer roleId, Integer rightId) {
+        this.roleId = roleId;
+        this.rightId = rightId;
     }
 
     public Integer getRrId() {
@@ -44,21 +48,12 @@ public class RoleRight {
         this.rightId = rightId;
     }
 
-    public Integer getRightType() {
-        return rightType;
-    }
-
-    public void setRightType(Integer rightType) {
-        this.rightType = rightType;
-    }
-
     @Override
     public String toString() {
         return "RoleRight{" +
                 "rrId=" + rrId +
                 ", roleId=" + roleId +
                 ", rightId=" + rightId +
-                ", rightType=" + rightType +
                 '}';
     }
 }

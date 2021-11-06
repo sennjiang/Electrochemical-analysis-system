@@ -400,4 +400,22 @@
         <method>updateUnfreeze</method>
     </node>
 
+    <node>
+        <number>1401</number>
+        <service>RoleService</service>
+        <method>queryRoles</method>
+    </node>
+
+    <node>
+        <number>1402</number>
+        <service>RoleService</service>
+        <method>queryRights</method>
+    </node>
+
+    <node>
+        <number>1403</number>
+        <service>RoleService</service>
+        <method>addRole</method>
+    </node>
+
 </service_mapping>

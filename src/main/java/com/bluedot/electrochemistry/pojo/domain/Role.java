@@ -17,16 +17,16 @@ public class Role {
     //角色描述
     private String description;
     //角色级别,0:管理员；1：普通用户
-    private Integer rightType;
+    private Integer roleType;
 
     public Role() {
     }
 
-    public Role(String roleName, Timestamp genTime, String description, Integer rightType) {
+    public Role(String roleName, Timestamp genTime, String description, Integer roleType) {
         this.roleName = roleName;
         this.genTime = genTime;
         this.description = description;
-        this.rightType = rightType;
+        this.roleType = roleType;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class Role {
                 ", roleName='" + roleName + '\'' +
                 ", genTime=" + genTime +
                 ", description='" + description + '\'' +
-                ", rightType=" + rightType +
+                ", roleType=" + roleType +
                 '}';
     }
 
@@ -72,11 +72,11 @@ public class Role {
         this.description = description;
     }
 
-    public Integer getRightType() {
-        return rightType;
+    public Integer getRoleType() {
+        return roleType;
     }
 
-    public void setRightType(Integer rightType) {
-        this.rightType = rightType;
+    public void setRoleType(Integer roleType) {
+        this.roleType = roleType;
     }
 }
