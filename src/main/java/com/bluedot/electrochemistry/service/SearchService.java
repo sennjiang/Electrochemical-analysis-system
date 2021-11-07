@@ -48,7 +48,7 @@ public class SearchService extends BaseService  {
         if (data.containsKey("boundary")) {
             String boundary = (String) data.get("boundary");
         }
-        List<User> users = baseMapper.listUser();
+        List<User> users = baseMapper.queryUser();
         ((Data)map).put("list",users);
     }
     public MapperFactory getMapperFactory() {

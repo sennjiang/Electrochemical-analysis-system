@@ -180,7 +180,8 @@ export default {
       })
     },
 
-    // 滑动验证
+    // 滑动验证-start
+    // 滑动验证文档 https://blog.csdn.net/qq_43487181/article/details/94143663?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522163585538016780261927285%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=163585538016780261927285&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-2-94143663.pc_search_mgc_flag&utm_term=%E6%BB%91%E5%8A%A8%E9%AA%8C%E8%AF%81vue&spm=1018.2226.3001.4187
     // 改变验证状态
     changeStatus() {
       this.verifyStatus = true;

@@ -13,7 +13,6 @@ import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 @Repository
 public class BaseDao {
 
-
     @Autowired
     SqlSessionFactory sqlSessionFactory;
 

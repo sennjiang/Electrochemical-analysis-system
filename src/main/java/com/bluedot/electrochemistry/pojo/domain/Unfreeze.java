@@ -1,6 +1,8 @@
 package com.bluedot.electrochemistry.pojo.domain;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * @ClassName Unfreeze
@@ -17,9 +19,9 @@ public class Unfreeze {
     // todo
     private Integer reviewer;
     // 用户名
-    private Long username;
+    private Integer username;
     // 申请时间
-    private Timestamp applicationTime;
+    private String applicationTime;
     // 邮箱
     private String email;
     // 处理状态
@@ -40,7 +42,7 @@ public class Unfreeze {
      * @Param [id, freezeId, reviewer, username, applicationTime, email, handleStatus, refuseReason, applicationReason]
      * @Date 2021/9/5 10:22
      **/
-    public Unfreeze(Integer id, Integer freezeId, Integer reviewer, Long username, Timestamp applicationTime, String email, Integer handleStatus, String refuseReason, String applicationReason) {
+    public Unfreeze(Integer id, Integer freezeId, Integer reviewer, Integer username, String applicationTime, String email, Integer handleStatus, String refuseReason, String applicationReason) {
         this.id = id;
         this.freezeId = freezeId;
         this.reviewer = reviewer;
@@ -76,20 +78,26 @@ public class Unfreeze {
         this.reviewer = reviewer;
     }
 
-    public Long getUsername() {
+    public Integer getUsername() {
         return username;
     }
 
-    public void setUsername(Long username) {
+    public void setUsername(Integer username) {
         this.username = username;
     }
 
     public Timestamp getApplicationTime() {
-        return applicationTime;
+        Timestamp at = null;
+        try {
+            at = Timestamp.valueOf(applicationTime);
+        } catch (Exception ignored) {
+        }
+        return at;
     }
 
     public void setApplicationTime(Timestamp applicationTime) {
-        this.applicationTime = applicationTime;
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.applicationTime = sdf.format(applicationTime);
     }
 
     public String getEmail() {

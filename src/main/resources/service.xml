@@ -23,7 +23,7 @@
     <node>
         <number>0105</number>
         <service>UserService</service>
-        <method>deleteUSerByUsername</method>
+        <method>deleteUserByUsername</method>
     </node>
     <node>
         <number>0106</number>
@@ -66,6 +66,11 @@
         <method>uploadAvatar</method>
     </node>
 
+    <node>
+        <number>0113</number>
+        <service>UserService</service>
+        <method>queryUsersByUsername</method>
+    </node>
     <node>
         <number>0201</number>
         <service>FileService</service>
@@ -365,6 +370,18 @@
     </node>
 
     <node>
+        <number>1005</number>
+        <service>AdminService</service>
+        <method>queryEditAdmin</method>
+    </node>
+
+    <node>
+        <number>1006</number>
+        <service>AdminService</service>
+        <method>editAdmin</method>
+    </node>
+
+    <node>
         <number>1101</number>
         <service>LoginRightService</service>
         <method>queryRightByUser</method>
@@ -374,6 +391,12 @@
         <number>1201</number>
         <service>FreezeService</service>
         <method>insertFreeze</method>
+    </node>
+
+    <node>
+        <number>1202</number>
+        <service>UserService</service>
+        <method>updateUserStatus</method>
     </node>
 
     <node>
@@ -387,5 +410,13 @@
         <service>UnfreezeService</service>
         <method>updateUnfreeze</method>
     </node>
+
+    <node>
+        <number>1303</number>
+        <service>UnfreezeService</service>
+        <method>searchUnfreeze</method>
+    </node>
+
+
 
 </service_mapping>
