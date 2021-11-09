@@ -317,6 +317,12 @@ public interface BaseMapper {
     /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓算法相关↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 
     /**
+     * 获取下一个算法的id号
+     * @return 下一个算法的id号
+     */
+    Long getNextAlgorithmId();
+
+    /**
      * 通过算法id查找指定算法
      *
      * @param id 指定算法的id

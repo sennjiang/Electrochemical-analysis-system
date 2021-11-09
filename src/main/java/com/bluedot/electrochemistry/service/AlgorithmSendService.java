@@ -11,6 +11,7 @@ import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.annotation.Service;
 import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
@@ -38,18 +39,18 @@ public class AlgorithmSendService extends BaseService {
      */
     private void judgementAlgorithmSend(Map map){
         StringBuilder message = new StringBuilder();
-        int isPass = (Integer) map.get("isPass");
-        int algorithmSendId = (Integer) map.get("algorithmSendId");
+        int rulingResult = Integer.parseInt((String) map.get("rulingResult"));
+        int algorithmSendId = Integer.parseInt((String) map.get("algorithmSendId"));
         AlgorithmSend algorithmSend = new AlgorithmSend();
-        if(isPass == 1) {  //审核通过
-            int type = (Integer) map.get("type");
-            int algorithmId = (Integer) map.get("algorithmId");
+        if(rulingResult == 1) {  //审核通过
+            int sendType = Integer.parseInt((String) map.get("sendType"));
+            int algorithmId = Integer.parseInt((String) map.get("algorithmId"));
             algorithmSend.setAlgId(algorithmId);
 
             Algorithm algorithm = new Algorithm();
             algorithm.setAlgId(algorithmId);
 
-            if(type == 0){  //添加算法操作
+            if(sendType == 0){  //添加算法操作
                 algorithm.setIsUsed(2); //设置启用
                 doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
                     @Override
@@ -65,40 +66,14 @@ public class AlgorithmSendService extends BaseService {
                         return update;
                     }
                 });
-            }else if (type < 0){    //删除算法操作
-                doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
-                    @Override
-                    public int doDataModifyExecutor(BaseDao baseDao) {
-                        int delete = baseDao.delete(algorithm);
-                        if(delete!=1){
-                            map.put("code",500);
-                            message.append("算法删除审核失败 ");
-                        }else {
-                            map.put("code",200);
-                            message.append("算法删除审核成功 ");
-                        }
-                        return delete;
-                    }
-                });
+            }else if (sendType < 0){    //删除算法操作
+                deleteAlgorithm(map, message, algorithmId);
             }else{              // 修改算法操作
                 //删除旧算法
-                doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
-                    @Override
-                    public int doDataModifyExecutor(BaseDao baseDao) {
-                        int delete = baseDao.delete(algorithm);
-                        if(delete!=1){
-                            map.put("code",500);
-                            message.append("算法删除审核失败 ");
-                        }else {
-                            map.put("code",200);
-                            message.append("算法删除审核成功 ");
-                        }
-                        return delete;
-                    }
-                });
+                deleteAlgorithm(map, message, algorithmId);
                 //让新算法上架
                 Algorithm algorithm_new = new Algorithm();
-                algorithm_new.setAlgId(type);
+                algorithm_new.setAlgId(sendType);
                 algorithm_new.setIsUsed(2); //设置启用
                 algorithm_new.setChangeTime(new Timestamp(System.currentTimeMillis()));
                 doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
@@ -122,8 +97,8 @@ public class AlgorithmSendService extends BaseService {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
                 algorithmSend.setAlgSendId(algorithmSendId);
-                int delete = baseDao.delete(algorithmSend);
-                if (delete!=1){
+                int del = baseDao.delete(algorithmSend);
+                if (del != 1){
                     map.put("code", 500);
                     message.append("算法审核条目删除失败");
                     map.put("message", message.toString());
@@ -131,6 +106,37 @@ public class AlgorithmSendService extends BaseService {
                     map.put("code", 200);
                     message.append("算法审核条目删除成功");
                     map.put("message", message.toString());
+                }
+                return del;
+            }
+        });
+    }
+
+    /**
+     * 删除算法文件，并进行数据库的相关记录的删除操作
+     * @param map 包含相关参数
+     * @param message 信息记录，用于相关操作后的信息反馈
+     * @param algorithmId 被删除的算法的id
+     */
+    private void deleteAlgorithm(Map map, StringBuilder message, int algorithmId) {
+        doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                Algorithm algorithm = mapperFactory.createMapper().getAlgorithmById(algorithmId);
+                boolean del = new File(algorithm.getUrl()).delete();
+                int delete = -1;
+                if (del) {
+                    delete = baseDao.delete(algorithm);
+                    if (delete != 1) {
+                        map.put("code", 500);
+                        message.append("算法删除审核失败 ");
+                    } else {
+                        map.put("code", 200);
+                        message.append("算法删除审核成功 ");
+                    }
+                } else {
+                    map.put("code", 500);
+                    message.append("算法文件删除失败 ");
                 }
                 return delete;
             }
@@ -182,7 +188,7 @@ public class AlgorithmSendService extends BaseService {
             Integer pageSize = Integer.parseInt((String) map.get("limit"));
             List<AlgorithmSendView> algorithmSends = mapper.getAlgorithmSends((pageStart - 1) * pageSize,pageSize);
             Long size = mapper.getAlgorithmSendsCount();
-            map.put("algorithmSends", algorithmSends);
+            map.put("data", algorithmSends);
             map.put("code", "200");
             map.put("message", "查询算法申请列表成功");
             map.put("length", size);

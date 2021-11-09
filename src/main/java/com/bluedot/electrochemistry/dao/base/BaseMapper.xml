@@ -105,6 +105,9 @@
     </select>
 
     <!--算法相关-->
+    <select id="getNextAlgorithmId" resultType="java.lang.Long">
+        select max(alg_id)+1 from algorithm
+    </select>
     <select id="getAlgorithmById" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
         select * from algorithm where alg_id = #{id}
     </select>

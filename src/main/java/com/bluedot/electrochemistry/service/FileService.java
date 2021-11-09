@@ -142,7 +142,9 @@ public class FileService extends BaseService {
     /**
      * 上传文件
      *
-     * @param map 数据
+     * @param map 数据，其中包含必要参数：
+     *              username：文件上传的用户账号
+     *              dataCycle：文件数据实验的循环圈数
      */
     private void uploadFile(Map<String, Object> map) {
         java.io.File file = (java.io.File) map.get("file");
@@ -151,11 +153,43 @@ public class FileService extends BaseService {
             reader = new BufferedReader(new FileReader(file));
             StringBuffer str = new StringBuffer();
             String temp = "";
+//            int lineNum = 0;        //记录行号
+//            String[] dataArray = null;  //存放临时数据的两项
+
+            //TODO
+//            double dataStart = -999,dataEnd, dataPrecision = -999;
+
             while ((temp = reader.readLine()) != null) {
+//                lineNum++;
                 str.append(temp).append("\n");
-                //TODO 文件数据处理
+//                //TODO 文件数据处理
+//                //拿到循环圈数 todo
+//                //当行号位于16行的时候，会出现灵敏度（精度）设置
+//                if(lineNum == 16){
+//                    dataArray = temp.split("= ");
+//                    dataPrecision = Double.parseDouble(dataArray[1]);
+//                }
+//                //当行号>=20的时候就是文件数据，之后想到更好的方法的时候在改进,毕竟txt文件嘛~
+//                if(lineNum >= 20){
+//                    dataArray = temp.split(", ");
+//                    if(lineNum == 20){
+//                        dataStart = Double.parseDouble(dataArray[0]);
+//                    }
+//                }
             }
+//            dataEnd = Double.parseDouble(dataArray[0]);
             System.out.println("file ---------------- " + str);
+//            //数据库写入操作
+//            File userFile = new File();
+//            userFile.setDataStart(dataStart);
+//            userFile.setDataEnd(dataEnd);
+//            userFile.setDataPrecision(dataPrecision);
+//            doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
+//                @Override
+//                public int doDataModifyExecutor(BaseDao baseDao) {
+//                    return baseDao.insert(userFile);
+//                }
+//            });
         } catch (Exception e) {
             map.put("message", e.getMessage());
             map.put("code", 401);

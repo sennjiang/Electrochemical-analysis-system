@@ -4,6 +4,7 @@ import com.bluedot.electrochemistry.dao.base.BaseDao;
 import com.bluedot.electrochemistry.dao.base.BaseMapper;
 import com.bluedot.electrochemistry.factory.MapperFactory;
 import com.bluedot.electrochemistry.pojo.domain.Algorithm;
+import com.bluedot.electrochemistry.pojo.domain.AlgorithmSend;
 import com.bluedot.electrochemistry.pojo.vo.AlgorithmView;
 import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
@@ -108,21 +109,40 @@ public class AlgorithmService extends BaseService {
             doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
                 @Override
                 public int doDataModifyExecutor(BaseDao baseDao) {
+                    //添加算法表
+                    Integer username = Integer.parseInt((String) map.get("username"));
                     Algorithm algorithm = new Algorithm();
                     //去除文件的后缀.java
-                    StringBuffer sb = new StringBuffer((String) map.get("fileName"));
-                    sb.delete(sb.length()-5,sb.length());
-                    algorithm.setAlgorithmName(sb.toString());
-                    algorithm.setClassification(Integer.parseInt((String) map.get("classification")));
+                    String[] arr = ((String) map.get("fileName")).split("[.]");
+                    algorithm.setAlgorithmName(arr[0]);
+                    //待修改 todo
+                    algorithm.setClassification(1);
                     algorithm.setUrl(file.toString());
-                    algorithm.setUsername(Integer.parseInt((String) map.get("username")));
+                    algorithm.setUsername(username);
+                    //获取
+                    Integer algorithmId = mapperFactory.createMapper().getNextAlgorithmId().intValue();
+                    algorithm.setAlgId(algorithmId);
                     int insert = baseDao.insert(algorithm);
                     if (insert != 1) {
                         map.put("code", 500);
                         map.put("message", "添加算法到数据库失败");
+                        return insert;
                     } else {
                         map.put("code", 200);
                         map.put("message", "添加算法成功");
+                    }
+                    //添加算法申请表
+                    AlgorithmSend algSend = new AlgorithmSend();
+                    algSend.setClassification(0);
+                    algSend.setAlgId(algorithmId);
+                    algSend.setUsername(username);
+                    insert = baseDao.insert(algSend);
+                    if (insert!=1){
+                        map.put("code", 500);
+                        map.put("message", "算法申请添加失败");
+                    }else{
+                        map.put("code",200);
+                        map.put("message", "算法申请添加成功");
                     }
                     return insert;
                 }

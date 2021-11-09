@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <!--输入框那一行-->
     <div class="filter-container">
       <!--输入搜索框-->
       <el-input v-model="listQuery.title" placeholder="请输入关键字" style="width: 300px;" class="filter-item" @keyup.enter.native="handleAlgorithm" />
@@ -102,7 +103,7 @@
         <div class="el-upload__tip" slot="tip">只能上传txt文件，且不超过500kb</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="algorithmUploadVisible = false">
+        <el-button type="primary" @click="this.$router.go(0)">
           确认
         </el-button>
       </div>
@@ -135,12 +136,6 @@ import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
-/*// 时间排序的方式
-const calendarTypeOptions = [
-  { key: "按时间升序" },
-  { key: "按时间降序" }
-];
-*/
 const statusOptions = [
   { key: '正常' },
   { key: '被删除' }
@@ -184,8 +179,7 @@ export default {
       },
       //TODO 算法类型待修改
       fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/algorithm/addAlgorithm?boundary=0406&username='
-        +this.$store.state.currentUsername
-        +'&classification=2',
+        +this.$store.state.currentUsername,
       importanceOptions: ['正常','已删除'],
       /*calendarTypeOptions,*/
       statusOptions,
@@ -239,11 +233,9 @@ export default {
     handleImport() {
       this.algorithmUploadVisible = true;
     },
-    /*todo 懒加载数据*/
+    //懒加载
     handleDetail(row) {
       this.detail = row;
-      // this.detail.algCode =
-      //待修改
       this.loadingSet.algorithmId = row.algId;
       this.postRequest('/algorithm/loadingCode', this.loadingSet).then(response => {
         if (response) {
