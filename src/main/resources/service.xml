@@ -23,7 +23,7 @@
     <node>
         <number>0105</number>
         <service>UserService</service>
-        <method>deleteUSerByUsername</method>
+        <method>deleteUserByUsername</method>
     </node>
     <node>
         <number>0106</number>
@@ -66,6 +66,11 @@
         <method>uploadAvatar</method>
     </node>
 
+    <node>
+        <number>0113</number>
+        <service>UserService</service>
+        <method>queryUsersByUsername</method>
+    </node>
     <node>
         <number>0201</number>
         <service>FileService</service>
@@ -389,6 +394,12 @@
     </node>
 
     <node>
+        <number>1202</number>
+        <service>UserService</service>
+        <method>updateUserStatus</method>
+    </node>
+
+    <node>
         <number>1301</number>
         <service>UnfreezeService</service>
         <method>insertUnfreeze</method>
@@ -399,6 +410,14 @@
         <service>UnfreezeService</service>
         <method>updateUnfreeze</method>
     </node>
+
+    <node>
+        <number>1303</number>
+        <service>UnfreezeService</service>
+        <method>searchUnfreeze</method>
+    </node>
+
+
 
     <node>
         <number>1401</number>

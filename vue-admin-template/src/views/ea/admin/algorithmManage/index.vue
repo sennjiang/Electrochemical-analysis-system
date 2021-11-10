@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <!--输入框那一行-->
     <div class="filter-container">
       <!--输入搜索框-->
       <el-input v-model="listQuery.title" placeholder="请输入关键字" style="width: 300px;" class="filter-item" @keyup.enter.native="handleAlgorithm" />
@@ -102,7 +103,7 @@
         <div class="el-upload__tip" slot="tip">只能上传txt文件，且不超过500kb</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="algorithmUploadVisible = false">
+        <el-button type="primary" @click="this.$router.go(0)">
           确认
         </el-button>
       </div>
@@ -118,7 +119,7 @@
         <tr align="center"><td>上传者昵称</td> <td>{{ detail.nickname }}</td></tr>
         <tr align="center"><td>上传时间</td> <td>{{ detail.createdTime }}</td></tr>
         <tr align="center"><td>上一次修改时间</td> <td>{{ detail.changeTime }}</td></tr>
-        <tr align="center"><td>算法代码</td> <td>{{ detail.algcode }}</td></tr><!--todo 算法代码懒加载-->
+        <tr align="center"><td>算法代码</td> <td><textarea style="width: 468px; height: 209px" disabled v-bind:value="detail.algCode"></textarea></td></tr><!--todo 算法代码懒加载-->
       </table>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogDetailVisible = false">
@@ -135,12 +136,6 @@ import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
-/*// 时间排序的方式
-const calendarTypeOptions = [
-  { key: "按时间升序" },
-  { key: "按时间降序" }
-];
-*/
 const statusOptions = [
   { key: '正常' },
   { key: '被删除' }
@@ -170,8 +165,12 @@ export default {
       detail: {algorithmName: null,nickname: null,createdTime: null,changeTime: null,algCode: null},
       owner: '',
       listLoading: true,
+      loadingSet:{
+        boundary: '0403',
+        algorithmId: undefined
+      },
       listQuery: {
-        boundary: '0208',
+        boundary: '0404',
         page: 1,
         limit: 10,
         title: undefined,
@@ -180,8 +179,7 @@ export default {
       },
       //TODO 算法类型待修改
       fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/algorithm/addAlgorithm?boundary=0406&username='
-        +this.$store.state.currentUsername
-        +'&classification=2',
+        +this.$store.state.currentUsername,
       importanceOptions: ['正常','已删除'],
       /*calendarTypeOptions,*/
       statusOptions,
@@ -235,25 +233,19 @@ export default {
     handleImport() {
       this.algorithmUploadVisible = true;
     },
-    /*todo 懒加载数据*/
+    //懒加载
     handleDetail(row) {
-      this.dialogDetailVisible = true;
       this.detail = row;
-      this.detail.algCode =
-
-      this.loading = true;
-      this.listQuery.boundary = b;
-      this.postRequest(path, this.listQuery).then(response => {
+      this.loadingSet.algorithmId = row.algId;
+      this.postRequest('/algorithm/loadingCode', this.loadingSet).then(response => {
         if (response) {
-          this.list = response.data;
-          console.log(this.list);
-          this.total = response.length;
+          this.detail.algCode = response.algCode;
+          console.log(this.detail.algCode);
         }
       });
-      this.listLoading = false;
       setTimeout(() => {
-        this.loading = false
-      }, 750)
+        this.dialogDetailVisible = true;
+      }, 70)
     },
     /*删除算法，这里的删除是提交删除申请*/
     handleDelete(row, index) {

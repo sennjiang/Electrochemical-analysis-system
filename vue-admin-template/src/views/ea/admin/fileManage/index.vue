@@ -235,7 +235,7 @@ export default {
       this.fileUploadVisible = true;
     },
     handleDetail(row) {
-      this.dialogDetailVisible = true
+      this.dialogDetailVisible = true;
       this.detail = row
     },
     handleExport(row, index) {

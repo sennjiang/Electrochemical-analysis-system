@@ -20,11 +20,14 @@ public class AlgorithmSendView {
     //算法审核条目生成的时间
     private String applyTime;
 
+    //算法上次的修改时间
+    private String changeTime;
+
     //算法审核条目的唯一标识
     private Integer algSendId;
 
     //算法创建者的昵称
-    private String creatorNickname;
+    private String createrNickname;
 
     //算法名称
     private String algorithmName;
@@ -32,11 +35,14 @@ public class AlgorithmSendView {
     //算法创建者的用户名
     private Integer algCreateUsername;
 
-    /*//原算法的地址
-    private String url;*/
+    //原算法的地址
+    private String url;
 
-    //原算法的id标识
+    //新算法id，是指申请时生成的文件算法id
     private Integer algId;
+
+    //算法创建的时间
+    private String createdTime;
 
     public String getSenderNickname() {
         return senderNickname;
@@ -54,6 +60,28 @@ public class AlgorithmSendView {
         this.sendType = sendType;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Timestamp getCreatedTime() {
+        Timestamp ts = null;
+        try {
+            ts = Timestamp.valueOf(createdTime);
+        } catch (Exception ignored) {
+        }
+        return ts;
+    }
+
+    public void setCreatedTime(Timestamp createdTime) {
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.createdTime = sdf.format(createdTime);
+    }
+
     public Timestamp getApplyTime() {
         Timestamp ts = null;
         try {
@@ -68,6 +96,20 @@ public class AlgorithmSendView {
         this.applyTime = sdf.format(applyTime);
     }
 
+    public Timestamp getChangeTime() {
+        Timestamp ts = null;
+        try {
+            ts = Timestamp.valueOf(changeTime);
+        } catch (Exception ignored) {
+        }
+        return ts;
+    }
+
+    public void setChangeTime(Timestamp changeTime) {
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.applyTime = sdf.format(changeTime);
+    }
+
     public Integer getAlgSendId() {
         return algSendId;
     }
@@ -76,12 +118,12 @@ public class AlgorithmSendView {
         this.algSendId = algSendId;
     }
 
-    public String getCreatorNickname() {
-        return creatorNickname;
+    public String getCreaterNickname() {
+        return createrNickname;
     }
 
-    public void setCreatorNickname(String creatorNickname) {
-        this.creatorNickname = creatorNickname;
+    public void setCreaterNickname(String creatorNickname) {
+        this.createrNickname = creatorNickname;
     }
 
     public String getAlgorithmName() {
@@ -113,11 +155,13 @@ public class AlgorithmSendView {
         return "AlgorithmSendView{" +
                 "senderNickname='" + senderNickname + '\'' +
                 ", sendType=" + sendType +
-                ", applyTime=" + applyTime +
+                ", applyTime='" + applyTime + '\'' +
+                ", changeTime='" + changeTime + '\'' +
                 ", algSendId=" + algSendId +
-                ", creatorNickname='" + creatorNickname + '\'' +
+                ", createrNickname='" + createrNickname + '\'' +
                 ", algorithmName='" + algorithmName + '\'' +
                 ", algCreateUsername=" + algCreateUsername +
+                ", url='" + url + '\'' +
                 ", algId=" + algId +
                 '}';
     }

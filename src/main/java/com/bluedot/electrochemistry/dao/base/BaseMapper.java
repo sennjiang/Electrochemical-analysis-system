@@ -23,15 +23,32 @@ public interface BaseMapper {
      *
      * @return
      */
-    List<User> listUser();
+    List<User> queryUser();
 
     /**
+     * 没有key
+     * @param pageSize
+     * @param currentPage
+     * @param key
+     * @return
+     */
+    List<User> listUser(int pageSize, int currentPage, String key);
+
+    /**
+     * 根据三个参数获得user集合
      * @param pageSize    页面大小
      * @param currentPage 当前页
      * @param key         key
      * @return User实体类
      */
-    List<User> listUser(int pageSize, int currentPage, String key);
+    List<User> queryUserByPageAndKey(String key, int currentPage, int pageSize);
+
+    /**
+     * 根据key查总数
+     * @param key
+     * @return
+     */
+    Long countUserByKey(String key);
 
     /**
      * 根据username查询用户
@@ -40,6 +57,14 @@ public interface BaseMapper {
      * @return User实体类
      */
     User queryUserByUsername(int username);
+
+    /**
+     * 根据username模糊查询用户
+     *
+     * @param username 用户名
+     * @return User实体类
+     */
+    List<User> queryUsersByUsername(int username);
 
     /**
      *  登录
@@ -295,6 +320,12 @@ public interface BaseMapper {
     /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓算法相关↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 
     /**
+     * 获取下一个算法的id号
+     * @return 下一个算法的id号
+     */
+    Long getNextAlgorithmId();
+
+    /**
      * 通过算法id查找指定算法
      *
      * @param id 指定算法的id
@@ -394,4 +425,18 @@ public interface BaseMapper {
     List<Operation> listOperationsByAdmin(Integer type, Integer pageStart, Integer pageSize);
 
     Long countAdminOperations(Integer type);
+
+
+    /**
+     * 查询处理中的解冻申请
+     * @return
+     */
+    List<Unfreeze> queryUnfreezeByCurrent(String key, int currentPage, int pageSize);
+
+    /**
+     * 查询总共数量
+     * @param key
+     * @return
+     */
+    Long countUnfreezeByKey (String key);
 }

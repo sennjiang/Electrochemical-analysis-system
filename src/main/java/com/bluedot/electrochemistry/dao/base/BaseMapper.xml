@@ -5,12 +5,29 @@
     <!--    <select id="listUser" resultType="com.bluedot.electrochemistry.pojo.domain.User">-->
     <!--        select * from user;-->
     <!--    </select>-->
+    <select id="queryUser" resultType="com.bluedot.electrochemistry.pojo.domain.User">
+        select * from user
+    </select>
     <select id="listUser" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user limit #{currentPage},#{pageSize}
     </select>
+
+    <select id="queryUserByPageAndKey" resultType="com.bluedot.electrochemistry.pojo.domain.User">
+        select * from user where nickname like concat('%', #{key}, '%') limit #{currentPage},#{pageSize}
+    </select>
+
+    <select id="countUserByKey" resultType="java.lang.Long">
+        select count(*) from user where nickname like concat('%', #{key}, '%')
+    </select>
+
     <select id="queryUserByUsername" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user where username = #{username};
     </select>
+
+    <select id="queryUsersByUsername" resultType="com.bluedot.electrochemistry.pojo.domain.User">
+        select * from user where username like #{username};
+    </select>
+
     <select id="queryUserByEmail" resultType="com.bluedot.electrochemistry.pojo.domain.User">
         select * from user where email = #{email};
     </select>
@@ -96,6 +113,9 @@
     </select>
 
     <!--算法相关-->
+    <select id="getNextAlgorithmId" resultType="java.lang.Long">
+        select max(alg_id)+1 from algorithm
+    </select>
     <select id="getAlgorithmById" resultType="com.bluedot.electrochemistry.pojo.domain.Algorithm">
         select * from algorithm where alg_id = #{id}
     </select>
@@ -224,5 +244,14 @@
     </select>
     <select id="countAdminOperations" resultType="java.lang.Long">
         <![CDATA[    select count(*) from operation where type <= #{type}; ]]>
+    </select>
+
+
+    <select id="queryUnfreezeByCurrent" resultType="com.bluedot.electrochemistry.pojo.domain.Unfreeze">
+        select * from unfreeze where handle_status = 0 and username like concat('%', #{key}, '%') limit #{currentPage},#{pageSize}
+    </select>
+
+    <select id="countUnfreezeByKey" resultType="java.lang.Long">
+        select count(*) from unfreeze where handle_status = 0 and username like concat('%', #{key}, '%')
     </select>
 </mapper>
