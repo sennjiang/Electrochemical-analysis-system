@@ -24,9 +24,9 @@
       </div>
       <div class="style-label-div-reason">
         <label>申请理由:</label>
-        <el-input v-model="unfreezeForm.applicationReason"></el-input>
+        <el-input v-model="unfreezeForm.applicationReason" value="hello"></el-input>
         <!--</el-input>-->
-        <!--<span v-text="unfreezeForm.applicationReason"></span>-->
+        <!--<input v-text="unfreezeForm.applicationReason"></input>-->
         <br/>
         <!--<textarea class="ui-textarea" v-model="unfreezeForm.applicationReason"></textarea>-->
       </div>
@@ -45,8 +45,7 @@ export default {
   data() {
     return {
       unfreezeForm: {
-        boundary: '',
-        freezeId: '',
+        freezeId:'',
         username: '',
         nickname: '',
         freezeReason: '',
@@ -76,16 +75,19 @@ export default {
   },
 
   methods: {
-    getFreezeInfo () {
+    getFreezeInfo() {
       this.postRequest('/getFreezeInfo', {boundary: '0111', email: this.unfreezeForm.email}).then(resp => {
-        this.unfreezeForm = resp.freeze
+        this.unfreezeForm.freezeId = resp.freeze.freezeId
+        this.unfreezeForm.username = resp.freeze.username
+        this.unfreezeForm.freezeReason = resp.freeze.freezeReason
+        this.unfreezeForm.freezeTime = resp.freeze.freezeTime
         this.unfreezeForm.nickname = resp.nickname
       })
     },
 
     // 保存申请
-    async saveUnfreezeInfo() {
-      await this.postRequest('/getFreezeInfo', {
+    saveUnfreezeInfo() {
+      this.postRequest('/saveUnfreezeInfo', {
         boundary: '0112',
         freezeId: this.unfreezeForm.freezeId,
         username: this.unfreezeForm.username,
@@ -101,8 +103,8 @@ export default {
 
     // 返回登录页
     async toLogin() {
-          window.sessionStorage.removeItem('tokenStr')
-          this.$router.push('/login')
+      window.sessionStorage.removeItem('tokenStr')
+      this.$router.push('/login')
     }
   }
 }
