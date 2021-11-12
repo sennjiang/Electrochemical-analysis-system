@@ -237,7 +237,7 @@ public interface BaseMapper {
      * @param pageSize       每页的大小
      * @return 角色信息列表
      */
-    List<Role> getRoleByQueryCondition(String queryCondition, String queryValue, int pageStart, int pageSize);
+    List<Role> getRoleByQuery(String query, int pageStart, int pageSize);
 
     /**
      * 根据查询条件获取角色数量
@@ -246,8 +246,11 @@ public interface BaseMapper {
      * @param queryValue     要查询的值
      * @return 角色数量
      */
-    Long getRoleCountByQueryCondition(String queryCondition, String queryValue);
+    Long getRoleCountByQuery(String query);
 
+    Integer queryNewRoleId(String roleName);
+
+    List<Right> getRights(Integer query);
 
     /**
      * 比较hash值
