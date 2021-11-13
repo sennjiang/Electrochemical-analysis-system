@@ -37,7 +37,7 @@ public class FileService extends BaseService {
      */
     private void export(Map<String, Object> map) {
         //测试1,"a.txt","/qwe",1234567890,100d,(short)1,(short)1
-        File file = new File(1, "1.txt", "/user/file", 12345, 1D, "sadf123erd", 1, 1, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
+        File file = new File(1, "1.txt", "/user/file", 12345, "1D", "sadf123erd", 1, 1, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
         file.setModifiedTime(new Timestamp(System.currentTimeMillis()));
         file.setProduceTime(new Timestamp(System.currentTimeMillis()));
         List<File> list = new ArrayList<>();
@@ -204,7 +204,7 @@ public class FileService extends BaseService {
             userFile.setName((file.getName()).split("[.]")[0]);
             userFile.setUrl(file.toString());
             userFile.setOwner(Integer.parseInt((String) map.get("username")));
-            userFile.setSize((double) file.length());
+            userFile.setSize(file.length()+"Byte");
             userFile.setType(1);
             userFile.setStatus(1);
             userFile.setProduceTime(new Timestamp(new Date().getTime()));
@@ -298,7 +298,7 @@ public class FileService extends BaseService {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
                 int fileId = (int) map.get("fileId");
-                double size = 1;
+                String size = "1";
                 Timestamp modified_time = (Timestamp) map.get("modified_time");
                 String hash = null;
                 double data_start = (double) map.get("data_start");
