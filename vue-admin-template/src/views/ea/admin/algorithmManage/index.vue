@@ -103,7 +103,7 @@
         <div class="el-upload__tip" slot="tip">只能上传txt文件，且不超过500kb</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="this.$router.go(0)">
+        <el-button type="primary" @click="dialogDetailVisible = false">
           确认
         </el-button>
       </div>
@@ -241,11 +241,9 @@ export default {
         if (response) {
           this.detail.algCode = response.algCode;
           console.log(this.detail.algCode);
+          this.dialogDetailVisible = true;
         }
       });
-      setTimeout(() => {
-        this.dialogDetailVisible = true;
-      }, 70)
     },
     /*删除算法，这里的删除是提交删除申请*/
     handleDelete(row, index) {

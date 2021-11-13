@@ -72,7 +72,13 @@
         style="width: 100%;" class="file_table">
         <tr align="center"><td>申请者</td><td>{{ detail.senderNickname }}</td></tr>
         <tr align="center"><td>申请时间</td> <td>{{ detail.applyTime }}</td></tr>
-        <tr align="center"><td>申请类型</td> <td>{{ detail.sendType }}</td></tr>
+        <tr align="center"><td>申请类型</td>
+          <td>
+              <span v-if="0 == detail.sendType">添加算法</span>
+              <span v-if="-1 == detail.sendType">删除算法</span>
+              <span v-if="1 <= detail.sendType">修改算法</span>
+          </td>
+        </tr>
         <tr align="center"><td>算法名称</td> <td>{{ detail.algorithmName }}</td></tr>
         <tr align="center"><td>原算法上传者</td> <td>{{ detail.createrNickname }}</td></tr>
         <tr align="center"><td>算法上传时间</td> <td>{{ detail.createdTime }}</td></tr>
