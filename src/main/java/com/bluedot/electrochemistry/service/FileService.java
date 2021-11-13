@@ -144,7 +144,6 @@ public class FileService extends BaseService {
      *
      * @param map 数据，其中包含必要参数：
      *              username：文件上传的用户账号
-     *              dataCycle：文件数据实验的循环圈数
      */
     private void uploadFile(Map<String, Object> map) {
         java.io.File file = (java.io.File) map.get("file");
@@ -153,56 +152,89 @@ public class FileService extends BaseService {
             reader = new BufferedReader(new FileReader(file));
             StringBuffer str = new StringBuffer();
             String temp = "";
-//            int lineNum = 0;        //记录行号
-//            String[] dataArray = null;  //存放临时数据的两项
+            int lineNum = 0, dataLine = 9999999;        //记录行号,数据行号
+            String[] dataArray = null;  //存放临时数据的两项
 
-            //TODO
-//            double dataStart = -999,dataEnd, dataPrecision = -999;
-
+            //x0,x1,灵敏度, y0,y1
+            double dataStart = -999,dataEnd, dataPrecision = -999, dataBottom = 999, dataPeak = -999;
             while ((temp = reader.readLine()) != null) {
-//                lineNum++;
+                //文件类型判断
+                if(++lineNum == 2 && !"Differential Pulse Voltammetry".equals(temp)){
+                    fileFormatError(map, file);
+                    return;
+                }
                 str.append(temp).append("\n");
-//                //TODO 文件数据处理
-//                //拿到循环圈数 todo
-//                //当行号位于16行的时候，会出现灵敏度（精度）设置
-//                if(lineNum == 16){
-//                    dataArray = temp.split("= ");
-//                    dataPrecision = Double.parseDouble(dataArray[1]);
-//                }
-//                //当行号>=20的时候就是文件数据，之后想到更好的方法的时候在改进,毕竟txt文件嘛~
-//                if(lineNum >= 20){
-//                    dataArray = temp.split(", ");
-//                    if(lineNum == 20){
-//                        dataStart = Double.parseDouble(dataArray[0]);
-//                    }
-//                }
+                //拿到循环圈数 !!! DPV没有循环圈数
+                //当行号位于16行的时候，会出现灵敏度（精度）设置
+                if(lineNum == 16){
+                    dataArray = temp.split(" \\(A/V\\) = ");
+                    if ("Sensitivity".equals(dataArray[0])) dataPrecision = Double.parseDouble(dataArray[1]);
+                    else {
+                        fileFormatError(map, file);
+                        return;
+                    }
+                }
+                //初始化数据行号
+                if("Potential/V, Current/A".equals(temp)){
+                    dataLine = lineNum+2;
+                }
+                //数据整理与统计
+                if(lineNum >= dataLine){
+                    dataArray = temp.split(", ");
+                    if(lineNum == dataLine){//记录x轴的最小值
+                        dataStart = Double.parseDouble(dataArray[0]);
+                    }
+                    //y0整理
+                    dataBottom = Math.min(dataBottom, Double.parseDouble(dataArray[1]));
+                    //y1整理
+                    dataPeak = Math.max(dataBottom, Double.parseDouble(dataArray[1]));
+                }
             }
-//            dataEnd = Double.parseDouble(dataArray[0]);
+            //x轴的最大值记录
+            dataEnd = Double.parseDouble(dataArray[0]);
             System.out.println("file ---------------- " + str);
-//            //数据库写入操作
-//            File userFile = new File();
-//            userFile.setDataStart(dataStart);
-//            userFile.setDataEnd(dataEnd);
-//            userFile.setDataPrecision(dataPrecision);
-//            doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
-//                @Override
-//                public int doDataModifyExecutor(BaseDao baseDao) {
-//                    return baseDao.insert(userFile);
-//                }
-//            });
+            //数据库写入操作
+            File userFile = new File();
+            userFile.setDataStart(dataStart);
+            userFile.setDataEnd(dataEnd);
+            userFile.setDataBottom(dataBottom);
+            userFile.setDataPeak(dataPeak);
+            userFile.setDataPrecision(dataPrecision);
+            //将去除后缀名的文件名注入
+            userFile.setName((file.getName()).split("[.]")[0]);
+            userFile.setUrl(file.toString());
+            userFile.setOwner(Integer.parseInt((String) map.get("username")));
+            userFile.setSize((double) file.length());
+            userFile.setType(1);
+            userFile.setStatus(1);
+            userFile.setProduceTime(new Timestamp(new Date().getTime()));
+
+            doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
+                @Override
+                public int doDataModifyExecutor(BaseDao baseDao) {
+                    return baseDao.insert(userFile);
+                }
+            });
         } catch (Exception e) {
             map.put("message", e.getMessage());
-            map.put("code", 401);
+            map.put("code", 500);
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
                     map.put("message", e.getMessage());
-                    map.put("code", 401);
+                    map.put("code", 500);
                 }
             }
         }
+    }
+
+    //当文件格式错误时进行的操作
+    private void fileFormatError(Map<String, Object> map, java.io.File file) {
+        map.put("message", "文件格式错误");
+        map.put("code", 500);
+        file.delete();
     }
 
     /**

@@ -113,7 +113,7 @@ public class AlgorithmService extends BaseService {
                     Integer username = Integer.parseInt((String) map.get("username"));
                     Algorithm algorithm = new Algorithm();
                     //去除文件的后缀.java
-                    String[] arr = ((String) map.get("fileName")).split("[.]");
+                    String[] arr = (file.getName()).split("[.]");
                     algorithm.setAlgorithmName(arr[0]);
                     //待修改 todo
                     algorithm.setClassification(1);
