@@ -56,7 +56,11 @@ public class RoleService extends BaseService {
         map.put("numbers",numbers);
     }
 
-
+    /**
+     *
+     * 查询角色对应的权限
+     * @param map
+     */
     private void queryRights(Map<String,Object> map){
         BaseMapper mapper = mapperFactory.createMapper();
         String query = (String) map.get("query");

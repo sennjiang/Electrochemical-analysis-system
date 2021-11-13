@@ -61,16 +61,19 @@
         <!-- 角色级别-->
         <el-form-item label="角色级别" prop="roleType">
           <el-radio-group v-model="addForm.roleType">
-            <el-radio :label='0' @change="getRightList('管理员')">管理员</el-radio>
-            <el-radio :label='1' @change="getRightList('普通用户')">普通用户</el-radio>
+            <el-radio :label="0" >管理员</el-radio>
+            <el-radio :label="1" >普通用户</el-radio>
           </el-radio-group>
 
         </el-form-item>
+
         <!-- 菜单分配-->
 
         <el-form-item label="菜单分配" prop="checkRightList">
-          <el-checkbox-group v-model="rightList" >
-            <el-checkbox v-model="rightList" v-for="right in rightList" :label="right.rightName" :key="right.rightName">{{right.rightName}}</el-checkbox>
+          <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+          <div style="margin: 15px 0;"></div>
+          <el-checkbox-group v-model="checkRightList" @change="handleCheckedCitiesChange">
+            <el-checkbox v-for="rightName in rights" :label="rightName" :key="rightName">{{rightName}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
 
@@ -91,6 +94,9 @@
 <script>
 
   import moment from 'moment'
+
+  const allRightList = ['用户管理','解冻审核','文件管理(管理员)','操作记录','算法管理','电化学分析','文件管理','回收站管理']
+
 
   export default {
     created(){
@@ -115,15 +121,13 @@
           boundary: '1402',
           query:""
         },
+
+        checkAll: false,
         //权限名称列表
-        rightList:[
-          {
-            rightName:'',
-          }
-        ],
-
-
-
+        checkRightList:[],
+        //所有权限列表
+        rights: allRightList,
+        isIndeterminate: true,
 
         addDialogVisible: false,//对话框状态
         //添加表单信息
@@ -132,12 +136,9 @@
           roleName:'',
           description:'',
           //角色级别
-          roleType:'',
+          roleType: 0,
           //权限
           checkRightList:[
-            {
-              rightName:'',
-            }
           ],
         },
 
@@ -158,27 +159,20 @@
         })
       },
 
-      //根据选择获取权限
-      getRightList:function (rightType){
-        this.queryRightInfo.boundary = '1402'
-        this.queryRightInfo.query = rightType
-        this.postRequest("/right/nameList",this.queryRightInfo).then(res=>{
-          this.rightList = res.data;//权限列表数据封装
-          console.log(this.rightList);
-        })
-      },
+
 
       //最大数E:\project\Electrochemical-analysis-system\vue-admin-template
       handleSizeChange(newSize){
         this.queryInfo.pageSize = newSize;
-        this.getRoleList();
+
       },
 
       //pageNum的触发动作
       handleCurrentChange(newPage){
         this.queryInfo.pageNum = newPage;
-        this.getRoleList();
+
       },
+
 
 
 
@@ -192,12 +186,14 @@
         this.$refs.addFormRef.validate(async valid=>{
           if(!valid) return;
           this.addForm.boundary = '1403'
-          this.addForm.checkRightList = this.rightList
+          console.log(this.checkRightList)
+          this.addForm.checkRightList = this.checkRightList
           this.postRequest("/role/addRole",this.addForm).then(res=> {
             if(res.data!=2){
               return this.$message.error("添加失败！！！");
             }else{
               this.$message.success("添加成功！！！");
+
               this.addDialogVisible = false;
               this.getRoleList();
             }
@@ -214,6 +210,16 @@
 
         return moment(date).format("YYYY-MM-DD HH:mm:ss")
 
+      },
+
+      handleCheckAllChange(val) {
+        this.checkedCities = val ? cityOptions : [];
+        this.isIndeterminate = false;
+      },
+      handleCheckedCitiesChange(value) {
+        let checkedCount = value.length;
+        this.checkAll = checkedCount === this.cities.length;
+        this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
       }
     },
 

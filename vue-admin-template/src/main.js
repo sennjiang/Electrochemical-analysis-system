@@ -16,7 +16,8 @@ import '@/icons' // icon
 import '@/permission' // permission control
 
 import { postRequest, getRequest, putRequest, deleteRequest } from './utils/request'
-
+// 引入echarts
+import echarts from 'echarts'
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -29,6 +30,7 @@ import { postRequest, getRequest, putRequest, deleteRequest } from './utils/requ
  //  const { mockXHR } = require('../mock')
  //  mockXHR()
  //}
+Vue.prototype.$echarts = echarts
 
 Vue.config.productionTip = false
 Vue.prototype.getRequest = getRequest
