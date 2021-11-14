@@ -70,11 +70,11 @@
             详情
           </el-button>
           <!--TODO 单击事件记得修改-->
-          <el-button type="primary" size="mini" @click="handleDetail(row)">
+          <!--<el-button type="primary" size="mini" @click="handleDetail(row)">
             修改
-          </el-button>
+          </el-button>-->
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            删除
+            申请删除
           </el-button>
         </template>
       </el-table-column>
@@ -103,7 +103,7 @@
         <div class="el-upload__tip" slot="tip">只能上传txt文件，且不超过500kb</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogDetailVisible = false">
+        <el-button type="primary" @click="algorithmUploadVisible = false">
           确认
         </el-button>
       </div>
@@ -161,6 +161,7 @@ export default {
       tableKey: 0,
       list: null,
       total: 0,
+      username: null,
       // 懒加载的数据
       detail: {algorithmName: null,nickname: null,createdTime: null,changeTime: null,algCode: null},
       owner: '',
@@ -179,7 +180,7 @@ export default {
       },
       //TODO 算法类型待修改
       fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/algorithm/addAlgorithm?boundary=0406&username='
-        +this.$store.state.currentUsername,
+        +this.username,
       importanceOptions: ['正常','已删除'],
       /*calendarTypeOptions,*/
       statusOptions,
@@ -190,7 +191,8 @@ export default {
     }
   },
   created() {
-    this.getList('/algorithm/list','0404')
+    this.username = window.sessionStorage.getItem("tokenStr");
+    this.getList('/algorithm/list','0404');
   },
   methods: {
     handleChange(file, fileList) {
@@ -248,7 +250,7 @@ export default {
     /*删除算法，这里的删除是提交删除申请*/
     handleDelete(row, index) {
       /*type:是申请的类型，-1代表删除*/
-      let deleteData = {boundary:"0804", algorithmId:row.algId, type:"-1", username:this.$store.state.currentUsername};
+      let deleteData = {boundary:"0804", algorithmId:row.algId, type:"-1", username: this.username};
       this.getRequest('/algorithmSend/addAlgorithmSend', deleteData).then(response => {
         if (response) {
           this.getList('/algorithm/list','0404')
