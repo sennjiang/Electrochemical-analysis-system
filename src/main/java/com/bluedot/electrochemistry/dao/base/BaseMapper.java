@@ -248,7 +248,7 @@ public interface BaseMapper {
      */
     Long getRoleCountByQuery(String query);
 
-    Integer queryNewRoleId(String roleName);
+    Role queryNewRoleId(String roleName);
 
     List<Right> getRights(Integer query);
 
