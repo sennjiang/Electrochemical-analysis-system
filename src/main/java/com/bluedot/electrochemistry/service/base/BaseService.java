@@ -62,7 +62,9 @@ public class BaseService {
     protected <T> void doSimpleModifyTemplate(Map<String, Object> map, ServiceCallback<T> serviceCallback){
         try {
             BaseDao baseDao = (BaseDao) beanContainer.getBean(BaseDao.class);
+            System.out.println(baseDao);
             int affectedRows = serviceCallback.doDataModifyExecutor(baseDao);
+            System.out.println(map);
             if (affectedRows == 0) {
                 map.put("error", "数据库信息操作失败！受影响的行数为0");
             }else {
@@ -71,7 +73,7 @@ public class BaseService {
             }
         }catch (Exception e) {
             map.put("code", 500);
-            map.put("message", "执行成功");
+            map.put("message", "执行失败");
         }
 
     }

@@ -44,13 +44,13 @@ public class OperationService extends BaseService {
             Long length = null;
             if (type == 1) {
                 list = baseMapper.listOperationsByUser(type,username,(pageStart - 1) * pageSize,pageSize);
-                length = baseMapper.countOperationsByUser(username,type);
+                length = baseMapper.countListOperationsByUser(username,type);
             }else if(type == 2){
                 list = baseMapper.listOperationsByAdmin(type,(pageStart - 1) * pageSize,pageSize);
-                length = baseMapper.countAdminOperations(type);
+                length = baseMapper.countListOperationsByAdmin(type);
             }else {
                 list = baseMapper.listOperationsBySuperAdmin(type,(pageStart - 1) * pageSize,pageSize);
-                length = baseMapper.countOperations(type);
+                length = baseMapper.countListOperationsBySuperAdmin(type);
             }
             map.put("data",list);
             map.put("code",200);
@@ -70,16 +70,19 @@ public class OperationService extends BaseService {
             int username = Integer.parseInt(str);
             Integer pageStart = Integer.parseInt((String) map.get("page"));
             Integer pageSize = Integer.parseInt((String) map.get("limit"));
-            short type = Short.parseShort((String) map.get("type"));
+            Integer type = Integer.parseInt((String) map.get("type"));
             String title = (String) map.get("title");
             List<Operation> files = null;
             Long size = null;
             if (type == 1) {
                 files = mapper.searchOperationsByUser("%" + title + "%", username, type, (pageStart - 1) * pageSize, pageSize);
-                size = mapper.countOperationsBySearchUser(("%" + title + "%"), username, type);
-            } else {
+                size = mapper.countSearchOperationsByUser(("%" + title + "%"), username, type);
+            } else if (type == 2) {
                 files = mapper.searchOperationsByAdmin("%" + title + "%","%" + title + "%", type, (pageStart - 1) * pageSize, pageSize);
-                size = mapper.countOperationsByAdmin("%" + title + "%","%" + title + "%", type);
+                size = mapper.countSearchOperationsByAdmin("%" + title + "%","%" + title + "%", type);
+            }else {
+                files = mapper.searchOperationsBySuperAdmin("%" + title + "%","%" + title + "%", type, (pageStart - 1) * pageSize, pageSize);
+                size = mapper.countSearchOperationsBySuperAdmin("%" + title + "%","%" + title + "%", type);
             }
 
             map.put("data", files);

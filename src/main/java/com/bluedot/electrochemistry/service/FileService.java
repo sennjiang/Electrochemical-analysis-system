@@ -60,6 +60,11 @@ public class FileService extends BaseService {
      */
     private void listFiles(Map<String, Object> map) {
         try {
+            String search = (String) map.get("search");
+            if ("1".equals(search)){
+                searchFiles(map);
+                return;
+            }
             String str = (String) map.get("username");
             int username = Integer.parseInt(str);
             Integer pageStart = Integer.parseInt((String) map.get("page"));
@@ -68,9 +73,15 @@ public class FileService extends BaseService {
             short status = Short.parseShort((String) map.get("status"));
 
             BaseMapper mapper = mapperFactory.createMapper();
-
-            List<File> files = mapper.listFiles(type, status, username, (pageStart - 1) * pageSize, pageSize);
-            Long size = mapper.countFiles(type, status, username);
+            List<File> files = null;
+            Long size = null;
+            if (type == 1) {
+                files = mapper.listFiles(type, status, username, (pageStart - 1) * pageSize, pageSize);
+                size = mapper.countFiles(type, status, username);
+            }else {
+                files = mapper.listFilesByAdmin0((short) 1,(pageStart - 1) * pageSize, pageSize);
+                size = mapper.countFilesByAdmin0((short) 1);
+            }
             map.put("data", files);
             map.put("code", 200);
             map.put("message", "文件列表加载完成");
@@ -98,14 +109,15 @@ public class FileService extends BaseService {
             Integer pageSize = Integer.parseInt((String) map.get("limit"));
             short type = Short.parseShort((String) map.get("type"));
             String title = (String) map.get("title");
+            Integer status = Integer.parseInt((String) map.get("status"));
             List<File> files = null;
             Long size = null;
             if (type == 1) {
-                files = mapper.searchFileByUser("%" + title + "%", 1,username, type, (pageStart - 1) * pageSize, pageSize);
-                size = mapper.countFilesByUser("%" + title + "%", 1,username, type);
+                files = mapper.searchFileByUser("%" + title + "%", status,username, (short) 1, (pageStart - 1) * pageSize, pageSize);
+                size = mapper.countFilesByUser("%" + title + "%", status,username, (short) 1);
             } else {
-                files = mapper.searchFileByAdmin("%" + title + "%","%" + title + "%", type, (pageStart - 1) * pageSize, pageSize);
-                size = mapper.countFilesByAdmin("%" + title + "%","%" + title + "%", type);
+                files = mapper.searchFileByAdmin("%" + title + "%","%" + title + "%", (short) 1, (pageStart - 1) * pageSize, pageSize);
+                size = mapper.countFilesByAdmin("%" + title + "%","%" + title + "%", (short) 1);
             }
 
             map.put("data", files);
@@ -231,8 +243,10 @@ public class FileService extends BaseService {
         doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
-                int fileId = (int) map.get("fileId");
-                File file = new File(fileId, null, null, null, null, null, null, 2, null, null);
+                Integer fileId = Integer.parseInt((String) map.get("fileId"));
+                File file = new File();
+                file.setId(fileId);
+                file.setStatus(2);
                 return baseDao.update(file);
             }
         });
@@ -244,10 +258,12 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void restore(Map<String, Object> map) {
+        System.out.println("------");
         doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
-                int fileId = (int) map.get("fileId");
+                System.out.println("------"+baseDao);
+                int fileId = Integer.parseInt((String) map.get("fileId"));
                 File file = new File();
                 file.setId(fileId);
                 file.setStatus(1);

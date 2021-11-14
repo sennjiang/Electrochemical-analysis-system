@@ -5,12 +5,6 @@
       <el-button v-waves class="filter-item" style="margin-left: 20px; "  type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-      <el-button class="filter-item" style="margin-left: 610px;" type="primary" icon="el-icon-edit" @click="handleImport">
-        添加
-      </el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleExport">
-        导出
-      </el-button>
     </div>
 
     <el-table
@@ -78,24 +72,6 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
-
-    <el-dialog :visible.sync="fileUploadVisible">
-      <el-upload
-          align="center"
-          class="upload-demo"
-          drag
-          :action="fileUploadPath"
-          multiple>
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          <div class="el-upload__tip" slot="tip">只能上传txt文件，且不超过500kb</div>
-        </el-upload>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="fileUploadVisible = false">
-          确认
-        </el-button>
-      </div>
-    </el-dialog>
 
     <el-dialog :visible.sync="dialogDetailVisible">
       <table
@@ -176,20 +152,20 @@ export default {
         page: 1,
         limit: 10,
         title: undefined,
-        type: 1,
-        status: 1
+        type: 2,
+        status: 1,
+        search: 0
       },
-      fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/file/upload?boundary=0205&username='+this.owner,
       importanceOptions: ['正常','已删除'],
       calendarTypeOptions,
       statusOptions,
       dialogDetailVisible: false,
-      fileUploadVisible : false,
       dialogStatus: '',
       downloadLoading: false
     }
   },
   created() {
+    this.listQuery.search = 0
     this.getList('/file/list','0208')
   },
   methods: {
@@ -222,6 +198,7 @@ export default {
     },
     handleFilter() {
       this.listQuery.page = 1
+      this.listQuery.search = 1
       this.getList('/file/search','0213')
     },
     handleModifyStatus(row, status) {
@@ -230,9 +207,6 @@ export default {
         type: 'success'
       })
       row.status = status
-    },
-    handleImport() {
-      this.fileUploadVisible = true;
     },
     handleDetail(row) {
       this.dialogDetailVisible = true;
