@@ -72,7 +72,7 @@
         <el-form-item label="菜单分配" prop="checkRightList">
           <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
           <div style="margin: 15px 0;"></div>
-          <el-checkbox-group v-model="checkRightList" @change="handleCheckedCitiesChange">
+          <el-checkbox-group v-model="addForm.checkRightList" @change="handleCheckedCitiesChange">
             <el-checkbox v-for="rightName in rights" :label="rightName" :key="rightName">{{rightName}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
@@ -123,8 +123,7 @@
         },
 
         checkAll: false,
-        //权限名称列表
-        checkRightList:[],
+
         //所有权限列表
         rights: allRightList,
         isIndeterminate: true,
@@ -138,8 +137,7 @@
           //角色级别
           roleType: 0,
           //权限
-          checkRightList:[
-          ],
+          checkRightList:[],
         },
 
 
@@ -186,8 +184,8 @@
         this.$refs.addFormRef.validate(async valid=>{
           if(!valid) return;
           this.addForm.boundary = '1403'
-          console.log(this.checkRightList)
-          this.addForm.checkRightList = this.checkRightList
+          console.log(this.addForm.checkRightList)
+
           this.postRequest("/role/addRole",this.addForm).then(res=> {
             if(res.data!=2){
               return this.$message.error("添加失败！！！");
@@ -213,13 +211,13 @@
       },
 
       handleCheckAllChange(val) {
-        this.checkedCities = val ? cityOptions : [];
+        this.checkedCities = val ? allRightList : [];
         this.isIndeterminate = false;
       },
       handleCheckedCitiesChange(value) {
         let checkedCount = value.length;
-        this.checkAll = checkedCount === this.cities.length;
-        this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
+        this.checkAll = checkedCount === this.rights.length;
+        this.isIndeterminate = checkedCount > 0 && checkedCount < this.rights.length;
       }
     },
 

@@ -270,4 +270,28 @@ public class File {
     public void setDataResults(Double dataResult) {
         this.dataResults = dataResult;
     }
+
+    @Override
+    public String toString() {
+        return "File{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", owner=" + owner +
+                ", size='" + size + '\'' +
+                ", hash='" + hash + '\'' +
+                ", type=" + type +
+                ", status=" + status +
+                ", produceTime='" + produceTime + '\'' +
+                ", modifiedTime='" + modifiedTime + '\'' +
+                ", dataStart=" + dataStart +
+                ", dataEnd=" + dataEnd +
+                ", dataBottom=" + dataBottom +
+                ", dataPeak=" + dataPeak +
+                ", dataPrecision=" + dataPrecision +
+                ", dataCycle=" + dataCycle +
+                ", dataRate=" + dataRate +
+                ", dataResults=" + dataResults +
+                '}';
+    }
 }

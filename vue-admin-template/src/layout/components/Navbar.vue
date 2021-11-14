@@ -66,11 +66,13 @@ export default {
     this.userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
   },
   methods: {
+
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
     logout() {
       window.sessionStorage.removeItem('tokenStr')
+      window.sessionStorage.removeItem('userInfo')
       store.state.routers = []
       resetRouter()
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)

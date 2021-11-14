@@ -219,10 +219,8 @@ public class UserService extends BaseService {
         int res = baseDao.insert(newUser);
         if (res > 0) {
             map.put("code", 200);
-            map.put("message", "注册成功啦");
         } else {
             map.put("code", 500);
-            map.put("message", "注册失败");
         }
     }
 
@@ -251,10 +249,8 @@ public class UserService extends BaseService {
         Long userCount = mapper.countUserByEmail(email);
         if (userCount > 0) {
             map.put("code", 500);
-            map.put("message", "用户已存在");
         } else {
             map.put("code", 200);
-            map.put("message", "可以注册");
         }
     }
 

@@ -7,6 +7,8 @@ import com.bluedot.electrochemistry.dao.base.BaseDao;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.BeanContainer;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +18,7 @@ import java.util.Map;
  * @description
  * @createDate 2021/8/25-14:37
  */
-public class BaseService {
+public class BaseService extends HttpServlet {
 
     private BeanContainer beanContainer = BeanContainer.getInstance();
 
