@@ -9,7 +9,7 @@
           :model="userForm"
           status-icon
           :rules="registerRules"
-          ref="ruleForm"
+          ref="registerForm"
           label-width="0"
           class="demo-ruleForm"
 
@@ -24,13 +24,13 @@
           <el-form-item prop="pwd1">
             <span class="demonstration">密码：</span>
             <el-input v-model="userForm.pwd1" auto-complete="off" placeholder="6-18位字母+数字组合"
-                      class="input-style-width"></el-input>
+                      class="input-style-width" type="password"></el-input>
           </el-form-item>
 
           <el-form-item prop="pwd2">
             <span class="demonstration">确认：</span>
             <el-input v-model="userForm.pwd2" auto-complete="off" placeholder="密码确认"
-                      class="input-style-width"></el-input>
+                      class="input-style-width" type="password"></el-input>
           </el-form-item>
 
           <el-form-item prop="gender" style="text-align: left">
@@ -66,7 +66,7 @@
             <el-button type="primary" :disabled='isDisabled' @click="sendEmailCode">{{ buttonText }}</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm" style="width:100%;">注册</el-button>
+            <el-button type="primary" @click="submitForm('registerForm')" style="width:100%;">注册</el-button>
             <p class="login" @click="gotoLogin">已有账号？立即登录</p>
           </el-form-item>
         </el-form>
@@ -140,10 +140,10 @@ export default {
     };
     // 校验邮箱验证码
     let validateEmailCode = (rule, value, callback) => {
-      if (!this.userForm.emailCode === this.userForm.emailCodeResp) {
+      if (this.userForm.emailCode !== this.userForm.emailCodeResp) {
         callback(new Error('验证码错误'))
       } else {
-        this.$message.success("验证码正确")
+        // this.$message.success("验证码正确")
         callback()
       }
     };
@@ -160,6 +160,7 @@ export default {
         //  校验密码
         pwd1: [
           {required: true, message: '请输入密码', trigger: 'blur'},
+          {validator: validatePwd2, trigger: 'blur'},
           {min: 6, max: 18, message: '长度在 5 到 12 个字符', trigger: 'blur'}
         ],
         pwd2: {validator: validatePwd2, trigger: 'blur'},
@@ -206,7 +207,24 @@ export default {
 
     }
   },
+  // 浏览器的后退情况
+  mounted () {
+    if (window.history && window.history.pushState) {
+      // 向历史记录中插入了当前页
+      history.pushState(null, null, document.URL);
+      window.addEventListener('popstate', this.goBack, false);
+    }
+  },
+  destroyed () {
+    window.removeEventListener('popstate', this.goBack, false);
+  },
   methods: {
+
+    // 浏览器后退的场景
+    goBack () {
+      sessionStorage.clear();
+      window.history.back();
+    },
 
     // 是否存在该用户, 参数为email, true:存在, false:不存在
     async existUser() {
@@ -214,9 +232,11 @@ export default {
       await this.postRequest('/existUserByEmail', {boundary: '0110', email: this.userForm.email}).then(resp => {
         if (resp.code === 200) {
           // 该email不存在, 可以注册
+          // this.$message.success("可以注册")
           return true;
         } else {
-          // 该email已存在, 可以注册
+          // 该email已存在, 不可以注册
+          this.$message.error("用户已存在")
           return false;
         }
       })
@@ -250,23 +270,23 @@ export default {
     },
     // <!--提交注册-->
     async submitForm(formName) {
-      // this.$refs[formName].validate(async valid => {
-      //   if (valid) {
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
       await this.postRequest('/addUser', this.userForm).then(resp => {
         if (resp.code == 200) {
-          console.log("注册成功")
+          this.$message.success('注册成功')
+          window.sessionStorage.removeItem('tokenStr')
+          this.$router.push('/login')
         } else {
           console.log("注册失败")
         }
       })
       setTimeout(() => {
-        alert('注册成功')
       }, 400);
-      //   } else {
-      //     console.log("error submit!!");
-      //     return false;
-      //   }
-      // })
+        } else {
+          return false;
+        }
+      })
     },
     // <!--进入登录页-->
     gotoLogin() {

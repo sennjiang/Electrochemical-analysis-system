@@ -37,7 +37,7 @@ public class FileService extends BaseService {
      */
     private void export(Map<String, Object> map) {
         //测试1,"a.txt","/qwe",1234567890,100d,(short)1,(short)1
-        File file = new File(1, "1.txt", "/user/file", 12345, 1D, "sadf123erd", 1, 1, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
+        File file = new File(1, "1.txt", "/user/file", 12345, "1", "sadf123erd", 1, 1, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
         file.setModifiedTime(new Timestamp(System.currentTimeMillis()));
         file.setProduceTime(new Timestamp(System.currentTimeMillis()));
         List<File> list = new ArrayList<>();
@@ -60,6 +60,11 @@ public class FileService extends BaseService {
      */
     private void listFiles(Map<String, Object> map) {
         try {
+            String search = (String) map.get("search");
+            if ("1".equals(search)){
+                searchFiles(map);
+                return;
+            }
             String str = (String) map.get("username");
             int username = Integer.parseInt(str);
             Integer pageStart = Integer.parseInt((String) map.get("page"));
@@ -68,9 +73,15 @@ public class FileService extends BaseService {
             short status = Short.parseShort((String) map.get("status"));
 
             BaseMapper mapper = mapperFactory.createMapper();
-
-            List<File> files = mapper.listFiles(type, status, username, (pageStart - 1) * pageSize, pageSize);
-            Long size = mapper.countFiles(type, status, username);
+            List<File> files = null;
+            Long size = null;
+            if (type == 1) {
+                files = mapper.listFiles(type, status, username, (pageStart - 1) * pageSize, pageSize);
+                size = mapper.countFiles(type, status, username);
+            }else {
+                files = mapper.listFilesByAdmin0((short) 1,(pageStart - 1) * pageSize, pageSize);
+                size = mapper.countFilesByAdmin0((short) 1);
+            }
             map.put("data", files);
             map.put("code", 200);
             map.put("message", "文件列表加载完成");
@@ -98,14 +109,15 @@ public class FileService extends BaseService {
             Integer pageSize = Integer.parseInt((String) map.get("limit"));
             short type = Short.parseShort((String) map.get("type"));
             String title = (String) map.get("title");
+            Integer status = Integer.parseInt((String) map.get("status"));
             List<File> files = null;
             Long size = null;
             if (type == 1) {
-                files = mapper.searchFileByUser("%" + title + "%", 1,username, type, (pageStart - 1) * pageSize, pageSize);
-                size = mapper.countFilesByUser("%" + title + "%", 1,username, type);
+                files = mapper.searchFileByUser("%" + title + "%", status,username, (short) 1, (pageStart - 1) * pageSize, pageSize);
+                size = mapper.countFilesByUser("%" + title + "%", status,username, (short) 1);
             } else {
-                files = mapper.searchFileByAdmin("%" + title + "%","%" + title + "%", type, (pageStart - 1) * pageSize, pageSize);
-                size = mapper.countFilesByAdmin("%" + title + "%","%" + title + "%", type);
+                files = mapper.searchFileByAdmin("%" + title + "%","%" + title + "%", (short) 1, (pageStart - 1) * pageSize, pageSize);
+                size = mapper.countFilesByAdmin("%" + title + "%","%" + title + "%", (short) 1);
             }
 
             map.put("data", files);
@@ -147,62 +159,95 @@ public class FileService extends BaseService {
      *              dataCycle：文件数据实验的循环圈数
      */
     private void uploadFile(Map<String, Object> map) {
+
         java.io.File file = (java.io.File) map.get("file");
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(file));
             StringBuffer str = new StringBuffer();
             String temp = "";
-//            int lineNum = 0;        //记录行号
-//            String[] dataArray = null;  //存放临时数据的两项
+            int lineNum = 0, dataLine = 9999999;        //记录行号,数据行号
+            String[] dataArray = null;  //存放临时数据的两项
 
-            //TODO
-//            double dataStart = -999,dataEnd, dataPrecision = -999;
-
+            //x0,x1,灵敏度, y0,y1
+            double dataStart = -999,dataEnd, dataPrecision = -999, dataBottom = 999, dataPeak = -999;
             while ((temp = reader.readLine()) != null) {
-//                lineNum++;
+                //文件类型判断
+                if(++lineNum == 2 && !"Differential Pulse Voltammetry".equals(temp)){
+                    fileFormatError(map, file);
+                    return;
+                }
                 str.append(temp).append("\n");
-//                //TODO 文件数据处理
-//                //拿到循环圈数 todo
-//                //当行号位于16行的时候，会出现灵敏度（精度）设置
-//                if(lineNum == 16){
-//                    dataArray = temp.split("= ");
-//                    dataPrecision = Double.parseDouble(dataArray[1]);
-//                }
-//                //当行号>=20的时候就是文件数据，之后想到更好的方法的时候在改进,毕竟txt文件嘛~
-//                if(lineNum >= 20){
-//                    dataArray = temp.split(", ");
-//                    if(lineNum == 20){
-//                        dataStart = Double.parseDouble(dataArray[0]);
-//                    }
-//                }
+                //拿到循环圈数 !!! DPV没有循环圈数
+                //当行号位于16行的时候，会出现灵敏度（精度）设置
+                if(lineNum == 16){
+                    dataArray = temp.split(" \\(A/V\\) = ");
+                    if ("Sensitivity".equals(dataArray[0])) dataPrecision = Double.parseDouble(dataArray[1]);
+                    else {
+                        fileFormatError(map, file);
+                        return;
+                    }
+                }
+                //初始化数据行号
+                if("Potential/V, Current/A".equals(temp)){
+                    dataLine = lineNum+2;
+                }
+                //数据整理与统计
+                if(lineNum >= dataLine){
+                    dataArray = temp.split(", ");
+                    if(lineNum == dataLine){//记录x轴的最小值
+                        dataStart = Double.parseDouble(dataArray[0]);
+                    }
+                    //y0整理
+                    dataBottom = Math.min(dataBottom, Double.parseDouble(dataArray[1]));
+                    //y1整理
+                    dataPeak = Math.max(dataBottom, Double.parseDouble(dataArray[1]));
+                }
             }
-//            dataEnd = Double.parseDouble(dataArray[0]);
-            System.out.println("file ---------------- " + str);
-//            //数据库写入操作
-//            File userFile = new File();
-//            userFile.setDataStart(dataStart);
-//            userFile.setDataEnd(dataEnd);
-//            userFile.setDataPrecision(dataPrecision);
-//            doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
-//                @Override
-//                public int doDataModifyExecutor(BaseDao baseDao) {
-//                    return baseDao.insert(userFile);
-//                }
-//            });
+            //x轴的最大值记录
+            dataEnd = Double.parseDouble(dataArray[0]);
+            //数据库写入操作
+            File userFile = new File();
+            userFile.setDataStart(dataStart);
+            userFile.setDataEnd(dataEnd);
+            userFile.setDataBottom(dataBottom);
+            userFile.setDataPeak(dataPeak);
+            userFile.setDataPrecision(dataPrecision);
+            //将去除后缀名的文件名注入
+            userFile.setName((file.getName()).split("[.]")[0]);
+            userFile.setUrl((String) map.get("filePath"));
+            userFile.setOwner(Integer.parseInt((String) map.get("username")));
+            userFile.setSize(file.length()+"Byte");
+            userFile.setType(1);
+            userFile.setStatus(1);
+            userFile.setProduceTime(new Timestamp(new Date().getTime()));
+            doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
+                @Override
+                public int doDataModifyExecutor(BaseDao baseDao) {
+                    return baseDao.insert(userFile);
+                }
+            });
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             map.put("message", e.getMessage());
-            map.put("code", 401);
+            map.put("code", 500);
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
                     map.put("message", e.getMessage());
-                    map.put("code", 401);
+                    map.put("code", 500);
                 }
             }
         }
+    }
+
+    //当文件格式错误时进行的操作
+    private void fileFormatError(Map<String, Object> map, java.io.File file) {
+        map.put("message", "文件格式错误");
+        map.put("code", 500);
+        file.delete();
     }
 
     /**
@@ -231,8 +276,10 @@ public class FileService extends BaseService {
         doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
-                int fileId = (int) map.get("fileId");
-                File file = new File(fileId, null, null, null, null, null, null, 2, null, null);
+                Integer fileId = Integer.parseInt((String) map.get("fileId"));
+                File file = new File();
+                file.setId(fileId);
+                file.setStatus(2);
                 return baseDao.update(file);
             }
         });
@@ -244,10 +291,12 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void restore(Map<String, Object> map) {
+        System.out.println("------");
         doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
-                int fileId = (int) map.get("fileId");
+                System.out.println("------"+baseDao);
+                int fileId = Integer.parseInt((String) map.get("fileId"));
                 File file = new File();
                 file.setId(fileId);
                 file.setStatus(1);
@@ -266,7 +315,7 @@ public class FileService extends BaseService {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
                 int fileId = (int) map.get("fileId");
-                double size = 1;
+                String size = "1";
                 Timestamp modified_time = (Timestamp) map.get("modified_time");
                 String hash = null;
                 double data_start = (double) map.get("data_start");

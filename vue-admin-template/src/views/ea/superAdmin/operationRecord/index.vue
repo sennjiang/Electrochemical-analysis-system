@@ -167,7 +167,7 @@ export default {
         level:"INFO", 
         user:"1234567890", 
         recorder: "SearchService.download", 
-        type: 1, 
+        type: 3, 
         time: "2021:10:01:15:00",
         isFile: 1,
         fileType: 1,

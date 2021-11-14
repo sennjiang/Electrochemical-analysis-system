@@ -53,8 +53,8 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleDetail(row)">
-            详情
+          <el-button type="primary" size="mini" @click="handleRestore(row)">
+            还原
           </el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
             删除
@@ -72,39 +72,6 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
-
-    <el-dialog :visible.sync="dialogDetailVisible">
-      <table
-      fit
-      highlight-current-row
-      style="width: 100%;" class="file_table">
-        <tr align="center"><td>属性名</td> <td>属性值</td></tr>
-        <tr  align="center"><td>fileId</td><td>{{ detail.id }}</td></tr>
-        <tr align="center"><td>name</td> <td>{{ detail.name }}</td></tr>
-        <tr align="center"><td>url</td> <td>{{ detail.url }}</td></tr>
-        <tr align="center"><td>owner</td> <td>{{ detail.owner }}</td></tr>
-        <tr align="center"><td>size</td> <td>{{ detail.size }}</td></tr>
-        <tr align="center"><td>hash</td> <td>{{ detail.hash }}</td></tr>
-        <tr align="center"><td>type</td> <td>{{detail.type | typeFilter }}</td></tr>
-        <tr align="center"><td>status</td> <td>{{ detail.status }}</td></tr>
-        <tr align="center"><td>produceTime</td> <td>{{ detail.produceTime }}</td></tr>
-        <tr align="center"><td>modifiedTime</td> <td>{{ detail.modifiedTime }}</td></tr>
-        <tr align="center"><td>dataStart</td> <td>{{ detail.dataStart }}</td></tr>
-        <tr align="center"><td>dataEnd </td> <td>{{ detail.dataEnd }}</td></tr>
-        <tr align="center"><td>dataBottom </td><td>{{ detail.dataBottom }}</td></tr>
-        <tr align="center"><td>dataPeak </td><td>{{ detail.dataPeak }}</td></tr>
-        <tr align="center"><td>dataPrecision </td><td>{{ detail.dataPrecision }}</td></tr>
-        <tr align="center"><td>dataCycle </td><td>{{ detail.dataCycle }}</td></tr>
-        <tr align="center"><td>dataRate </td><td>{{ detail.dataRate }}</td></tr>
-        <tr align="center"><td>dataResult </td><td>{{ detail.dataResult }}</td></tr>
-        </table>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogDetailVisible = false">
-          确认
-        </el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -113,10 +80,6 @@ import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
-const calendarTypeOptions = [
-  { key: "最近三天" },
-  { key: "最近一周" }
-]
 
 const statusOptions = [
   { key: '正常' },
@@ -152,20 +115,20 @@ export default {
         page: 1,
         limit: 10,
         title: undefined,
-        type: 2,
-        status: 1,
-        search: 0
+        type: 1,
+        status: 2,
+        fileId:'',
+        searsh:''
       },
-      importanceOptions: ['正常','已删除'],
-      calendarTypeOptions,
       statusOptions,
+      importanceOptions: ['正常','已删除'],
       dialogDetailVisible: false,
+      fileUploadVisible : false,
       dialogStatus: '',
       downloadLoading: false
     }
   },
   created() {
-    this.listQuery.search = 0
     this.getList('/file/list','0208')
   },
   methods: {
@@ -198,7 +161,7 @@ export default {
     },
     handleFilter() {
       this.listQuery.page = 1
-      this.listQuery.search = 1
+      this.listQuery.searsh = 1
       this.getList('/file/search','0213')
     },
     handleModifyStatus(row, status) {
@@ -208,9 +171,16 @@ export default {
       })
       row.status = status
     },
-    handleDetail(row) {
-      this.dialogDetailVisible = true;
-      this.detail = row
+    handleImport() {
+      this.fileUploadVisible = true;
+    },
+    handleRestore(row) {
+      let deleteData = {boundary:"0210",fileId:row.id};
+     this.getRequest('/file/delete', deleteData).then(response => {
+            if (response) {
+              this.getList('/file/list','0208')
+            }
+          })
     },
     handleExport(row, index) {
       this.$message({
@@ -222,7 +192,7 @@ export default {
      let deleteData = {boundary:"0209",fileId:row.id};
      this.getRequest('/file/delete', deleteData).then(response => {
             if (response) {
-              this.getList('file/list','0208')
+              this.getList('/file/list','0208')
             }
           })
     },

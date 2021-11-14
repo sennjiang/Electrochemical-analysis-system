@@ -42,16 +42,16 @@ public class AlgorithmSendService extends BaseService {
         int rulingResult = Integer.parseInt((String) map.get("rulingResult"));
         int algorithmSendId = Integer.parseInt((String) map.get("algorithmSendId"));
         AlgorithmSend algorithmSend = new AlgorithmSend();
+        int algorithmId = Integer.parseInt((String) map.get("algorithmId"));
+        int sendType = Integer.parseInt((String) map.get("sendType"));
         if(rulingResult == 1) {  //审核通过
-            int sendType = Integer.parseInt((String) map.get("sendType"));
-            int algorithmId = Integer.parseInt((String) map.get("algorithmId"));
             algorithmSend.setAlgId(algorithmId);
 
             Algorithm algorithm = new Algorithm();
             algorithm.setAlgId(algorithmId);
 
             if(sendType == 0){  //添加算法操作
-                algorithm.setIsUsed(2); //设置启用
+                algorithm.setIsUsed(1); //设置启用
                 doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
                     @Override
                     public int doDataModifyExecutor(BaseDao baseDao) {
@@ -66,14 +66,17 @@ public class AlgorithmSendService extends BaseService {
                         return update;
                     }
                 });
+                //删除算法审核条目
+                algorithmSend.setAlgSendId(algorithmSendId);
+                deleteAlgorithmSend(map, message, algorithmSend);
             }else if (sendType < 0){    //删除算法操作
                 deleteAlgorithm(map, message, algorithmId);
             }else{              // 修改算法操作
                 //删除旧算法
-                deleteAlgorithm(map, message, algorithmId);
+                deleteAlgorithm(map, message, sendType);
                 //让新算法上架
                 Algorithm algorithm_new = new Algorithm();
-                algorithm_new.setAlgId(sendType);
+                algorithm_new.setAlgId(algorithmId);
                 algorithm_new.setIsUsed(2); //设置启用
                 algorithm_new.setChangeTime(new Timestamp(System.currentTimeMillis()));
                 doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
@@ -90,13 +93,30 @@ public class AlgorithmSendService extends BaseService {
                         return update;
                     }
                 });
+                //删除算法审核条目
+                algorithmSend.setAlgSendId(algorithmSendId);
+                deleteAlgorithmSend(map, message, algorithmSend);
+            }
+        } else if(rulingResult == 0){   //审核不通过，并且（只要不是删除申请都要删除掉因为申请提案而生成的文件）
+            if (sendType>=0)
+                deleteAlgorithm(map, message, algorithmId);
+            else{
+                algorithmSend.setAlgSendId(algorithmSendId);
+                deleteAlgorithmSend(map, message, algorithmSend);
             }
         }
-        //todo 无论审核通过与否都删除审核完成后的申请条目！！！！待修改
+    }
+
+    /**
+     * 删除算法审核条目
+     * @param map 存放必要的信息数据
+     * @param message 处理成功与否的信息记录
+     * @param algorithmSend 对应的算法实体，用于删除使用
+     */
+    private void deleteAlgorithmSend(Map map, StringBuilder message, AlgorithmSend algorithmSend) {
         doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
-                algorithmSend.setAlgSendId(algorithmSendId);
                 int del = baseDao.delete(algorithmSend);
                 if (del != 1){
                     map.put("code", 500);
@@ -130,13 +150,16 @@ public class AlgorithmSendService extends BaseService {
                     if (delete != 1) {
                         map.put("code", 500);
                         message.append("算法删除审核失败 ");
+                        map.put("message", message.toString());
                     } else {
                         map.put("code", 200);
                         message.append("算法删除审核成功 ");
+                        map.put("message", message.toString());
                     }
                 } else {
                     map.put("code", 500);
                     message.append("算法文件删除失败 ");
+                    map.put("message", message.toString());
                 }
                 return delete;
             }

@@ -1,14 +1,11 @@
 package com.bluedot.electrochemistry.dao.base;
 
 import com.bluedot.electrochemistry.pojo.domain.*;
-
 import java.sql.Timestamp;
 import java.util.List;
-
 import com.bluedot.electrochemistry.pojo.domain.File;
 import com.bluedot.electrochemistry.pojo.vo.AlgorithmSendView;
 import com.bluedot.electrochemistry.pojo.vo.AlgorithmView;
-import com.bluedot.framework.simplespring.core.annotation.Repository;
 
 /**
  * @author zero
@@ -21,16 +18,16 @@ public interface BaseMapper {
     /**
      * 查询所有用户
      *
-     * @return
+     * @return List<User>
      */
     List<User> queryUser();
 
     /**
      * 没有key
-     * @param pageSize
-     * @param currentPage
-     * @param key
-     * @return
+     * @param pageSize pageSize
+     * @param currentPage currentPage
+     * @param key key
+     * @return List<User>
      */
     List<User> listUser(int pageSize, int currentPage, String key);
 
@@ -45,8 +42,8 @@ public interface BaseMapper {
 
     /**
      * 根据key查总数
-     * @param key
-     * @return
+     * @param key key
+     * @return Long
      */
     Long countUserByKey(String key);
 
@@ -66,13 +63,13 @@ public interface BaseMapper {
      */
     List<User> queryUsersByUsername(int username);
 
-    /**
-     *  登录
-     * @param username 用户名
-     * @param email 邮箱
-     * @return
-     */
-    User login(int username, String email);
+//    /**
+//     *  登录
+//     * @param username 用户名
+//     * @param email 邮箱
+//     * @return
+//     */
+//    User login(int username, String email);
 
     /**
      * 根据email查询用户
@@ -126,7 +123,7 @@ public interface BaseMapper {
 
     /**
      * 根据查询信息获取管理员列表
-     * @return管理员列表
+     * @return 管理员列表
      */
     List<User> getAdminsByQuery(String query1 ,String query2, int pageStart , int pageSize);
 
@@ -134,16 +131,15 @@ public interface BaseMapper {
     /**
      *
      * 根据查询信息获取管理员数据总数
-     * @param
-     * @return
+     * @return Long
      */
     Long getAdminCountByQuery(String query1 , String query2);
 
     /**
      *
      * 根据用户名和权限编号，查询权限id
-     * @param username
-     * @param roleId
+     * @param username username
+     * @param roleId roleId
      * @return UserRoleId
      */
     UserRole getUserRoleId(int username,int roleId);
@@ -151,21 +147,21 @@ public interface BaseMapper {
     /**
      *
      * 根据用户名查询用户
-     * @param username
-     * @return
+     * @param username username
+     * @return User
      */
     User getQueryEditAdmin(int username);
 
-    /**
-     * 根据查询条件获取用户信息列表
-     *
-     * @param queryCondition 查询条件（字段）
-     * @param queryValue     要查询的值
-     * @param pageStart      页码
-     * @param pageSize       每页大小
-     * @return 管理员列表
-     */
-    List<User> getAdminByQueryCondition(String queryCondition, String queryValue, int pageStart, int pageSize);
+//    /**
+//     * 根据查询条件获取用户信息列表
+//     *
+//     * @param queryCondition 查询条件（字段）
+//     * @param queryValue     要查询的值
+//     * @param pageStart      页码
+//     * @param pageSize       每页大小
+//     * @return 管理员列表
+//     */
+//    List<User> getAdminByQueryCondition(String queryCondition, String queryValue, int pageStart, int pageSize);
 
     /**
      * 根据查询条件获取用户数据总数
@@ -230,9 +226,6 @@ public interface BaseMapper {
 
     /**
      * 根据查询条件获取角色信息列表
-     *
-     * @param queryCondition 查询条件（字段）
-     * @param queryValue     要查询的值
      * @param pageStart      页码
      * @param pageSize       每页的大小
      * @return 角色信息列表
@@ -242,8 +235,6 @@ public interface BaseMapper {
     /**
      * 根据查询条件获取角色数量
      *
-     * @param queryCondition 查询条件（字段）
-     * @param queryValue     要查询的值
      * @return 角色数量
      */
     Long getRoleCountByQuery(String query);
@@ -255,9 +246,9 @@ public interface BaseMapper {
     /**
      * 比较hash值
      *
-     * @param File_hash
-     * @param username
-     * @return
+     * @param File_hash File_hash
+     * @param username username
+     * @return Long
      */
     Long contrastFile(String File_hash, int username);
 
@@ -398,11 +389,34 @@ public interface BaseMapper {
 
     Long countFiles(short type, short status, int username);
 
+    List<File> listFilesByAdmin0(short type, Integer pageStart, Integer pageSize);
+
+    Long countFilesByAdmin0(short type);
+
     List<Operation> listOperationsBySuperAdmin(Integer type, Integer pageStart, Integer pageSize);
+
+    List<Operation> listOperationsByAdmin(Integer type, Integer pageStart, Integer pageSize);
 
     List<Operation> listOperationsByUser(Integer type, Integer username, Integer pageStart, Integer pageSize);
 
-    Long countOperations(Integer type);
+    Long countListOperationsBySuperAdmin(Integer type);
+
+    Long countListOperationsByAdmin(Integer type);
+
+    Long countListOperationsByUser( Integer username,Integer type);
+
+
+    List<Operation> searchOperationsByUser(String title, int username, Integer type, int pageStart, Integer pageSize);
+
+    List<Operation> searchOperationsByAdmin(String title0,String title1, Integer type, int pageStart, Integer pageSize);
+
+    List<Operation> searchOperationsBySuperAdmin(String title0,String title1, Integer type, int pageStart, Integer pageSize);
+
+    Long countSearchOperationsByUser(String title, int username, Integer type);
+
+    Long countSearchOperationsByAdmin(String title0,String title1,Integer type);
+
+    Long countSearchOperationsBySuperAdmin(String title0,String title1,Integer type);
 
     List<File> searchFileByAdmin(String title0,String title1, short type, int pageStart, Integer pageSize);
 
@@ -412,31 +426,16 @@ public interface BaseMapper {
 
     Long countFilesByUser(String title, int status, int username, short type);
 
-    List<Operation> searchOperationsByUser(String title, int username, short type, int pageStart, Integer pageSize);
-
-    Long countOperationsBySearchUser(String title, int username, short type);
-
-    List<Operation> searchOperationsByAdmin(String title0,String title1, short type, int pageStart, Integer pageSize);
-
-    Long countOperationsByAdmin(String title0,String title1, short type);
-
-    Long countOperationsByUser( Integer username,Integer type);
-
-    List<Operation> listOperationsByAdmin(Integer type, Integer pageStart, Integer pageSize);
-
-    Long countAdminOperations(Integer type);
-
-
     /**
      * 查询处理中的解冻申请
-     * @return
+     * @return List<Unfreeze>
      */
     List<Unfreeze> queryUnfreezeByCurrent(String key, int currentPage, int pageSize);
 
     /**
      * 查询总共数量
-     * @param key
-     * @return
+     * @param key key
+     * @return Long
      */
     Long countUnfreezeByKey (String key);
 }

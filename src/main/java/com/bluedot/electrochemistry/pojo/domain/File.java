@@ -29,7 +29,7 @@ public class File {
     /**
      * 文件大小
      */
-    private Double size;
+    private String size;
     /**
      * 文件hash值
      */
@@ -86,7 +86,7 @@ public class File {
     public File() {
     }
 
-    public File(Integer id, String name, String url, Integer owner, Double size, String hash, Integer type, Integer status, Timestamp produceTime, Timestamp modifiedTime) {
+    public File(Integer id, String name, String url, Integer owner, String size, String hash, Integer type, Integer status, Timestamp produceTime, Timestamp modifiedTime) {
         this.id = id;
         this.name = name;
         this.url = url;
@@ -99,7 +99,7 @@ public class File {
 //        this.modifiedTime = modifiedTime;
     }
 
-    public File(Integer fileId, Double size, String hash, Timestamp modified_time, Double data_start, Double data_end, Double data_bottom, Double data_peak, Double data_precision, Double data_cycle, Double data_rate, Double data_results) {
+    public File(Integer fileId, String size, String hash, Timestamp modified_time, Double data_start, Double data_end, Double data_bottom, Double data_peak, Double data_precision, Double data_cycle, Double data_rate, Double data_results) {
         this.id = fileId;
         this.size = size;
         this.hash = hash;
@@ -147,11 +147,11 @@ public class File {
         this.owner = owner;
     }
 
-    public Double getSize() {
+    public String getSize() {
         return size;
     }
 
-    public void setSize(Double size) {
+    public void setSize(String size) {
         this.size = size;
     }
 
@@ -269,5 +269,29 @@ public class File {
 
     public void setDataResults(Double dataResult) {
         this.dataResults = dataResult;
+    }
+
+    @Override
+    public String toString() {
+        return "File{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", owner=" + owner +
+                ", size='" + size + '\'' +
+                ", hash='" + hash + '\'' +
+                ", type=" + type +
+                ", status=" + status +
+                ", produceTime='" + produceTime + '\'' +
+                ", modifiedTime='" + modifiedTime + '\'' +
+                ", dataStart=" + dataStart +
+                ", dataEnd=" + dataEnd +
+                ", dataBottom=" + dataBottom +
+                ", dataPeak=" + dataPeak +
+                ", dataPrecision=" + dataPrecision +
+                ", dataCycle=" + dataCycle +
+                ", dataRate=" + dataRate +
+                ", dataResults=" + dataResults +
+                '}';
     }
 }

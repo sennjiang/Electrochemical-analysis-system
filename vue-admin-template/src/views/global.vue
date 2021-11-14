@@ -138,7 +138,43 @@ const map = new Map([
         meta: {title: '算法管理', icon: 'user'}
       }
     ]
-  }]
+  }],
+  ['301', {
+    path: '/user/electrochemicalAnalysis',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'ElectrochemicalAnalysis',
+        component: () => import('@/views/ea/user/electrochemicalAnalysis/index'),
+        meta: {title: '电化学分析', icon: 'user'}
+      }
+    ]
+  }],
+  ['302', {
+    path: '/user/fileManage',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'FileManage',
+        component: () => import('@/views/ea/user/fileManage/index'),
+        meta: {title: '文件管理', icon: 'user'}
+      }
+    ]
+  }],
+  ['303', {
+    path: '/user/recycleManage',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'RecycleManage',
+        component: () => import('@/views/ea/user/recycleManage/index'),
+        meta: {title: '回收站管理', icon: 'user'}
+      }
+    ]
+  }],
 ])
 
 export default

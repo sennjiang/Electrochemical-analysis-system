@@ -5,6 +5,10 @@
       <el-button v-waves class="filter-item" style="margin-left: 20px; "  type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
+      <el-button class="filter-item" style="margin-left: 650px;" type="primary" icon="el-icon-edit" @click="handleImport">
+        添加
+      </el-button>
+      
     </div>
 
     <el-table
@@ -21,12 +25,12 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="文件名" width="150px" align="center">
+      <el-table-column label="文件名" width="120px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="文件大小" width="80px" align="center">
+      <el-table-column label="文件大小" width="100px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.size }}</span>
         </template>
@@ -53,6 +57,9 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
+          <el-button v-waves :loading="downloadLoading" size="mini" type="primary" icon="el-icon-download" @click="handleExport(row)">
+        导出
+      </el-button>
           <el-button type="primary" size="mini" @click="handleDetail(row)">
             详情
           </el-button>
@@ -72,6 +79,24 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
+
+    <el-dialog :visible.sync="fileUploadVisible">
+      <el-upload
+          align="center"
+          class="upload-demo"
+          drag
+          :action="fileUploadPath"
+          multiple>
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          <div class="el-upload__tip" slot="tip">只能上传txt文件，且不超过500kb</div>
+        </el-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="fileUploadVisible = false">
+          确认
+        </el-button>
+      </div>
+    </el-dialog>
 
     <el-dialog :visible.sync="dialogDetailVisible">
       <table
@@ -145,27 +170,26 @@ export default {
       total: 0,
       // 懒加载的数据
       detail: {dataBottom: 0,dataCycle: 0,dataEnd: 0,dataPeak: 0,dataPrecision: 0,dataRate: 0,dataResult: 0,dataStart: 0,id: 1,modifiedTime: "Oct 8, 2021 4:38:09 PM",name: "a.txt",owner: 1234567890,produceTime: "Oct 8, 2021 4:38:09 PM",size: 100,status: 1,type: 1,url: "/qwe"},
-      owner: '',
       listLoading: true,
       listQuery: {
         boundary: '0208',
         page: 1,
         limit: 10,
         title: undefined,
-        type: 2,
-        status: 1,
-        search: 0
+        type: 1,
+        status: 1
       },
+      fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/file/upload?boundary=0205&username='+this.$store.state.currentUsername,
       importanceOptions: ['正常','已删除'],
       calendarTypeOptions,
       statusOptions,
       dialogDetailVisible: false,
+      fileUploadVisible : false,
       dialogStatus: '',
       downloadLoading: false
     }
   },
   created() {
-    this.listQuery.search = 0
     this.getList('/file/list','0208')
   },
   methods: {
@@ -188,7 +212,6 @@ export default {
               this.list = response.data
               console.log(this.list)
               this.total = response.length
-              this.owner = response.username
             }
           })
           this.listLoading = false
@@ -198,7 +221,6 @@ export default {
     },
     handleFilter() {
       this.listQuery.page = 1
-      this.listQuery.search = 1
       this.getList('/file/search','0213')
     },
     handleModifyStatus(row, status) {
@@ -208,21 +230,24 @@ export default {
       })
       row.status = status
     },
+    handleImport() {
+      this.fileUploadVisible = true;
+    },
     handleDetail(row) {
       this.dialogDetailVisible = true;
       this.detail = row
     },
-    handleExport(row, index) {
+    handleExport(row) {
       this.$message({
-        message: 'Export TODO',
+        message: 'Export TODO fileid ' + row.id,
         type: 'success'
       })
     },
     handleDelete(row, index) {
-     let deleteData = {boundary:"0209",fileId:row.id};
+     let deleteData = {boundary:"0206",fileId:row.id};
      this.getRequest('/file/delete', deleteData).then(response => {
             if (response) {
-              this.getList('file/list','0208')
+              this.getList('/file/list','0208')
             }
           })
     },
