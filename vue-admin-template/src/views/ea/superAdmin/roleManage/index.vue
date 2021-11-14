@@ -162,13 +162,13 @@
       //最大数E:\project\Electrochemical-analysis-system\vue-admin-template
       handleSizeChange(newSize){
         this.queryInfo.pageSize = newSize;
-
+        this.getRoleList();
       },
 
       //pageNum的触发动作
       handleCurrentChange(newPage){
         this.queryInfo.pageNum = newPage;
-
+        this.getRoleList();
       },
 
 
