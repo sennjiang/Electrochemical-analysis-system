@@ -25,12 +25,12 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="文件名" width="150px" align="center">
+      <el-table-column label="文件名" width="120px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="文件大小" width="80px" align="center">
+      <el-table-column label="文件大小" width="100px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.size }}</span>
         </template>
@@ -170,7 +170,6 @@ export default {
       total: 0,
       // 懒加载的数据
       detail: {dataBottom: 0,dataCycle: 0,dataEnd: 0,dataPeak: 0,dataPrecision: 0,dataRate: 0,dataResult: 0,dataStart: 0,id: 1,modifiedTime: "Oct 8, 2021 4:38:09 PM",name: "a.txt",owner: 1234567890,produceTime: "Oct 8, 2021 4:38:09 PM",size: 100,status: 1,type: 1,url: "/qwe"},
-      owner: '',
       listLoading: true,
       listQuery: {
         boundary: '0208',
@@ -180,7 +179,7 @@ export default {
         type: 1,
         status: 1
       },
-      fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/file/upload?boundary=0205&username='+this.owner,
+      fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/file/upload?boundary=0205&username='+this.$store.state.currentUsername,
       importanceOptions: ['正常','已删除'],
       calendarTypeOptions,
       statusOptions,
@@ -213,7 +212,6 @@ export default {
               this.list = response.data
               console.log(this.list)
               this.total = response.length
-              this.owner = response.username
             }
           })
           this.listLoading = false

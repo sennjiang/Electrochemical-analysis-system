@@ -32,7 +32,7 @@
           <span>{{ row.email }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="申请理由" width="400px" align="center">
+      <el-table-column label="申请理由" width="200px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.applicationReason }}</span>
         </template>

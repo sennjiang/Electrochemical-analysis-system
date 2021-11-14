@@ -159,6 +159,7 @@ public class FileService extends BaseService {
      *              dataCycle：文件数据实验的循环圈数
      */
     private void uploadFile(Map<String, Object> map) {
+
         java.io.File file = (java.io.File) map.get("file");
         BufferedReader reader = null;
         try {
@@ -205,7 +206,6 @@ public class FileService extends BaseService {
             }
             //x轴的最大值记录
             dataEnd = Double.parseDouble(dataArray[0]);
-            System.out.println("file ---------------- " + str);
             //数据库写入操作
             File userFile = new File();
             userFile.setDataStart(dataStart);
@@ -215,13 +215,12 @@ public class FileService extends BaseService {
             userFile.setDataPrecision(dataPrecision);
             //将去除后缀名的文件名注入
             userFile.setName((file.getName()).split("[.]")[0]);
-            userFile.setUrl(file.toString());
+            userFile.setUrl((String) map.get("filePath"));
             userFile.setOwner(Integer.parseInt((String) map.get("username")));
             userFile.setSize(file.length()+"Byte");
             userFile.setType(1);
             userFile.setStatus(1);
             userFile.setProduceTime(new Timestamp(new Date().getTime()));
-
             doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
                 @Override
                 public int doDataModifyExecutor(BaseDao baseDao) {
@@ -229,6 +228,7 @@ public class FileService extends BaseService {
                 }
             });
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             map.put("message", e.getMessage());
             map.put("code", 500);
         } finally {
