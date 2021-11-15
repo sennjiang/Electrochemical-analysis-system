@@ -207,7 +207,7 @@ export default {
 
     }
   },
-  // 浏览器的后退情况
+  // 浏览器的后退 1.1
   mounted () {
     if (window.history && window.history.pushState) {
       // 向历史记录中插入了当前页
@@ -219,8 +219,7 @@ export default {
     window.removeEventListener('popstate', this.goBack, false);
   },
   methods: {
-
-    // 浏览器后退的场景
+    // 浏览器后退 1.2
     goBack () {
       sessionStorage.clear();
       window.history.back();

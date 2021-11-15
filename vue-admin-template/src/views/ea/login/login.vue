@@ -151,13 +151,18 @@ export default {
                     }
                     this.$store.commit('modifyRouters', this.currentRoles)
                   })
+                  this.$message.success('登录成功')
                   this.$router.push({path: this.redirect || '/'})
 
                 }
 
                 // 用户状态被冻结, 状态码为0
                 if (resp.userInfo.status === 0) {
-                  // todo 跳转到解冻申请页
+                  // 跳转到解冻申请页
+                  this.$message.warning('账号异常, 请先解锁账号')
+                  let tempUserKey = Math.round(Math.random()*99999999+10000000).toString()
+                  window.sessionStorage.setItem('tokenStr', tempUserKey)
+                  this.$router.push('/unfreezeApplicationVerify')
                 }
 
                 // 剩下被删除状态, 状态码为2

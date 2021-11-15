@@ -46,8 +46,8 @@ export default {
     let validateEmail = (rule, value, callback) => {
       if (!isEmail(value)) {
         callback(new Error('邮箱格式错误'))
-      } else if (!this.existUser()) {
-        callback(new Error('邮箱已存在'))
+      } else if (this.existUser()) {
+        callback(new Error('用户不存在'))
       } else {
         callback()
       }
@@ -106,7 +106,27 @@ export default {
     this.userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
   },
 
+  // 浏览器的后退 1.1
+  mounted () {
+    if (window.history && window.history.pushState) {
+      // 向历史记录中插入了当前页
+      history.pushState(null, null, document.URL);
+      window.addEventListener('popstate', this.goBack, false);
+    }
+  },
+
+  destroyed () {
+    window.removeEventListener('popstate', this.goBack, false);
+  },
+
   methods: {
+
+    // 浏览器后退 1.2
+    goBack () {
+      sessionStorage.clear();
+      window.history.back();
+    },
+
     load() {
       this.loadState = !this.loadState;
     },
@@ -156,10 +176,10 @@ export default {
       // const {data: resp} = await this.$http.post('/existUserByEmail', this.emailForm.email)
       await this.postRequest('/existUserByEmail', {boundary: '0110', email: this.emailForm.email}).then(resp => {
         if (resp.code === 200) {
-          // 该email不存在, 可以注册
-          return false;
+          // 该email不存在
+          return true;
         } else {
-          // 该email已存在, 可以注册
+          // 该email已存在
           return false;
         }
       })
