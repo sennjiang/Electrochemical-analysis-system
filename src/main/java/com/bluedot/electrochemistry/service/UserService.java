@@ -53,7 +53,6 @@ public class UserService extends BaseService {
         if (user != null && password.equals(user.getPassword())) {
             map.put("userInfo", user);
             map.put("code", 200);
-            map.put("message", "登录成功");
         } else {
             map.put("code", 500);
             map.put("message", "账号或者密码错误");
@@ -248,8 +247,10 @@ public class UserService extends BaseService {
         BaseMapper mapper = mapperFactory.createMapper();
         Long userCount = mapper.countUserByEmail(email);
         if (userCount > 0) {
-            map.put("code", 500);
+            // 写成50原因, 防止前端报错
+            map.put("code", 50);
         } else {
+            // 200数据库中不存在该用户
             map.put("code", 200);
         }
     }

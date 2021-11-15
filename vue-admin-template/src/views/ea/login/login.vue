@@ -126,7 +126,6 @@ export default {
     login() {
       this.$refs.loginForm.validate(async valid => {
         if (valid) {
-
           if (this.verifyStatus) {
             this.loading = true
             this.postRequest('/login', this.loginForm).then(resp => {
@@ -134,14 +133,15 @@ export default {
                 // 用户状态正常,状态码为1,正常登录
                 if (resp.userInfo.status === 1) {
                   // 将服务器返回的token存储到sessionStorage
-                  const tokenStr = resp.username
-
+                  const tokenStr = resp.userInfo.username
                   window.sessionStorage.setItem('tokenStr', tokenStr)
                   window.sessionStorage.setItem('userInfo', JSON.stringify(resp.userInfo))
                   // 将userInfo存入session
-                  this.$store.commit('modifyCurrentUsername', resp.username)
-                  this.$store.commit('modifyCurrentNickname', resp.nickname)
-                  this.$store.commit('modifyCurrentStatus', resp.status)
+                  this.$store.commit('modifyCurrentUsername', resp.userInfo.username)
+                  this.$store.commit('modifyCurrentNickname', resp.userInfo.nickname)
+                  this.$store.commit('modifyCurrentStatus', resp.userInfo.status)
+
+                  sessionStorage.setItem('store', JSON.stringify(this.$store.state))
 
                   // 获得用户名后查找用户权限加载侧边栏
                   this.postRequest('/roles', { boundary : '1101', username : store.state.currentUsername }).then(resp => {
@@ -151,13 +151,18 @@ export default {
                     }
                     this.$store.commit('modifyRouters', this.currentRoles)
                   })
+                  this.$message.success('登录成功')
                   this.$router.push({path: this.redirect || '/'})
 
                 }
 
                 // 用户状态被冻结, 状态码为0
                 if (resp.userInfo.status === 0) {
-                  // todo 跳转到解冻申请页
+                  // 跳转到解冻申请页
+                  this.$message.warning('账号异常, 请先解锁账号')
+                  let tempUserKey = Math.round(Math.random()*99999999+10000000).toString()
+                  window.sessionStorage.setItem('tokenStr', tempUserKey)
+                  this.$router.push('/unfreezeApplicationVerify')
                 }
 
                 // 剩下被删除状态, 状态码为2

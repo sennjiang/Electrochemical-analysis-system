@@ -106,7 +106,24 @@ export default {
     this.userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
   },
 
+  // 浏览器的后退 1.1
+  mounted () {
+    if (window.history && window.history.pushState) {
+      // 向历史记录中插入了当前页
+      history.pushState(null, null, document.URL);
+      window.addEventListener('popstate', this.goBack, false);
+    }
+  },
+  destroyed () {
+    window.removeEventListener('popstate', this.goBack, false);
+  },
+
   methods: {
+    // 浏览器后退 1-2
+    goBack () {
+      sessionStorage.clear();
+      history.pushState(null, null, document.URL)
+    },
     load() {
       this.loadState = !this.loadState;
     },
