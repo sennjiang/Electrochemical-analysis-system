@@ -258,7 +258,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        name: 'FileManage',
+        name: 'adminFileManage',
         component: () => import('@/views/ea/admin/fileManage/index'),
         meta: { title: '文件管理', icon: 'user' }
       }
@@ -388,7 +388,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        name: 'FileManage',
+        name: 'userFileManage',
         component: () => import('@/views/ea/user/fileManage/index'),
         meta: {title: '文件管理', icon: 'user'}
       }

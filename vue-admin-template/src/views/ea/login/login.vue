@@ -126,7 +126,6 @@ export default {
     login() {
       this.$refs.loginForm.validate(async valid => {
         if (valid) {
-
           if (this.verifyStatus) {
             this.loading = true
             this.postRequest('/login', this.loginForm).then(resp => {
@@ -134,14 +133,15 @@ export default {
                 // 用户状态正常,状态码为1,正常登录
                 if (resp.userInfo.status === 1) {
                   // 将服务器返回的token存储到sessionStorage
-                  const tokenStr = resp.username
-
+                  const tokenStr = resp.userInfo.username
                   window.sessionStorage.setItem('tokenStr', tokenStr)
                   window.sessionStorage.setItem('userInfo', JSON.stringify(resp.userInfo))
                   // 将userInfo存入session
-                  this.$store.commit('modifyCurrentUsername', resp.username)
-                  this.$store.commit('modifyCurrentNickname', resp.nickname)
-                  this.$store.commit('modifyCurrentStatus', resp.status)
+                  this.$store.commit('modifyCurrentUsername', resp.userInfo.username)
+                  this.$store.commit('modifyCurrentNickname', resp.userInfo.nickname)
+                  this.$store.commit('modifyCurrentStatus', resp.userInfo.status)
+
+                  sessionStorage.setItem('store', JSON.stringify(this.$store.state))
 
                   // 获得用户名后查找用户权限加载侧边栏
                   this.postRequest('/roles', { boundary : '1101', username : store.state.currentUsername }).then(resp => {
