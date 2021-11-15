@@ -434,7 +434,14 @@
     <node>
         <number>1403</number>
         <service>RoleService</service>
-        <method>addRole</method>
+        <method>addRole</method>w
+    </node>
+
+    <node>
+        <number>1501</number>
+        <service>SystemService</service>
+        <method>systemBackup</method>
+
     </node>
 
 </service_mapping>

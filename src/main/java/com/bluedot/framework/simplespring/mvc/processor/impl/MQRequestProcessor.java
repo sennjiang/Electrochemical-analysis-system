@@ -250,7 +250,7 @@ public class MQRequestProcessor implements RequestProcessor {
                     String filename = item.getName();
                     File file1 = new File(realPath, filename);
                     data.put("file",file1);
-                    data.put("filePath","/uploads");
+                    data.put("filePath",CommonMapper.filePathMapper.getOrDefault(boundary,"/uploads"));
                     item.write(file1);
                     item.delete();
                 }

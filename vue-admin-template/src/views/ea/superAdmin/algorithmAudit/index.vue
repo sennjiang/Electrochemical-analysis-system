@@ -202,12 +202,10 @@ export default {
       this.postRequest('/algorithm/loadingCode', this.loadingSet).then(response => {
         if (response) {
           this.detail.algCode = response.algCode;
+          this.dialogDetailVisible = true;
           console.log(this.detail.algCode);
         }
       });
-      setTimeout(() => {
-        this.dialogDetailVisible = true;
-      }, 100)
     },
     //审核通过与否，1通过，0未通过
     ruling(result){

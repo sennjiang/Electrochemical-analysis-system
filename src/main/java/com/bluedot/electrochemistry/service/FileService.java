@@ -37,7 +37,7 @@ public class FileService extends BaseService {
      */
     private void export(Map<String, Object> map) {
         //测试1,"a.txt","/qwe",1234567890,100d,(short)1,(short)1
-        File file = new File(1, "1.txt", "/user/file", 12345, "1D", "sadf123erd", 1, 1, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
+        File file = new File(1, "1.txt", "/user/file", 12345, "1", "sadf123erd", 1, 1, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
         file.setModifiedTime(new Timestamp(System.currentTimeMillis()));
         file.setProduceTime(new Timestamp(System.currentTimeMillis()));
         List<File> list = new ArrayList<>();
@@ -60,6 +60,11 @@ public class FileService extends BaseService {
      */
     private void listFiles(Map<String, Object> map) {
         try {
+            String search = (String) map.get("search");
+            if ("1".equals(search)){
+                searchFiles(map);
+                return;
+            }
             String str = (String) map.get("username");
             int username = Integer.parseInt(str);
             Integer pageStart = Integer.parseInt((String) map.get("page"));
@@ -68,9 +73,15 @@ public class FileService extends BaseService {
             short status = Short.parseShort((String) map.get("status"));
 
             BaseMapper mapper = mapperFactory.createMapper();
-
-            List<File> files = mapper.listFiles(type, status, username, (pageStart - 1) * pageSize, pageSize);
-            Long size = mapper.countFiles(type, status, username);
+            List<File> files = null;
+            Long size = null;
+            if (type == 1) {
+                files = mapper.listFiles(type, status, username, (pageStart - 1) * pageSize, pageSize);
+                size = mapper.countFiles(type, status, username);
+            }else {
+                files = mapper.listFilesByAdmin0((short) 1,(pageStart - 1) * pageSize, pageSize);
+                size = mapper.countFilesByAdmin0((short) 1);
+            }
             map.put("data", files);
             map.put("code", 200);
             map.put("message", "文件列表加载完成");
@@ -98,14 +109,15 @@ public class FileService extends BaseService {
             Integer pageSize = Integer.parseInt((String) map.get("limit"));
             short type = Short.parseShort((String) map.get("type"));
             String title = (String) map.get("title");
+            Integer status = Integer.parseInt((String) map.get("status"));
             List<File> files = null;
             Long size = null;
             if (type == 1) {
-                files = mapper.searchFileByUser("%" + title + "%", 1,username, type, (pageStart - 1) * pageSize, pageSize);
-                size = mapper.countFilesByUser("%" + title + "%", 1,username, type);
+                files = mapper.searchFileByUser("%" + title + "%", status,username, (short) 1, (pageStart - 1) * pageSize, pageSize);
+                size = mapper.countFilesByUser("%" + title + "%", status,username, (short) 1);
             } else {
-                files = mapper.searchFileByAdmin("%" + title + "%","%" + title + "%", type, (pageStart - 1) * pageSize, pageSize);
-                size = mapper.countFilesByAdmin("%" + title + "%","%" + title + "%", type);
+                files = mapper.searchFileByAdmin("%" + title + "%","%" + title + "%", (short) 1, (pageStart - 1) * pageSize, pageSize);
+                size = mapper.countFilesByAdmin("%" + title + "%","%" + title + "%", (short) 1);
             }
 
             map.put("data", files);
@@ -144,8 +156,10 @@ public class FileService extends BaseService {
      *
      * @param map 数据，其中包含必要参数：
      *              username：文件上传的用户账号
+     *              dataCycle：文件数据实验的循环圈数
      */
     private void uploadFile(Map<String, Object> map) {
+
         java.io.File file = (java.io.File) map.get("file");
         BufferedReader reader = null;
         try {
@@ -192,7 +206,6 @@ public class FileService extends BaseService {
             }
             //x轴的最大值记录
             dataEnd = Double.parseDouble(dataArray[0]);
-            System.out.println("file ---------------- " + str);
             //数据库写入操作
             File userFile = new File();
             userFile.setDataStart(dataStart);
@@ -202,13 +215,12 @@ public class FileService extends BaseService {
             userFile.setDataPrecision(dataPrecision);
             //将去除后缀名的文件名注入
             userFile.setName((file.getName()).split("[.]")[0]);
-            userFile.setUrl(file.toString());
+            userFile.setUrl((String) map.get("filePath"));
             userFile.setOwner(Integer.parseInt((String) map.get("username")));
             userFile.setSize(file.length()+"Byte");
             userFile.setType(1);
             userFile.setStatus(1);
             userFile.setProduceTime(new Timestamp(new Date().getTime()));
-
             doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
                 @Override
                 public int doDataModifyExecutor(BaseDao baseDao) {
@@ -216,6 +228,7 @@ public class FileService extends BaseService {
                 }
             });
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             map.put("message", e.getMessage());
             map.put("code", 500);
         } finally {
@@ -263,8 +276,10 @@ public class FileService extends BaseService {
         doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
-                int fileId = (int) map.get("fileId");
-                File file = new File(fileId, null, null, null, null, null, null, 2, null, null);
+                Integer fileId = Integer.parseInt((String) map.get("fileId"));
+                File file = new File();
+                file.setId(fileId);
+                file.setStatus(2);
                 return baseDao.update(file);
             }
         });
@@ -276,10 +291,12 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void restore(Map<String, Object> map) {
+        System.out.println("------");
         doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
-                int fileId = (int) map.get("fileId");
+                System.out.println("------"+baseDao);
+                int fileId = Integer.parseInt((String) map.get("fileId"));
                 File file = new File();
                 file.setId(fileId);
                 file.setStatus(1);
