@@ -441,7 +441,12 @@
         <number>1501</number>
         <service>SystemService</service>
         <method>systemBackup</method>
+    </node>
 
+    <node>
+        <number>1502</number>
+        <service>SystemService</service>
+        <method>systemReduction</method>
     </node>
 
 </service_mapping>

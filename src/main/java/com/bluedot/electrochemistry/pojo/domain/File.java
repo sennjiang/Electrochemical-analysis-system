@@ -86,6 +86,8 @@ public class File {
     public File() {
     }
 
+
+
     public File(Integer id, String name, String url, Integer owner, String size, String hash, Integer type, Integer status, Timestamp produceTime, Timestamp modifiedTime) {
         this.id = id;
         this.name = name;

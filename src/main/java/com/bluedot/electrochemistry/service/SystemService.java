@@ -5,8 +5,11 @@ import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.framework.simplespring.core.annotation.Service;
 
 import java.io.*;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,8 +34,25 @@ public class SystemService extends BaseService {
     private String sqlFilePath;
 
     //系统还原
-    private int systemReduction(Map map){
-        return 1;
+    private void systemReduction(Map<String,Object> map ){
+        try{
+            File file = new File("D:/MysqlFile");
+            String[] paths = file.list();
+            List<com.bluedot.electrochemistry.pojo.domain.File> fileList = new ArrayList<com.bluedot.electrochemistry.pojo.domain.File>();
+            int idx = 0;
+            for (String path : paths) {
+                com.bluedot.electrochemistry.pojo.domain.File file1 = new com.bluedot.electrochemistry.pojo.domain.File(++idx,path,"D:/MysqlFile",(Integer)map.get("username"),"2 KB","1",1,1,(Timestamp)(new Date()),(Timestamp)(new Date()));
+                fileList.add(file1);
+            }
+            map.put("fileList",fileList);
+            map.put("length",paths.length);
+            map.put("code",200);
+            map.put("message","查询成功");
+        }catch (Exception e){
+            map.put("code",500);
+            map.put("message","查询失败");
+        }
+
     }
 
     //系统备份
