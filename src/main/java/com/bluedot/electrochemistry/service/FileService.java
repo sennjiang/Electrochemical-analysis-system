@@ -8,6 +8,7 @@ import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.annotation.Service;
 import com.bluedot.framework.simplespring.inject.annotation.Autowired;
+import javafx.beans.binding.When;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 
 import java.io.*;
@@ -350,6 +351,40 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void loadingData(Map<String, Object> map) {
+        int fileId = Integer.parseInt((String) map.get("fileId")) ;
+        BaseMapper mapper = mapperFactory.createMapper();
+        File file = mapper.getFileById(fileId);
+        String url = file.getUrl();
+        url = "D://WorkPlace_Code//IDEA_Code//Electrochemical-analysis-system//" + url;
+        java.io.File f = new java.io.File(url);
+        List<String> vList = new ArrayList<>();
+        List<Double> aList = new ArrayList<>();
+
+        try {
+            BufferedReader fis = new BufferedReader(new FileReader(f));
+            String temp = null;
+            boolean flag = false;
+            while((temp = fis.readLine()) != null) {
+                if("Potential/V, Current/A".equals(temp)){
+                    temp = fis.readLine();
+                    flag = true;
+                    continue;
+                }
+                if (flag){
+                    if (temp.contains(",")){
+                        String[] split = temp.split(",");
+                        vList.add(split[0]);
+                        aList.add(Double.parseDouble(split[1]));
+                    }
+                }
+            }
+            map.put("detailA",aList);
+            map.put("detailV",vList);
+            map.put("file",file);
+        } catch (IOException e) {
+            map.put("message", e.getMessage());
+            map.put("code", 500);
+        }
 
     }
 

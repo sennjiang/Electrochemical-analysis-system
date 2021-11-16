@@ -9,6 +9,7 @@ import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.annotation.Service;
 import com.bluedot.framework.simplespring.inject.annotation.Autowired;
 import com.bluedot.framework.simplespring.mvc.RequestProcessorChain;
+import com.bluedot.framework.simplespring.mvc.monitor.Data;
 
 import javax.management.loading.MLetContent;
 import javax.servlet.ServletException;
@@ -142,7 +143,8 @@ public class RoleService extends BaseService{
         BaseMapper mapper = mapperFactory.createMapper();
         Role role1 = mapper.queryNewRoleId(role.getRoleName());
 
-
+        HttpServletRequest request = ((Data) map).getRequest();
+//        request.getAttribute("");
 
         //System.out.println(map.get("checkRightList"));
 

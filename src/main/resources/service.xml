@@ -141,10 +141,16 @@
         <service>FileService</service>
         <method>searchFiles</method>
     </node>
+
     <node>
         <number>0214</number>
         <service>FileService</service>
         <method>deleteFile</method>
+    </node>
+    <node>
+        <number>0215</number>
+        <service>FileService</service>
+        <method>loadingData</method>
     </node>
     <node>
         <number>0301</number>

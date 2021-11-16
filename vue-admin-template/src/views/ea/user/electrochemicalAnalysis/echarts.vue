@@ -5,6 +5,7 @@
     <div :class="echart" :style="{height:500,width:400}"/>
     <!-- 其他内容可以放 -->
   </div>
+  
 </template>
 
 <script>
@@ -14,6 +15,10 @@ require('echarts/theme/macarons') // echarts theme
 export default {
   data() {
     return {
+      resultVisible: false,
+      result: null,
+      xy: null,
+      yx:null,
       // echart对象
       chart: null,
       // x轴标点 改x轴动态更改此变量
@@ -23,7 +28,8 @@ export default {
       y2data: [120, 50, 60, 20, -100, 100, 70],
       // 点击点以后会将坐标值赋给x， y
       x: undefined,
-      y: undefined
+      y: undefined,
+      times: 0
     }
   },
   watch: {
@@ -224,12 +230,23 @@ export default {
 
       // 点击事件
       this.chart.on('click',(params) => {
+        this.times ++
         this.y = params.data
         this.x = this.xdata[params.dataIndex]
-        // 当前点的x坐标
-        console.log(this.x)
-        // 当前点的y坐标
-        console.log(this.y)
+        if ( this.times == 1) {
+          this.xy = [this.y,this.x]
+        }else if( this.times == 2){
+          this.yx = [this.y,this.x]
+          console.log(this.xy[0])
+          console.log(this.yx[0])
+          this.result = (this.xy[0] + this.yx[0] ) / 2,
+          this.resultVisible = true
+          this.$message({
+              message: this.result,
+              type: 'success'
+          })
+          this.times = 0;
+        }
       });
 
     }
