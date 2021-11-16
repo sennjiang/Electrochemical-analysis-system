@@ -283,7 +283,7 @@ public interface BaseMapper {
     /**
      * 根据文件id查找对应的文件
      *
-     * @param id        文件的id
+     * @param id  文件的id
      * @return 被查找到的指定文件
      * @author zero
      */
