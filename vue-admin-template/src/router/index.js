@@ -6,7 +6,7 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 import Register from '@/views/ea/user/register'
-import ModifyPasswordVerify from '@/views/ea/user/modifyPasswordVerify/index'
+import ModifyPasswordVerify from '@/views/ea/user/modifyPasswordVerify'
 import ModifyPasswordInfo from '@/views/ea/user/modifyPasswordInfo'
 import ModifyEmailVerify from '@/views/ea/user/modifyEmailVerify'
 import ModifyEmailInfo from '@/views/ea/user/modifyEmailInfo'
@@ -40,12 +40,6 @@ import ForgetPasswordVerify from "@/views/ea/user/forgetPasswordVerify";
  * all roles can be accessed
  */
 export const constantRoutes = [
-  // 登录
-  //{
-  //  path: '/login',
-  //  component: () => import('@/views/ea/login/login'),
-  //  hidden: true
-  //},
   {
     path: '/login',
     component: () => import('@/views/ea/login/login'),
