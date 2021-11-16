@@ -43,10 +43,7 @@
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.username)"></el-button>
             <!-- 删除 -->
             <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteUser(scope.row.username)"></el-button>
-            <!-- 权限 -->
-            <!-- 文字提示 enterable 隐藏 -->
-            <el-tooltip effect="dark" content="分配权限" placement="top-start" :enterable="false"></el-tooltip>
-            <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+
           </template>
         </el-table-column>
       </el-table>
@@ -214,7 +211,7 @@
           }
           //console.log(this.userList);
           this.total = res.numbers;//总管理员数封装
-          this.$message.success("管理员列表加载成功！！！");
+
         })
       },
 
@@ -236,9 +233,7 @@
         this.editStatusInfo.username = userInfo.username;
         this.editStatusInfo.status = userInfo.status;
         this.postRequest("/admin/adminStatusChanged", this.editStatusInfo).then(res => {
-          if(res.data!=1){
-            return this.$message.error("修改失败！！！");
-          } else return this.$message.success("修改成功！！！");
+
         })
 
       },
@@ -255,9 +250,9 @@
           this.addForm.boundary = '1003'
           this.postRequest("/admin/addAdmin",this.addForm).then(res=> {
             if(res.data!=2){
-              return this.$message.error("添加失败！！！");
+
             }else{
-              this.$message.success("添加成功！！！");
+
               this.addDialogVisible = false;
               this.getUserList();
             }
@@ -282,9 +277,9 @@
         this.deleteInfo.username = username;
         this.postRequest("/admin/deleteAdmin",this.deleteInfo).then(res=>{
           if(res.data != 1){
-            return this.$message.error("删除失败！");
+
           }
-          this.$message.success("删除成功！");
+
           this.getUserList();
         });
 
@@ -313,9 +308,9 @@
           this.editForm.boundary = '1006'
           this.postRequest("/admin/editAdmin", this.editForm).then(res => {
             if (res.data != 1) {
-              return this.$message.error("修改失败！！！");
+
             } else {
-              this.$message.success("修改成功！！！");
+
               this.editDialogVisible = false;
               this.getUserList();
             }
