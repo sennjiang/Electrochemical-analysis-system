@@ -31,30 +31,46 @@ public class AdminService extends BaseService {
      *
      */
 
+    @Autowired
+    BaseDao baseDao;
+
+    /**
+     * 查询管理员列表
+     * @param map
+     */
     private void queryAdmins(Map<String, Object> map) {
-        BaseMapper mapper = mapperFactory.createMapper();
-        List<User> adminlist = new ArrayList<>();
+        try{
+            BaseMapper mapper = mapperFactory.createMapper();
+            List<User> adminlist = new ArrayList<>();
 
-        Integer pageNum = Integer.parseInt((String) map.get("pageNum"));
-        Integer pageSize = Integer.parseInt((String) map.get("pageSize"));
-        //获取当前编号
-        int pageStart = (pageNum-1)*pageSize;
+            Integer pageNum = Integer.parseInt((String) map.get("pageNum"));
+            Integer pageSize = Integer.parseInt((String) map.get("pageSize"));
+            //获取当前编号
+            int pageStart = (pageNum-1)*pageSize;
 
 
-        //System.out.println(map.get("query"));
-        //query为""则查询所有用户，否则支持模糊查询
-        long numbers = 0 ;
-        String query = (String) map.get("query");
-        if(query.equals("")){
-            numbers = mapper.getAdminCount();
-            adminlist = mapper.getAdmins(pageStart,pageSize);
-        }else {
-            numbers = mapper.getAdminCountByQuery("%"+query+"%","%"+query+"%");
-            adminlist = mapper.getAdminsByQuery("%"+query+"%","%"+query+"%",pageStart,pageSize);
+            //System.out.println(map.get("query"));
+            //query为""则查询所有用户，否则支持模糊查询
+            long numbers = 0 ;
+            String query = (String) map.get("query");
+            if(query.equals("")){
+                numbers = mapper.getAdminCount();
+                adminlist = mapper.getAdmins(pageStart,pageSize);
+            }else {
+                numbers = mapper.getAdminCountByQuery("%"+query+"%","%"+query+"%");
+                adminlist = mapper.getAdminsByQuery("%"+query+"%","%"+query+"%",pageStart,pageSize);
+            }
+
+            map.put("data",adminlist);
+            map.put("numbers",numbers);
+
+            map.put("code",200);
+            map.put("message","管理员列表加载成功");
+
+        }catch (Exception e){
+            map.put("code",500);
+            map.put("message","管理员列表加载失败");
         }
-
-        map.put("data",adminlist);
-        map.put("numbers",numbers);
 
 
     }
@@ -89,16 +105,17 @@ public class AdminService extends BaseService {
      * @param map
      */
     private void modifyAdminState(Map<String , Object> map){
-        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
-            @Override
-            public int doDataModifyExecutor(BaseDao baseDao) {
-                int update = baseDao.update(packagingUser(map));
-                //System.out.println(update);
-                map.put("data",update);
-                return update;
-            }
-        });
+        try{
+            int update = baseDao.update(packagingUser(map));
+            //System.out.println(update);
+            map.put("data",update);
 
+            map.put("code",200);
+            map.put("code","修改状态成功");
+        }catch (Exception e){
+            map.put("code",500);
+            map.put("message","修改状态失败");
+        }
     }
 
 
@@ -108,18 +125,24 @@ public class AdminService extends BaseService {
      * @param map
      */
     private void addAdmin(Map<String , Object> map){
-        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
-            @Override
-            public int doDataModifyExecutor(BaseDao baseDao) {
-                User user = packagingUser(map);
 
+        try{
+            User user = packagingUser(map);
+            int addUser = baseDao.insert(user);
+
+            //添加用户成功时，为该用户赋予管理员角色
+            if(addUser == 1){
                 int addUserRole = baseDao.insert(new UserRole(user.getUsername(),200));
-                int addUser = baseDao.insert(user);
-
                 map.put("data",addUserRole+addUser);
-                return addUserRole+addUser;
             }
-        });
+
+            map.put("code",200);
+            map.put("message","添加成功");
+        }catch (Exception e){
+            map.put("code",500);
+            map.put("message","添加失败，当前用户（非管理员）已存在，请修改用户名");
+        }
+
     }
 
     /**
@@ -128,31 +151,43 @@ public class AdminService extends BaseService {
      * @param map
      */
     private void deleteAdmin(Map<String , Object> map){
+        try{
+            //查询该用户的管理员角色的ID
+            User user = packagingUser(map);
+            BaseMapper mapper = mapperFactory.createMapper();
+            UserRole userRole = mapper.getUserRoleId(user.getUsername(),200);
+            System.out.println(userRole.getUserRoleId());
 
-        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
-            @Override
-            public int doDataModifyExecutor(BaseDao baseDao) {
-                //查询该用户的管理员角色的ID
-                User user = packagingUser(map);
-                BaseMapper mapper = mapperFactory.createMapper();
-                UserRole userRole = mapper.getUserRoleId(user.getUsername(),200);
-                System.out.println(userRole.getUserRoleId());
+            //UserRole userRole = new UserRole(user.getUsername(),200);
 
-                //UserRole userRole = new UserRole(user.getUsername(),200);
+            int deleteUserRole = baseDao.delete(userRole);
 
-                int deleteUserRole = baseDao.delete(userRole);
-
-                map.put("data",deleteUserRole);
-                return deleteUserRole;
-            }
-        });
+            map.put("data",deleteUserRole);
+            map.put("code",200);
+            map.put("message","删除该用户管理员角色成功");
+        }catch (Exception e){
+            map.put("code",500);
+            map.put("message","删除该用户管理员角色失败");
+        }
     }
 
-    private void queryEditAdmin(Map<String, Object> map){
-        BaseMapper mapper = mapperFactory.createMapper();
-        User user = mapper.getQueryEditAdmin(Integer.parseInt((String) map.get("username")));
 
-        map.put("data",user);
+    /**
+     * 查询要修改的用户
+     * @param map
+     */
+    private void queryEditAdmin(Map<String, Object> map){
+        try{
+            BaseMapper mapper = mapperFactory.createMapper();
+            User user = mapper.getQueryEditAdmin(Integer.parseInt((String) map.get("username")));
+
+            map.put("data",user);
+            map.put("code",200);
+            map.put("message","加载当前用户成功");
+        }catch (Exception e){
+            map.put("code",500);
+            map.put("message","加载当前用户失败");
+        }
     }
 
     /**
@@ -183,17 +218,26 @@ public class AdminService extends BaseService {
     }
 
 
-    private void editAdmin(Map<String , Object> map){
-        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
-            @Override
-            public int doDataModifyExecutor(BaseDao baseDao) {
-                User user = packagingUser(map);
+    /**
+     * 修改用户
+     *
+     * @param map
+     */
 
-                int editAdmin = baseDao.update(user);
-                map.put("data",editAdmin);
-                return editAdmin;
-            }
-        });
+    private void editAdmin(Map<String , Object> map){
+        try{
+
+            User user = packagingUser(map);
+
+            int editAdmin = baseDao.update(user);
+            map.put("data",editAdmin);
+
+
+        }catch (Exception e){
+
+        }
+
+
     }
 
     /**

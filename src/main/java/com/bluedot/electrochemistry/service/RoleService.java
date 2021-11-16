@@ -146,6 +146,8 @@ public class RoleService extends BaseService{
         HttpServletRequest request = ((Data) map).getRequest();
 //        request.getAttribute("");
 
+
+
         //System.out.println(map.get("checkRightList"));
 
 
