@@ -39,9 +39,22 @@ function isEmail(s) {
 }
 
 export default {
-  name: "modifyEmailInfo",
+  name: "unfreezeApplicationVerify",
 
   data() {
+    // 校验邮箱
+    // let validateEmail = (rule, value, callback) => {
+    //   this.existUser();
+    //   if (!isEmail(value)) {
+    //     callback(new Error('邮箱格式错误'))
+    //   } else if (this.res) {
+    //     this.sendStatus = false
+    //     callback(new Error('用户不存在'))
+    //   } else {
+    //     callback()
+    //   }
+    // };
+
     // 校验邮箱
     let validateEmail = (rule, value, callback) => {
       if (!isEmail(value)) {
@@ -52,6 +65,7 @@ export default {
         callback()
       }
     };
+
     // 校验邮箱验证码
     let validateEmailCode = (rule, value, callback) => {
       if (this.emailForm.emailCode !== this.emailForm.emailCodeResp) {
@@ -62,6 +76,13 @@ export default {
       }
     };
     return {
+
+      // 是否可以发送邮件
+      sendStatus: false,
+
+      // 验证用户是否存在
+      res: false,
+
       loadState: false,
 
       // 表单数据对象
@@ -114,7 +135,6 @@ export default {
       window.addEventListener('popstate', this.goBack, false);
     }
   },
-
   destroyed () {
     window.removeEventListener('popstate', this.goBack, false);
   },
@@ -147,7 +167,7 @@ export default {
     // <!--发送邮箱验证码-->
     sendEmailCode() {
       let email = this.emailForm.email
-      if (this.checkEmail(email)) {
+      if (this.checkEmail(email) && this.sendStatus) {
         console.log(email)
         let time = 60
         this.buttonText = '已发送'
@@ -172,15 +192,17 @@ export default {
     },
 
     // 是否存在该用户, 参数为email, true:存在, false:不存在
-    async existUser() {
-      // const {data: resp} = await this.$http.post('/existUserByEmail', this.emailForm.email)
-      await this.postRequest('/existUserByEmail', {boundary: '0110', email: this.emailForm.email}).then(resp => {
+    existUser() {
+      // const {data: resp} = await this.$http.post('/existUserByEmail', this.userForm.email)
+      this.postRequest('/existUserByEmail', {boundary: '0110', email: this.emailForm.email}).then(resp => {
         if (resp.code === 200) {
           // 该email不存在
-          return true;
-        } else {
-          // 该email已存在
+          this.$message.error('用户不存在')
           return false;
+        } else {
+          // 该email已存在, 不可以注册
+          this.sendStatus = true
+          return true;
         }
       })
     },

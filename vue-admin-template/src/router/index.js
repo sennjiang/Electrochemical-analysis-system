@@ -14,6 +14,7 @@ import UnfreezeApplicationVerify from '@/views/ea/user/unfreezeApplicationVerify
 import UnfreezeApplicationInfo from '@/views/ea/user/unfreezeApplicationInfo'
 import LogoutUserVerify from '@/views/ea/user/logoutUserVerify'
 import LogoutUserInfo from '@/views/ea/user/logoutUserInfo'
+import ForgetPasswordVerify from "@/views/ea/user/forgetPasswordVerify";
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -101,6 +102,13 @@ export const constantRoutes = [
     hidden: true
   },
 
+  // 忘记密码
+  {
+    path: '/forgetPasswordVerify',
+    component: ForgetPasswordVerify,
+    hidden: true
+  },
+
   // 注销账户验证
   {
     path: '/logoutUserVerify',
@@ -133,12 +141,6 @@ export const constantRoutes = [
       component: () => import('@/views/ea/admin/info/index'),
       meta: { title: '个人信息', icon: 'user' }
     }]
-  },
-
-  {
-    path: '/forgetPasswordVerify',
-    component: () => import('@/views/ea/user/forgetPasswordVerify'),
-    hidden: true
   },
 
   {
