@@ -10,6 +10,9 @@
         <el-form-item prop="email">
           <label style="font-size: large;">邮箱:&nbsp;&nbsp;&nbsp;&nbsp;</label>
           <el-input style="width: 300px;" v-model="emailForm.email"></el-input>
+          <div class="aaaa">
+            {{ message }} 
+        </div>
           <!--<span style="width: 300px; font-size: large" v-text="userInfo.email"></span>-->
         </el-form-item>
         <br/>
@@ -58,7 +61,8 @@ export default {
     // 校验邮箱
     let validateEmail = (rule, value, callback) => {
       if (!isEmail(value)) {
-        callback(new Error('邮箱格式错误'))
+         callback(new Error(''))
+        this.message = '邮箱格式错误'
       } else if (this.existUser()) {
         callback(new Error('用户不存在'))
       } else {
@@ -85,6 +89,7 @@ export default {
 
       loadState: false,
 
+      message: null,
       // 表单数据对象
       emailForm: {
         email: '',
@@ -298,13 +303,21 @@ body {
   width: 200px;
   left: 5%;
 }
-
 .code button {
   position: relative;
   left: 8%;
   width: 90px;
   height: 38px;
   text-align: center;
+}
+.aaaa{
+    color: #F56C6C;
+    font-size: 12px;
+    line-height: 1;
+    padding-top: 4px;
+    position: absolute;
+    top: 100%;
+    left: 25%;
 }
 </style>
 

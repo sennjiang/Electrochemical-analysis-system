@@ -43,6 +43,12 @@ public class CommonMapper {
 
     public final static List<String> fileList = new ArrayList<>();
 
+    /**
+     * 请求白名单（以 boundary 为 键）
+     */
+    public static List<String> writeList = new ArrayList<>();
+
+
     public void initMapper(Properties contextConfig) {
         logger.debug("start init mapper ... ");
         initFileTypeMapper();
@@ -50,7 +56,16 @@ public class CommonMapper {
         initMethodMapper(contextConfig);
         initFileList(contextConfig);
         initFilePathMapper(contextConfig);
+        initWhitePathMapper(contextConfig);
         logger.debug("end init mapper ... ");
+    }
+
+    private void initWhitePathMapper(Properties contextConfig) {
+        String whiteList = contextConfig.getProperty("whiteList");
+        if (whiteList.contains(",")) {
+            String[] split = whiteList.split(",");
+            writeList.addAll(Arrays.asList(split));
+        }
     }
 
     private void initFilePathMapper(Properties contextConfig) {
