@@ -242,7 +242,7 @@ public class UserService extends BaseService {
      *
      * @param map
      */
-    private void existUserByEmail(Map map) {
+    private void existUserByEmail(Map<String,Object> map) {
         String email = (String) map.get("email");
         BaseMapper mapper = mapperFactory.createMapper();
         Long userCount = mapper.countUserByEmail(email);
@@ -378,12 +378,14 @@ public class UserService extends BaseService {
      * @param map 头像图片
      */
     private void uploadAvatar(Map<String, Object> map) {
+        System.out.println("-------");
         java.io.File file = (java.io.File) map.get("file");
         String portraitPath = "avatar/" + file.getName();
         Integer username = Integer.parseInt((String) map.get("username"));
         User user = new User();
         user.setUsername(username);
         user.setPortrait(portraitPath);
+        System.out.println(user);
         doSimpleModifyTemplate(map, new ServiceCallback<User>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {

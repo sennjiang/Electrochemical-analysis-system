@@ -42,10 +42,7 @@ public class MQRequestProcessor implements RequestProcessor {
 
     private Logger logger = LogUtil.getLogger();
 
-    /**
-     * 请求白名单（以 boundary 为 键）
-     */
-    private static List<String> writeList = new ArrayList<>();
+
 
     /**
      * 获取到当前运行环境的可用处理器数量
@@ -69,13 +66,6 @@ public class MQRequestProcessor implements RequestProcessor {
      * 标识request 唯一id 并线程安全，自增
      */
     private AtomicLong requestId = new AtomicLong(1);
-
-    /**
-     * 初始化白名单
-     */
-    static {
-        writeList.add("0101");
-    }
 
     /**
      * 日志线程处理对象
@@ -215,7 +205,7 @@ public class MQRequestProcessor implements RequestProcessor {
         data.setRequest(request);
 
         if (username == null || boundary == null) {
-            if (!CommonMapper.fileList.contains(boundary) && !writeList.contains(boundary)){
+            if (!CommonMapper.fileList.contains(boundary) && !CommonMapper.writeList.contains(boundary)){
                 return null;
             }
         }
