@@ -5,7 +5,7 @@
     <div :class="echart" :style="{height:500,width:400}"/>
     <!-- 其他内容可以放 -->
   </div>
-  
+
 </template>
 
 <script>
@@ -13,6 +13,20 @@ import * as echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 
 export default {
+  props:{
+    detailV:{
+      type:Array,
+      required: true
+    },
+    detailA:{
+      type:Array,
+      required: true
+    },
+    curveAmount:{
+      type:Number,
+      required: true
+    }
+  },
   data() {
     return {
       resultVisible: false,
@@ -55,8 +69,12 @@ export default {
     if (!this.chart) {
       return
     }
-    this.chart.dispose()
+    this.chart.dispose();
     this.chart = null
+  },
+  created() {
+    this.xdata = this.detailV;
+    this.y1data = this.detailA;
   },
   methods: {
     initChart() {

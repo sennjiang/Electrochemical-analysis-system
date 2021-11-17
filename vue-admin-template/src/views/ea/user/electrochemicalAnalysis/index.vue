@@ -9,13 +9,13 @@
       <el-button class="filter-item" style="margin-left: 20px;" type="primary" icon="el-icon-edit" @click="handleDataDetail">
         展示数据
       </el-button>
-      
+
     </div>
-    
+
     <div style="margin-top: 20px;" v-if="showEcharts">
-        <echarts></echarts>
+        <echarts :detailV="detailV" :detailA="detailA" :curveAmount="curveAmount"></echarts>
     </div>
-    
+
     <!-- <el-table
 
       :key="tableKey"
@@ -75,7 +75,7 @@
         </template>
       </el-table-column>
     </el-table> -->
-      
+
       <!-- <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -218,7 +218,7 @@ import echarts from "@/views/ea/user/electrochemicalAnalysis/echarts"
 
 export default {
   name: 'ElectrochemicalAnalysis',
-  components: { 
+  components: {
     Pagination,
     echarts
   },
@@ -250,6 +250,7 @@ export default {
       downloadLoading: false,
       dataDtailVisible: false,
       filesVisible: false,
+      curveAmount:0,  //曲线数量
       showEcharts: false
     }
   },
@@ -265,7 +266,7 @@ export default {
         this.listQuery.limit=val,
         this.getList('/file/list','0208')
       },
-      handleCurrentChange(val) {
+    handleCurrentChange(val) {
       this.listQuery.page=val,
         this.getList('/file/list','0208')
     },
@@ -310,16 +311,17 @@ export default {
      let fileData = {boundary:"0215",fileId:row.id};
      this.getRequest('/file/detail', fileData).then(response => {
             if (response) {
-              this.detailV = response.detailV
-              this.detailA = response.detailA.map(Number)
-              this.detail = this.list[index]
-              this.filesVisible = false 
-              console.log(this.detailA)
+              this.detailV = response.detailV;
+              this.detailA = response.detailA.map(Number);
+              this.detail = this.list[index];
+              this.filesVisible = false;
+              console.log(this.detailA);
               this.$bus.$emit("sendAV", this.detailA, this.detailV);
+              this.curveAmount++;
               this.showEcharts = true;
             }
           })
-         
+
     },
     formatTime(filterVal) {
       return this.list.map(v => filterVal.map(j => {
