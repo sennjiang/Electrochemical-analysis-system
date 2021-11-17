@@ -242,7 +242,7 @@ public class UserService extends BaseService {
      *
      * @param map
      */
-    private void existUserByEmail(Map map) {
+    private void existUserByEmail(Map<String,Object> map) {
         String email = (String) map.get("email");
         BaseMapper mapper = mapperFactory.createMapper();
         Long userCount = mapper.countUserByEmail(email);
