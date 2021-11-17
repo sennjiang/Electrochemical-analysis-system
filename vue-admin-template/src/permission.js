@@ -9,7 +9,7 @@ import { loadVuex } from '@/utils/index.js'
 
 NProgress.configure({ showSpinner: false }) // NProgress配置
 
-const whiteList = ['/login', '/unfreezeApplicationVerify', '/register', '/forgetPasswordVerify'] // no redirect whitelist （白名单）
+const whiteList = ['/login', '/unfreezeApplicationVerify','/unfreezeApplicationInfo', '/register', '/forgetPasswordVerify','/forgetPasswordInfo', ] // no redirect whitelist （白名单）
 
 
 

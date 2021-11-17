@@ -176,6 +176,7 @@ export default {
     existUser() {
       // const {data: resp} = await this.$http.post('/existUserByEmail', this.userForm.email)
       this.postRequest('/existUserByEmail', {boundary: '0110', email: this.emailForm.email}).then(resp => {
+        // 该email已存在, 不可以注册
         if (resp.code === 200) {
           // 该email不存在
           this.$message.error('用户不存在')

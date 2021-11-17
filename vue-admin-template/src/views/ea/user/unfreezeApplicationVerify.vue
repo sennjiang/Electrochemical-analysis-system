@@ -11,7 +11,7 @@
           <label style="font-size: large;">邮箱:&nbsp;&nbsp;&nbsp;&nbsp;</label>
           <el-input style="width: 300px;" v-model="emailForm.email"></el-input>
           <div class="aaaa">
-            {{ message }} 
+            {{ message }}
         </div>
           <!--<span style="width: 300px; font-size: large" v-text="userInfo.email"></span>-->
         </el-form-item>
@@ -61,8 +61,7 @@ export default {
     // 校验邮箱
     let validateEmail = (rule, value, callback) => {
       if (!isEmail(value)) {
-         callback(new Error(''))
-        this.message = '邮箱格式错误'
+         callback(new Error('邮箱格式错误'))
       } else if (this.existUser()) {
         callback(new Error('用户不存在'))
       } else {
@@ -100,7 +99,8 @@ export default {
       // 用户信息
       userInfo: {
         username: '',
-        email: ''
+        email: '',
+        status: 1
       },
       // email表单验证对象
       emailRules: {
@@ -130,6 +130,7 @@ export default {
 
   created() {
     this.userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
+    this.getUsernameByEmail()
   },
 
   // 浏览器的后退 1.1
@@ -150,6 +151,13 @@ export default {
     goBack () {
       sessionStorage.clear();
       window.history.back();
+    },
+
+    getUsernameByEmail() {
+      this.postRequest('/queryUsersByEmail', {boundary: '0115', email: this.userInfo.email}).then(resp => {
+        this.userInfo.status = resp.userInfo.status
+      })
+
     },
 
     load() {
@@ -224,10 +232,17 @@ export default {
     async goToInfo() {
       await this.$refs.emailFormRef.validate(async valid => {
         if (valid) {
-          window.sessionStorage.setItem('currentEmail', this.emailForm.email)
-          this.$router.push({
-            path: '/UnfreezeApplicationInfo'
-          })
+          if (this.sendStatus == 0) {
+            window.sessionStorage.setItem('currentEmail', this.emailForm.email)
+            this.$router.push({
+              path: '/unfreezeApplicationInfo'
+            })
+          } else {
+            this.$message.info('用户可以正常登录')
+            this.$router.push({
+              path: '/'
+            })
+          }
         }
       });
     }
