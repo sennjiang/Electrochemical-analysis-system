@@ -39,7 +39,7 @@ export default {
       xdata: ['-0.6', '-0.4', '0', '0.1', '0.2', '0.4', '0.6'],
       // y轴的真正数据 如果空数组就不显示图线
       y1data: [100, 20, 60, 100, 70, 60, 70],
-      y2data: [120, 50, 60, 20, -100, 100, 70],
+      y2data: [],
       // 点击点以后会将坐标值赋给x， y
       x: undefined,
       y: undefined,
@@ -74,7 +74,8 @@ export default {
   },
   created() {
     this.xdata = this.detailV;
-    this.y1data = this.detailA;
+    if(this.curveAmount == 1) this.y1data = this.detailA;
+    else if(this.curveAmount == 2) this.y2data = this.detailA;
   },
   methods: {
     initChart() {
