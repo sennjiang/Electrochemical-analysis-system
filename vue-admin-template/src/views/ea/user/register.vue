@@ -132,7 +132,7 @@ export default {
     let validateEmail = (rule, value, callback) => {
       if (!isEmail(value)) {
         callback(new Error('邮箱格式错误'))
-      } else if (!this.existUser()) {
+      } else if (this.existUser()) {
         callback(new Error('邮箱已存在'))
       } else {
         callback()
@@ -148,6 +148,8 @@ export default {
       }
     };
     return {
+      // 邮件发送状态
+      sendStatus: true,
       // 注册信息核验规则
       registerRules: {
         //  校验用户名
@@ -226,9 +228,9 @@ export default {
     },
 
     // 是否存在该用户, 参数为email, true:存在, false:不存在
-    async existUser() {
+    existUser() {
       // const {data: resp} = await this.$http.post('/existUserByEmail', this.userForm.email)
-      await this.postRequest('/existUserByEmail', {boundary: '0110', email: this.userForm.email}).then(resp => {
+      this.postRequest('/existUserByEmail', {boundary: '0110', email: this.userForm.email}).then(resp => {
         if (resp.code === 200) {
           // 该email不存在, 可以注册
           // this.$message.success("可以注册")
@@ -236,6 +238,7 @@ export default {
         } else {
           // 该email已存在, 不可以注册
           this.$message.error("用户已存在")
+          this.sendStatus =false
           return false;
         }
       })
@@ -244,7 +247,7 @@ export default {
     // <!--发送邮箱验证码-->
     sendEmailCode() {
       let email = this.userForm.email
-      if (this.checkEmail(email)) {
+      if (this.checkEmail(email) && this.sendStatus) {
         console.log(email)
         let time = 60
         this.buttonText = '已发送'
