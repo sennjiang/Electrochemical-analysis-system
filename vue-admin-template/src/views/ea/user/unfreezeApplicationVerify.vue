@@ -67,6 +67,7 @@ export default {
       } else {
         callback()
       }
+      this.getUsernameByEmail()
     };
 
     // 校验邮箱验证码
@@ -95,7 +96,7 @@ export default {
         emailCode: '',
         emailCodeResp: ''
       },
-
+      status:1,
       // 用户信息
       userInfo: {
         username: '',
@@ -130,7 +131,6 @@ export default {
 
   created() {
     this.userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
-    this.getUsernameByEmail()
   },
 
   // 浏览器的后退 1.1
@@ -154,8 +154,10 @@ export default {
     },
 
     getUsernameByEmail() {
-      this.postRequest('/queryUsersByEmail', {boundary: '0115', email: this.userInfo.email}).then(resp => {
-        this.userInfo.status = resp.userInfo.status
+      this.postRequest('/queryUsersByEmail', {boundary: '0115', email: this.emailForm.email}).then(resp => {
+        if (resp.userInfo.status === 0) {
+          this.status = 0;
+        }
       })
 
     },
@@ -229,10 +231,11 @@ export default {
         return false;
       }
     },
-    async goToInfo() {
-      await this.$refs.emailFormRef.validate(async valid => {
+    goToInfo() {
+      this.$refs.emailFormRef.validate(async valid => {
         if (valid) {
-          if (this.sendStatus == 0) {
+          this.getUsernameByEmail()
+          if (this.status == 0) {
             window.sessionStorage.setItem('currentEmail', this.emailForm.email)
             this.$router.push({
               path: '/unfreezeApplicationInfo'
