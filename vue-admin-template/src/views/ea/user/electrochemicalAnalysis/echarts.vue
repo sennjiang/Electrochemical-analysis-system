@@ -1,6 +1,6 @@
 <template>
   <!--设置宽高-->
-  <div style="width: 80%; height: 400px">
+  <div style="width: 100%; height: 600px">
     <!--echarts图-->
     <div :class="echart" :style="{height:500,width:400}"/>
     <!-- 其他内容可以放 -->
