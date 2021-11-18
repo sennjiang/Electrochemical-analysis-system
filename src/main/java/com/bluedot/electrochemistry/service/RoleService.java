@@ -38,13 +38,6 @@ public class RoleService extends BaseService{
     @Autowired
     BaseDao baseDao;
 
-    HttpServletRequest request;
-
-    @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.request = req;
-    }
-
     /**
      * 查询角色信息
      *

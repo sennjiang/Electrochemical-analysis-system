@@ -200,20 +200,17 @@ public class AdminService extends BaseService {
         Integer username = Integer.parseInt((String) map.get("username"));
         String password = (String) map.get("password");
         String nickname  = (String) map.get("nickname");
-        Integer gender = (Integer) map.get("gender");
-        Integer age = (Integer) map.get("age");
+        Integer gender = Integer.parseInt((String) map.get("gender"));
+        Integer age = Integer.parseInt((String)  map.get("age"));
         String email = (String) map.get("email");
-        Timestamp birth = (Timestamp) map.get("birth");
 
         String statusTmp = (String)map.get("status");
         //添加用户时statusTmp == null，给status赋初值
         Integer status = -1;
         if(statusTmp == null) status=1;
         else status = statusTmp.equals("true")?1:0;
-
         String portrait = (String) map.get("portrait");
-        Timestamp gmtCreated = (Timestamp) map.get("gmtCreated");
-        return new User(username,password,nickname,gender,age,email,birth,status,portrait,gmtCreated);
+        return new User(username,password,nickname,gender,age,email,null,status,portrait,null);
 
     }
 
@@ -226,18 +223,12 @@ public class AdminService extends BaseService {
 
     private void editAdmin(Map<String , Object> map){
         try{
-
             User user = packagingUser(map);
-
             int editAdmin = baseDao.update(user);
             map.put("data",editAdmin);
-
-
         }catch (Exception e){
-
+            e.printStackTrace();
         }
-
-
     }
 
     /**

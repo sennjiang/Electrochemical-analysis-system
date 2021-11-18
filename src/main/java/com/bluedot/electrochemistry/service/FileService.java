@@ -31,6 +31,9 @@ public class FileService extends BaseService {
     @Autowired
     MapperFactory mapperFactory;
 
+    @Autowired
+    BaseDao baseDao;
+
     /**
      * 导出文件
      *
@@ -257,15 +260,12 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void deleteFile(Map<String, Object> map) {
-        doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
-            @Override
-            public int doDataModifyExecutor(BaseDao baseDao) {
-                Integer fileId = Integer.parseInt((String) map.get("fileId"));
-                File file = new File();
-                file.setId(fileId);
-                return baseDao.delete(file);
-            }
-        });
+        Integer fileId = Integer.parseInt((String) map.get("fileId"));
+        File file = new File();
+        file.setId(fileId);
+        baseDao.delete(file);
+        map.put("code", 200);
+        map.put("message", "删除文件");
     }
 
     /**
@@ -274,16 +274,13 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void remove(Map<String, Object> map) {
-        doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
-            @Override
-            public int doDataModifyExecutor(BaseDao baseDao) {
-                Integer fileId = Integer.parseInt((String) map.get("fileId"));
-                File file = new File();
-                file.setId(fileId);
-                file.setStatus(2);
-                return baseDao.update(file);
-            }
-        });
+        Integer fileId = Integer.parseInt((String) map.get("fileId"));
+        File file = new File();
+        file.setId(fileId);
+        file.setStatus(2);
+        baseDao.update(file);
+        map.put("code", 200);
+        map.put("message", "移除文件");
     }
 
     /**
@@ -296,7 +293,6 @@ public class FileService extends BaseService {
         doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
-                System.out.println("------"+baseDao);
                 int fileId = Integer.parseInt((String) map.get("fileId"));
                 File file = new File();
                 file.setId(fileId);

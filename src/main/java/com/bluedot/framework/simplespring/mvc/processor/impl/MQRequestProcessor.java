@@ -79,9 +79,15 @@ public class MQRequestProcessor implements RequestProcessor {
 
         @Override
         public void run() {
-            Operation operation = packageOperation();
-            OperationService operationService = (OperationService) BeanContainer.getInstance().getBean(OperationService.class);
-            operationService.insertOperation(operation);
+            try {
+                logger.debug("开始执行日志。。。");
+                Operation operation = packageOperation();
+                OperationService operationService = (OperationService) BeanContainer.getInstance().getBean(OperationService.class);
+                operationService.insertOperation(operation);
+                logger.debug("结束执行日志。。。");
+            }catch (Exception e){
+                logger.debug("{}",e.getMessage());
+            }
         }
 
         /**
@@ -89,31 +95,40 @@ public class MQRequestProcessor implements RequestProcessor {
          * @return Operation
          */
         private Operation packageOperation() {
+            String boundary = (String) data.get("boundary");
             Class<?> service = data.getService();
             String name = service.getName();
             String serviceMethod = data.getServiceMethod();
             Operation operation = new Operation();
 
+
+
             if (data.containsKey("message")) {
                 operation.setMessage((String) data.get("message"));
+            }else {
+                operation.setMessage("doSomething");
             }
 
-            operation.setLevel(data.containsKey("error") ? "error" : "info");
+            operation.setLevel(data.containsKey("error") ? "ERROR" : "INFO");
 
-            operation.setUser(((int)data.get("user")));
+            Integer username = Integer.parseInt((String) data.get("username"));
+            operation.setUser(username);
 
             operation.setRecorder(name + "." + serviceMethod);
 
-            String boundary = (String) data.get("boundary");
-            operation.setType(data.containsKey(boundary) ? CommonMapper.typeMapper.get(boundary) : 1);
+            Integer logLevel = Integer.parseInt((String) data.get("logLevel"));
+            operation.setType(logLevel);
 
             operation.setTime(new Timestamp(System.currentTimeMillis()));
 
             operation.setBoundary(boundary);
 
             if ("FileService".equals(name)) {
-                operation.setIsFile(true);
-                operation.setFileType(CommonMapper.fileTypeMapper.get(boundary));
+                operation.setIsFile(1);
+                operation.setFileType(CommonMapper.fileTypeMapper.getOrDefault(boundary,1));
+            }else {
+                operation.setIsFile(0);
+                operation.setFileType(0);
             }
             return operation;
         }
@@ -177,9 +192,11 @@ public class MQRequestProcessor implements RequestProcessor {
         Data newData = submit.get();
 
         //暂不开启
-//        LogTask task = new LogTask(newData);
-//
-//        executors.submit(task);
+//        if (CommonMapper.doLogMapper.contains(newData.get("boundary"))){
+//            LogTask task = new LogTask(newData);
+//            executors.submit(task);
+//        }
+
 
         //设置后置处理器
         requestProcessorChain.setResultRender(new JsonResultRender(newData));
@@ -198,6 +215,8 @@ public class MQRequestProcessor implements RequestProcessor {
         HttpServletRequest request = requestProcessorChain.getReq();
         //从请求头中取得username
         String username = request.getHeader("Authorization");
+
+        String logLevel = request.getHeader("UserStatus");
         //将请求的数据 封装成Data
         Data data = new Data(request);
 
@@ -209,6 +228,7 @@ public class MQRequestProcessor implements RequestProcessor {
                 return null;
             }
         }
+        data.put("logLevel",logLevel);
 //        TODO 角色级别 用于日志
 //        if (CommonMapper.typeMapper.containsKey(boundary)) {
 //            data.put("level",2);
