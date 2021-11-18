@@ -116,6 +116,7 @@ public class UserService extends BaseService {
             baseDao.update(user);
             map.put("code", 200);
             map.put("message", "修改成功");
+            map.put("logMessage", "修改用户个人信息");
         }catch (Exception e) {
             map.put("code", 500);
             map.put("message", "修改失败");
@@ -137,6 +138,7 @@ public class UserService extends BaseService {
             baseDao.update(user);
             map.put("code", 200);
             map.put("message", "更新用户状态成功");
+            map.put("logMessage","更改用户状态");
         }catch (Exception e) {
             map.put("code", 500);
             map.put("message", "更新用户状态失败");
@@ -217,6 +219,7 @@ public class UserService extends BaseService {
         int res = baseDao.insert(newUser);
         if (res > 0) {
             map.put("code", 200);
+            map.put("logMessage","添加用户");
         } else {
             map.put("code", 500);
         }
@@ -234,6 +237,7 @@ public class UserService extends BaseService {
                 return baseDao.delete(parseToUser(map));
             }
         });
+        map.put("logMessage","删除用户");
     }
 
     /**
@@ -336,6 +340,7 @@ public class UserService extends BaseService {
                 return baseDao.insert(parseToUnfreeze(map));
             }
         });
+        map.put("logMessage","保存用户解冻信息");
     }
 
     /**
@@ -387,6 +392,7 @@ public class UserService extends BaseService {
                 return baseDao.update(user);
             }
         });
+        map.put("logMessage","用户上传头像");
     }
 
     /**
