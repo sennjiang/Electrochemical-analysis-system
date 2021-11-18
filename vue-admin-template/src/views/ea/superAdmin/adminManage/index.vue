@@ -233,6 +233,10 @@
         this.editStatusInfo.username = userInfo.username;
         this.editStatusInfo.status = userInfo.status;
         this.postRequest("/admin/adminStatusChanged", this.editStatusInfo).then(res => {
+          if(res.data != 1) {
+            return this.$message.error("操作失败");
+          }
+          this.$message.success("操作成功");
 
         })
 

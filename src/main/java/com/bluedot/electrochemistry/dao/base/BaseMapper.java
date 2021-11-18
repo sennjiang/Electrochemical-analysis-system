@@ -241,7 +241,21 @@ public interface BaseMapper {
 
     Role queryNewRoleId(String roleName);
 
-    List<Right> getRights(Integer query);
+
+
+    /**
+     * 根据权限名查询该权限实体
+     * @param rightName
+     * @return
+     */
+    Right getRightByRightName(String rightName);
+
+    /**
+     * 根据角色的ID查询该角色拥有的权限列表
+     * @param
+     * @return
+     */
+    List<Right> getRights(Integer roleId);
 
     /**
      * 比较hash值
