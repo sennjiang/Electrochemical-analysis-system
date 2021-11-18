@@ -38,6 +38,7 @@ public class AlgorithmSendService extends BaseService {
      * 审核成功与否的结果会放入到map中去，0失败，1成功
      */
     private void judgementAlgorithmSend(Map map){
+        map.put("logMessage", "算法审核(*^▽^*)");
         StringBuilder message = new StringBuilder();
         int rulingResult = Integer.parseInt((String) map.get("rulingResult"));
         int algorithmSendId = Integer.parseInt((String) map.get("algorithmSendId"));
@@ -176,6 +177,7 @@ public class AlgorithmSendService extends BaseService {
      *       注：算法申请的发起时间以添加到数据库的时间为准，由添加数据库表时默认生成，所以不在传递的参数计量之内
      */
     private void addAlgorithmSend(Map<String, Object> map){
+        map.put("logMessage", "添加算法审核申请(*^▽^*)");
         Integer algorithmId = Integer.parseInt((String) map.get("algorithmId"));
         Integer classification = Integer.parseInt((String) map.get("type"));
         Integer username = Integer.parseInt((String) map.get("username"));
