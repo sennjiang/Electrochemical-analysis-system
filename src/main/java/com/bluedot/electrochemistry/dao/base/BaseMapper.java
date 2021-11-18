@@ -297,13 +297,11 @@ public interface BaseMapper {
     /**
      * 根据文件id查找对应的文件
      *
-     * @param id        文件的id
-     * @param pageStart 起始页码
-     * @param pageSize  一页的数据量
+     * @param id  文件的id
      * @return 被查找到的指定文件
      * @author zero
      */
-    File getFileById(int id, int pageStart, int pageSize);
+    File getFileById(int id);
 
     /**
      * 电化学分析模块查询文件

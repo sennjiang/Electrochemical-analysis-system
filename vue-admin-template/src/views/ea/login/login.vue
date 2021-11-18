@@ -235,22 +235,16 @@ export default {
 
     // to忘记密码页
     forgetPassword() {
-      let tempUserKey = Math.round(Math.random()*99999999+10000000).toString()
-      window.sessionStorage.setItem('tokenStr', tempUserKey)
       this.$router.push({path: '/forgetPasswordVerify'})
     },
 
     // to注册页
     toRegister() {
-      let tempUserKey = Math.round(Math.random()*99999999+10000000).toString()
-      window.sessionStorage.setItem('tokenStr', tempUserKey)
       this.$router.push({path: '/register'})
     },
 
     // to申请解冻页
     toUnfreeze() {
-      let tempUserKey = Math.round(Math.random()*99999999+10000000).toString()
-      window.sessionStorage.setItem('tokenStr', tempUserKey)
       this.$router.push({path: '/unfreezeApplicationVerify'})
     }
   }

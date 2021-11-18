@@ -67,9 +67,14 @@
     </node>
 
     <node>
-        <number>0113</number>
+        <number>0114</number>
         <service>UserService</service>
         <method>queryUsersByUsername</method>
+    </node>
+    <node>
+        <number>0115</number>
+        <service>UserService</service>
+        <method>queryUsersByEmail</method>
     </node>
     <node>
         <number>0201</number>
@@ -141,10 +146,16 @@
         <service>FileService</service>
         <method>searchFiles</method>
     </node>
+
     <node>
         <number>0214</number>
         <service>FileService</service>
         <method>deleteFile</method>
+    </node>
+    <node>
+        <number>0215</number>
+        <service>FileService</service>
+        <method>loadingData</method>
     </node>
     <node>
         <number>0301</number>

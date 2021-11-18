@@ -1,10 +1,11 @@
 <template>
   <!--设置宽高-->
-  <div style="width: 80%; height: 400px">
+  <div style="width: 100%; height: 600px">
     <!--echarts图-->
     <div :class="echart" :style="{height:500,width:400}"/>
     <!-- 其他内容可以放 -->
   </div>
+
 </template>
 
 <script>
@@ -12,18 +13,37 @@ import * as echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 
 export default {
+  props:{
+    detailV:{
+      type:Array,
+      required: true
+    },
+    detailA:{
+      type:Array,
+      required: true
+    },
+    curveAmount:{
+      type:Number,
+      required: true
+    }
+  },
   data() {
     return {
+      resultVisible: false,
+      result: null,
+      xy: null,
+      yx:null,
       // echart对象
       chart: null,
       // x轴标点 改x轴动态更改此变量
       xdata: ['-0.6', '-0.4', '0', '0.1', '0.2', '0.4', '0.6'],
       // y轴的真正数据 如果空数组就不显示图线
       y1data: [100, 20, 60, 100, 70, 60, 70],
-      y2data: [120, 50, 60, 20, -100, 100, 70],
+      y2data: [],
       // 点击点以后会将坐标值赋给x， y
       x: undefined,
-      y: undefined
+      y: undefined,
+      times: 0
     }
   },
   watch: {
@@ -49,8 +69,13 @@ export default {
     if (!this.chart) {
       return
     }
-    this.chart.dispose()
+    this.chart.dispose();
     this.chart = null
+  },
+  created() {
+    this.xdata = this.detailV;
+    if(this.curveAmount == 1) this.y1data = this.detailA;
+    else if(this.curveAmount == 2) this.y2data = this.detailA;
   },
   methods: {
     initChart() {
@@ -224,12 +249,23 @@ export default {
 
       // 点击事件
       this.chart.on('click',(params) => {
+        this.times ++
         this.y = params.data
         this.x = this.xdata[params.dataIndex]
-        // 当前点的x坐标
-        console.log(this.x)
-        // 当前点的y坐标
-        console.log(this.y)
+        if ( this.times == 1) {
+          this.xy = [this.y,this.x]
+        }else if( this.times == 2){
+          this.yx = [this.y,this.x]
+          console.log(this.xy[0])
+          console.log(this.yx[0])
+          this.result = (this.xy[0] + this.yx[0] ) / 2,
+          this.resultVisible = true
+          this.$message({
+              message: this.result,
+              type: 'success'
+          })
+          this.times = 0;
+        }
       });
 
     }

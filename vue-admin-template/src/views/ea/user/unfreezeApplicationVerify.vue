@@ -10,6 +10,9 @@
         <el-form-item prop="email">
           <label style="font-size: large;">邮箱:&nbsp;&nbsp;&nbsp;&nbsp;</label>
           <el-input style="width: 300px;" v-model="emailForm.email"></el-input>
+          <div class="aaaa">
+            {{ message }}
+        </div>
           <!--<span style="width: 300px; font-size: large" v-text="userInfo.email"></span>-->
         </el-form-item>
         <br/>
@@ -39,19 +42,34 @@ function isEmail(s) {
 }
 
 export default {
-  name: "modifyEmailInfo",
+  name: "unfreezeApplicationVerify",
 
   data() {
     // 校验邮箱
+    // let validateEmail = (rule, value, callback) => {
+    //   this.existUser();
+    //   if (!isEmail(value)) {
+    //     callback(new Error('邮箱格式错误'))
+    //   } else if (this.res) {
+    //     this.sendStatus = false
+    //     callback(new Error('用户不存在'))
+    //   } else {
+    //     callback()
+    //   }
+    // };
+
+    // 校验邮箱
     let validateEmail = (rule, value, callback) => {
       if (!isEmail(value)) {
-        callback(new Error('邮箱格式错误'))
+         callback(new Error('邮箱格式错误'))
       } else if (this.existUser()) {
         callback(new Error('用户不存在'))
       } else {
         callback()
       }
+      this.getUsernameByEmail()
     };
+
     // 校验邮箱验证码
     let validateEmailCode = (rule, value, callback) => {
       if (this.emailForm.emailCode !== this.emailForm.emailCodeResp) {
@@ -62,19 +80,28 @@ export default {
       }
     };
     return {
+
+      // 是否可以发送邮件
+      sendStatus: false,
+
+      // 验证用户是否存在
+      res: false,
+
       loadState: false,
 
+      message: null,
       // 表单数据对象
       emailForm: {
         email: '',
         emailCode: '',
         emailCodeResp: ''
       },
-
+      status:1,
       // 用户信息
       userInfo: {
         username: '',
-        email: ''
+        email: '',
+        status: 1
       },
       // email表单验证对象
       emailRules: {
@@ -114,7 +141,6 @@ export default {
       window.addEventListener('popstate', this.goBack, false);
     }
   },
-
   destroyed () {
     window.removeEventListener('popstate', this.goBack, false);
   },
@@ -125,6 +151,15 @@ export default {
     goBack () {
       sessionStorage.clear();
       window.history.back();
+    },
+
+    getUsernameByEmail() {
+      this.postRequest('/queryUsersByEmail', {boundary: '0115', email: this.emailForm.email}).then(resp => {
+        if (resp.userInfo.status === 0) {
+          this.status = 0;
+        }
+      })
+
     },
 
     load() {
@@ -147,7 +182,7 @@ export default {
     // <!--发送邮箱验证码-->
     sendEmailCode() {
       let email = this.emailForm.email
-      if (this.checkEmail(email)) {
+      if (this.checkEmail(email) && this.sendStatus) {
         console.log(email)
         let time = 60
         this.buttonText = '已发送'
@@ -172,15 +207,17 @@ export default {
     },
 
     // 是否存在该用户, 参数为email, true:存在, false:不存在
-    async existUser() {
-      // const {data: resp} = await this.$http.post('/existUserByEmail', this.emailForm.email)
-      await this.postRequest('/existUserByEmail', {boundary: '0110', email: this.emailForm.email}).then(resp => {
+    existUser() {
+      // const {data: resp} = await this.$http.post('/existUserByEmail', this.userForm.email)
+      this.postRequest('/existUserByEmail', {boundary: '0110', email: this.emailForm.email}).then(resp => {
         if (resp.code === 200) {
           // 该email不存在
-          return true;
-        } else {
-          // 该email已存在
+          this.$message.error('用户不存在')
           return false;
+        } else {
+          // 该email已存在, 不可以注册
+          this.sendStatus = true
+          return true;
         }
       })
     },
@@ -194,13 +231,21 @@ export default {
         return false;
       }
     },
-    async goToInfo() {
-      await this.$refs.emailFormRef.validate(async valid => {
+    goToInfo() {
+      this.$refs.emailFormRef.validate(async valid => {
         if (valid) {
-          window.sessionStorage.setItem('currentEmail', this.emailForm.email)
-          this.$router.push({
-            path: '/UnfreezeApplicationInfo'
-          })
+          this.getUsernameByEmail()
+          if (this.status == 0) {
+            window.sessionStorage.setItem('currentEmail', this.emailForm.email)
+            this.$router.push({
+              path: '/unfreezeApplicationInfo'
+            })
+          } else {
+            this.$message.info('用户可以正常登录')
+            this.$router.push({
+              path: '/'
+            })
+          }
         }
       });
     }
@@ -276,13 +321,21 @@ body {
   width: 200px;
   left: 5%;
 }
-
 .code button {
   position: relative;
   left: 8%;
   width: 90px;
   height: 38px;
   text-align: center;
+}
+.aaaa{
+    color: #F56C6C;
+    font-size: 12px;
+    line-height: 1;
+    padding-top: 4px;
+    position: absolute;
+    top: 100%;
+    left: 25%;
 }
 </style>
 
