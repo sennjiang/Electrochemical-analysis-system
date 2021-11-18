@@ -18,6 +18,7 @@ import java.util.*;
  */
 public class CommonMapper {
 
+
     private Logger logger = LogUtil.getLogger();
 
     /**
@@ -48,6 +49,8 @@ public class CommonMapper {
      */
     public static List<String> writeList = new ArrayList<>();
 
+    public static List<String> doLogMapper = new ArrayList<>();
+
 
     public void initMapper(Properties contextConfig) {
         logger.debug("start init mapper ... ");
@@ -57,7 +60,43 @@ public class CommonMapper {
         initFileList(contextConfig);
         initFilePathMapper(contextConfig);
         initWhitePathMapper(contextConfig);
+        initDoLogMapper();
         logger.debug("end init mapper ... ");
+    }
+
+    private void initDoLogMapper() {
+        doLogMapper.add("0105");
+        doLogMapper.add("0108");
+        doLogMapper.add("0109");
+        doLogMapper.add("0112");
+        doLogMapper.add("0205");
+        doLogMapper.add("0206");
+        doLogMapper.add("0207");
+        doLogMapper.add("0209");
+        doLogMapper.add("0210");
+        doLogMapper.add("0214");
+        doLogMapper.add("0405");
+        doLogMapper.add("0406");
+        doLogMapper.add("0409");
+        doLogMapper.add("0410");
+        doLogMapper.add("0411");
+        doLogMapper.add("0501");
+        doLogMapper.add("0503");
+        doLogMapper.add("0504");
+        doLogMapper.add("0601");
+        doLogMapper.add("0703");
+        doLogMapper.add("0704");
+        doLogMapper.add("0705");
+        doLogMapper.add("0804");
+        doLogMapper.add("1002");
+        doLogMapper.add("1003");
+        doLogMapper.add("1004");
+        doLogMapper.add("1006");
+        doLogMapper.add("1201");
+        doLogMapper.add("1202");
+        doLogMapper.add("1301");
+        doLogMapper.add("1302");
+        doLogMapper.add("1403");
     }
 
     private void initWhitePathMapper(Properties contextConfig) {

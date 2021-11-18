@@ -25,8 +25,7 @@ public class SystemService extends BaseService {
     private static String password = "2019Blue";
     //sql文件存储的路径
     private String savePath = "D:/MysqlFile";
-    //sql文件存储名
-    private static String fileName = "badaoBak"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+".sql";
+
     //数据库名
     private static String databaseName = "ea";
     private static final int BUFFER = 8192;
@@ -59,15 +58,18 @@ public class SystemService extends BaseService {
     private void systemBackup(Map<String,Object> map ){
         try{
 
+            //sql文件存储名
+            String fileName = "badaoBak"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+".sql";
+            //用户输入的sql文件的存储路径
             savePath = (String) map.get("filePath");
 
 
-            dataBakExec();
+            dataBakExec(fileName);
             System.out.println("备份的sql文件保存路径为:"+this.sqlFilePath);
             map.put("sqlFilePath",this.sqlFilePath);
 
             map.put("code",200);
-            map.put("message","备份成功");
+            map.put("message","备份成功,路径为："+sqlFilePath);
         }catch (Exception e){
             map.put("code",500);
             map.put("message","备份失败");
@@ -88,7 +90,7 @@ public class SystemService extends BaseService {
      * 执行数据备份
      * @return
      */
-    private void dataBakExec()
+    private void dataBakExec(String fileName)
     {
 
         File saveFile = new File(savePath);
@@ -106,8 +108,11 @@ public class SystemService extends BaseService {
         try {
             printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(savePath + fileName), "utf8"));
             this.sqlFilePath= savePath + fileName;
+            //导出指定数据库的结构和数据
+            Process process = Runtime.getRuntime().exec("E:/software/mysql8-winx64/mysql-8.0.21-winx64/bin/mysqldump -h" + hostIP + " -u" + userName + " -p" + password + " --set-charset=UTF8 " + databaseName);
+
             //导出指定数据库指定表的结构和数据
-            Process process = Runtime.getRuntime().exec("E:/software/mysql8-winx64/mysql-8.0.21-winx64/bin/mysqldump -h" + hostIP + " -u" + userName + " -p" + password + " --set-charset=UTF8 " + databaseName +" book ");
+            //Process process = Runtime.getRuntime().exec("E:/software/mysql8-winx64/mysql-8.0.21-winx64/bin/mysqldump -h" + hostIP + " -u" + userName + " -p" + password + " --set-charset=UTF8 " + databaseName +" book ");
             //导出指定数据库指定表的结构
             //Process process = Runtime.getRuntime().exec("C:/Program Files/MySQL/MySQL Server 5.6/bin/mysqldump -h" + hostIP + " -u" + userName + " -p" + password + " --set-charset=UTF8 " + databaseName + " book -d");
             //导出指定数据库指定表符合条件的结构和数据

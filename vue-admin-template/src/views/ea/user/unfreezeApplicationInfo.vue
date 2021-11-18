@@ -24,9 +24,11 @@
       </div>
       <div class="style-label-div-reason">
         <label>申请理由:</label>
-        <el-input v-model="unfreezeForm.applicationReason" value="hello"></el-input>
-        <!--</el-input>-->
-        <!--<input v-text="unfreezeForm.applicationReason"></input>-->
+        <!--<FormItem prop="name" :rules="{required: true, message: '请填写付款人姓名', trigger: 'blur'}">-->
+        <!--    <el-input v-model="unfreezeForm.applicationReason"></el-input>-->
+        <!--</FormItem>-->
+        <el-input v-model="unfreezeForm.applicationReason"></el-input>
+
         <br/>
         <!--<textarea class="ui-textarea" v-model="unfreezeForm.applicationReason"></textarea>-->
       </div>
@@ -55,16 +57,8 @@ export default {
         refuseReason: '',
         applicationReason: ''
       },
-      // 表单验证对象
+      // email表单验证对象
       Rules: {
-        //  校验用户名
-        // email: [
-        //   {required: true, message: '邮箱不能为空', trigger: 'blur'},
-        //   {validator: validateEmail, trigger: 'blur'}
-        // ],
-        emailCode: [
-          {required: true, message: '验证码不能为空', trigger: 'blur'},
-        ]
       },
     }
   },
@@ -111,7 +105,7 @@ export default {
         freezeId: this.unfreezeForm.freezeId,
         username: this.unfreezeForm.username,
         email: this.unfreezeForm.email,
-        handleStatus: '0',
+        handleStatus: 0,
         applicationReason: this.unfreezeForm.applicationReason
       }).then(resp => {
         this.$message.success('已提交,等待审核')

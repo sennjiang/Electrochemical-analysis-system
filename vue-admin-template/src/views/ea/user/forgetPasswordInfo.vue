@@ -21,7 +21,7 @@
         <br/>
         <br/>
         <el-row>
-          <el-button type="primary" size="medium" class="style-form-button" :loading="loadState" @click="submitForm">确定
+          <el-button type="primary" size="medium" class="style-form-button" :loading="loadState" @click="submitForm()">确定
           </el-button>
         </el-row>
       </el-form>
@@ -63,8 +63,11 @@ export default {
         password1: '',
         password2: '',
       },
+      userEmail:'',
+      username: '',
       userInfo: {
         username: '',
+        email: ''
       },
 
       passwordFormRules: {
@@ -82,14 +85,23 @@ export default {
   },
 
   created() {
-    this.userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
+    this.userEmail = window.sessionStorage.getItem('currentEmail')
+    this.getUsernameByEmail()
   },
 
   methods: {
+
+    getUsernameByEmail() {
+      this.postRequest('/queryUsersByEmail', {boundary: '0115', email: this.userEmail}).then(resp => {
+        this.username = resp.userInfo.username
+      })
+
+    },
+
     async submitForm() {
       await this.$refs.passwordForm.validate(async valid => {
         if (valid) {
-          this.postRequest('/modifyUser', {boundary: '0104', username: this.userInfo.username, password: this.passwordForm.password2}).then(resp => {
+          this.postRequest('/modifyUser', {boundary: '0104', username: this.username, password: this.passwordForm.password2}).then(resp => {
             this.loadState = false;
             this.toLogin()
           })

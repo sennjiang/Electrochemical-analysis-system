@@ -41,7 +41,7 @@ public class Operation {
     /**
      * 是否为文件
      */
-    private Boolean isFile;
+    private Integer isFile;
     /**
      * 文件类型
      */
@@ -55,7 +55,7 @@ public class Operation {
     public Operation() {
     }
 
-    public Operation(Integer id, String message, String level, Integer user, String recorder, Integer type, String time, Boolean isFile, Integer fileType, String boundary) {
+    public Operation(Integer id, String message, String level, Integer user, String recorder, Integer type, String time, Integer isFile, Integer fileType, String boundary) {
         this.id = id;
         this.message = message;
         this.level = level;
@@ -130,11 +130,11 @@ public class Operation {
         this.time = sdf.format(time);
     }
 
-    public Boolean getIsFile() {
+    public Integer getIsFile() {
         return isFile;
     }
 
-    public void setIsFile(Boolean isFile) {
+    public void setIsFile(Integer isFile) {
         this.isFile = isFile;
     }
 

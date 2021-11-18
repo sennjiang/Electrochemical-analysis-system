@@ -28,8 +28,14 @@
         <el-table-column type="index"></el-table-column>
         <el-table-column label="角色ID" prop="roleId"></el-table-column>
         <el-table-column label="角色名称" prop="roleName"></el-table-column>
+        <el-table-column label="角色权限" >
+          <span slot-scope="scope">
+              <span >{{ rightNames[scope.$index] }}&nbsp</span>
+          </span>
+        </el-table-column>
         <el-table-column label="创建时间" :formatter="dateFormat" prop="genTime"></el-table-column>
-        <el-table-column label="角色级别（0，管理员，1，普通用户，2，超级管理员）" prop="roleType"></el-table-column>
+        <el-table-column label="角色级别（0，超级管理员，1，管理员，2，普通用户）" prop="roleType"></el-table-column>
+
 
       </el-table>
 
@@ -113,7 +119,13 @@
           pageSize:5,//每页最大数
         },
 
-        roleList:[],//角色列表
+        rightNames:[],//角色权限列表
+        //rightNames:[[]],
+        roleList:[
+
+        ],//角色列表
+
+
         total: 0,//总记录数
 
         //查询权限信息实体
@@ -150,10 +162,12 @@
       getRoleList: function () {
         this.queryInfo.boundary = '1401'
         this.postRequest("/role/list", this.queryInfo).then(res => {
-
+          this.rightNames = res.rightNames;
           this.roleList = res.data;//角色列表数据封装
+          console.log(this.roleList);
+
           this.total = res.numbers;//总管理员数封装
-          this.$message.success("角色列表加载成功！！！");
+
         })
       },
 
@@ -188,9 +202,9 @@
 
           this.postRequest("/role/addRole",this.addForm).then(res=> {
             if(res.data!=2){
-              return this.$message.error("添加失败！！！");
+
             }else{
-              this.$message.success("添加成功！！！");
+
 
               this.addDialogVisible = false;
               this.getRoleList();

@@ -105,12 +105,18 @@
     </select>
 
     <select id="getRights" resultType="com.bluedot.electrochemistry.pojo.domain.Right">
-        select b.* from role_right as a LEFT JOIN `right` as b on a.right_id = b.right_id where a.role_id = #{query}
+        select b.* from role_right as a LEFT JOIN `right` as b on a.right_id = b.right_id where a.role_id = #{roleId}
     </select>
 
     <select id="queryNewRoleId" resultType="com.bluedot.electrochemistry.pojo.domain.Role">
         select * from role where role_name = #{roleName}
     </select>
+
+    <!--权限相关-->
+    <select id="getRightByRightName" resultType="com.bluedot.electrochemistry.pojo.domain.Right">
+        select * from `right` where right_name = #{rightName}
+    </select>
+
 
     <!--算法相关-->
     <select id="getNextAlgorithmId" resultType="java.lang.Long">

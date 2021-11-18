@@ -49,7 +49,6 @@ public class UserService extends BaseService {
         String password = (String) map.get("password");
         BaseMapper mapper = mapperFactory.createMapper();
         User user = mapper.queryUserByUsername(Integer.parseInt(username));
-        System.out.println(user);
         if (user != null && password.equals(user.getPassword())) {
             map.put("userInfo", user);
             map.put("code", 200);
@@ -246,11 +245,7 @@ public class UserService extends BaseService {
         String email = (String) map.get("email");
         BaseMapper mapper = mapperFactory.createMapper();
         Long userCount = mapper.countUserByEmail(email);
-        if (userCount > 0) {
-            // 写成50原因, 防止前端报错
-            map.put("code", 50);
-        } else {
-            // 200数据库中不存在该用户
+        if (userCount <= 0) {
             map.put("code", 200);
         }
     }
@@ -392,6 +387,24 @@ public class UserService extends BaseService {
                 return baseDao.update(user);
             }
         });
+    }
+
+    /**
+     * 根据email查询user
+     * @param map email
+     */
+    private void queryUsersByEmail(Map map) {
+        String email = (String) map.get("email");
+        BaseMapper mapper = mapperFactory.createMapper();
+        User user = mapper.queryUserByEmail(email);
+        if (user != null) {
+            map.put("code", 200);
+            map.put("userInfo", user);
+        } else {
+            map.put("code", 500);
+            map.put("message", "邮箱不存在");
+        }
+
     }
 
     /**

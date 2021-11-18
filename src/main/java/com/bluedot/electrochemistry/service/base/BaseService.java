@@ -18,7 +18,7 @@ import java.util.Map;
  * @description
  * @createDate 2021/8/25-14:37
  */
-public class BaseService extends HttpServlet {
+public class BaseService {
 
     private BeanContainer beanContainer = BeanContainer.getInstance();
 
