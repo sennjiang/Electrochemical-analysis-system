@@ -103,13 +103,13 @@ public class MQRequestProcessor implements RequestProcessor {
 
 
 
-            if (data.containsKey("message")) {
-                operation.setMessage((String) data.get("message"));
+            if (data.containsKey("logMessage")) {
+                operation.setMessage((String) data.get("logMessage"));
             }else {
                 operation.setMessage("doSomething");
             }
 
-            operation.setLevel(data.containsKey("error") ? "ERROR" : "INFO");
+            operation.setLevel(data.get("code").equals("500") ? "ERROR" : "INFO");
 
             Integer username = Integer.parseInt((String) data.get("username"));
             operation.setUser(username);
