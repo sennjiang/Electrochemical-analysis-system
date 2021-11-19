@@ -83,6 +83,7 @@ public class RoleService extends BaseService{
             map.put("data",roleList);
             map.put("numbers",numbers);
 
+            map.put("logMessage","查询角色");
             map.put("code",200);
             map.put("message","角色列表加载成功");
 
@@ -185,9 +186,11 @@ public class RoleService extends BaseService{
                 int addRoleRight = baseDao.insert(roleRight);
             }
 
+            map.put("logMessage","添加角色");
             map.put("code",200);
             map.put("message","角色创建成功");
         }catch (Exception e){
+
             map.put("code",500);
             map.put("message","角色创建失败");
         }
@@ -205,7 +208,7 @@ public class RoleService extends BaseService{
         String roleName = (String) map.get("roleName");
         Timestamp genTime = new Timestamp(new Date().getTime());
         String description = (String) map.get("description");
-        Integer rightType = Integer.valueOf((String) map.get("roleType"));
+        Integer rightType = map.get("roleType") == null ? 0:Integer.valueOf((String) map.get("roleType"));
         return new Role(roleName , genTime , description , rightType);
     }
 

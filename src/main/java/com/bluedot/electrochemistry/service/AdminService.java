@@ -64,6 +64,7 @@ public class AdminService extends BaseService {
             map.put("data",adminlist);
             map.put("numbers",numbers);
 
+            map.put("logMessage","查询管理员");
             map.put("code",200);
             map.put("message","管理员列表加载成功");
 
@@ -110,6 +111,7 @@ public class AdminService extends BaseService {
             //System.out.println(update);
             map.put("data",update);
 
+            map.put("logMessage","修改管理员状态");
             map.put("code",200);
             map.put("code","修改状态成功");
         }catch (Exception e){
@@ -127,6 +129,9 @@ public class AdminService extends BaseService {
     private void addAdmin(Map<String , Object> map){
 
         try{
+
+            System.out.println("11111111");
+
             User user = packagingUser(map);
             int addUser = baseDao.insert(user);
 
@@ -136,6 +141,7 @@ public class AdminService extends BaseService {
                 map.put("data",addUserRole+addUser);
             }
 
+            map.put("logMessage","添加管理员");
             map.put("code",200);
             map.put("message","添加成功");
         }catch (Exception e){
@@ -163,6 +169,8 @@ public class AdminService extends BaseService {
             int deleteUserRole = baseDao.delete(userRole);
 
             map.put("data",deleteUserRole);
+
+            map.put("logMessage","删除用户管理员角色");
             map.put("code",200);
             map.put("message","删除该用户管理员角色成功");
         }catch (Exception e){
@@ -200,8 +208,8 @@ public class AdminService extends BaseService {
         Integer username = Integer.parseInt((String) map.get("username"));
         String password = (String) map.get("password");
         String nickname  = (String) map.get("nickname");
-        Integer gender = Integer.parseInt((String) map.get("gender"));
-        Integer age = Integer.parseInt((String)  map.get("age"));
+        Integer gender = map.get("gender") == null ? 0: Integer.parseInt((String) map.get("gender"));
+        Integer age = map.get("age") == null ? 0:Integer.parseInt((String)  map.get("age"));
         String email = (String) map.get("email");
 
         String statusTmp = (String)map.get("status");
@@ -226,7 +234,12 @@ public class AdminService extends BaseService {
             User user = packagingUser(map);
             int editAdmin = baseDao.update(user);
             map.put("data",editAdmin);
+            map.put("logMessage","修改了一个管理员");
+            map.put("code",200);
+            map.put("message","修改成功");
         }catch (Exception e){
+            map.put("code",500);
+            map.put("message","修改失败");
             e.printStackTrace();
         }
     }

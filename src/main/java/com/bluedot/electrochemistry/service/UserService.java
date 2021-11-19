@@ -116,15 +116,16 @@ public class UserService extends BaseService {
             baseDao.update(user);
             map.put("code", 200);
             map.put("message", "修改成功");
-            map.put("logMessage", "修改用户个人信息");
         }catch (Exception e) {
             map.put("code", 500);
             map.put("message", "修改失败");
+        }finally {
+            map.put("logMessage", "修改用户个人信息");
         }
     }
 
     /**
-     * 冻结用户
+     * 更改用户状态
      *
      * @param map ResultBean实休类
      */
@@ -138,10 +139,11 @@ public class UserService extends BaseService {
             baseDao.update(user);
             map.put("code", 200);
             map.put("message", "更新用户状态成功");
-            map.put("logMessage","更改用户状态");
         }catch (Exception e) {
             map.put("code", 500);
             map.put("message", "更新用户状态失败");
+        }finally {
+            map.put("logMessage", "更改用户状态");
         }
     }
 
@@ -219,10 +221,10 @@ public class UserService extends BaseService {
         int res = baseDao.insert(newUser);
         if (res > 0) {
             map.put("code", 200);
-            map.put("logMessage","添加用户");
         } else {
             map.put("code", 500);
         }
+        map.put("logMessage","添加用户");
     }
 
     /**

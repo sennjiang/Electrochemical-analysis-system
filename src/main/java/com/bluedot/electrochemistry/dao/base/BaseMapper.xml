@@ -13,11 +13,13 @@
     </select>
 
     <select id="queryUserByPageAndKey" resultType="com.bluedot.electrochemistry.pojo.domain.User">
-        select * from user where nickname like concat('%', #{key}, '%') limit #{currentPage},#{pageSize}
+        <!--select * from user where nickname like concat('%', #{key}, '%') limit #{currentPage},#{pageSize}-->
+        select user.* from user,user_role where user.username = user_role.username and user_role.role_id = 300 and user.nickname like concat('%', #{key}, '%') limit #{currentPage},#{pageSize}
     </select>
 
     <select id="countUserByKey" resultType="java.lang.Long">
-        select count(*) from user where nickname like concat('%', #{key}, '%')
+        <!--select count(*) from user where nickname like concat('%', #{key}, '%')-->
+        select count(*) from user,user_role where user.username = user_role.username and user_role.role_id = 300 and user.nickname like concat('%', #{key}, '%')
     </select>
 
     <select id="queryUserByUsername" resultType="com.bluedot.electrochemistry.pojo.domain.User">
