@@ -34,6 +34,8 @@ public class FreezeService extends BaseService {
         catch (Exception e) {
             map.put("code", 500);
             map.put("message", "出现异常，添加冻结记录失败");
+        }finally {
+            map.put("logMessage","添加冻结记录");
         }
     }
 }

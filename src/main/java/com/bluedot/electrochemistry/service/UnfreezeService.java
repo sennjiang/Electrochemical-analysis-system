@@ -75,6 +75,8 @@ public class UnfreezeService extends BaseService {
         catch (Exception e) {
             map.put("code", 500);
             map.put("message", "出现异常，更新失败");
+        }finally {
+            map.put("logMessage","更改解冻申请记录");
         }
     }
 
@@ -98,6 +100,8 @@ public class UnfreezeService extends BaseService {
         catch (Exception e) {
             map.put("code", 500);
             map.put("message", "出现未知异常，申请失败");
+        }finally {
+            map.put("logMessage","添加解冻申请记录");
         }
     }
 }
