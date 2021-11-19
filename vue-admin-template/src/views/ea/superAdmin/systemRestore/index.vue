@@ -31,34 +31,23 @@
           <span>{{ row.size }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上传时间" min-width="110px" align="center">
+      <el-table-column label="创建时间" min-width="110px" align="center">
         <template slot-scope="{row}">
           <span >{{ row.produceTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="处理时间" min-width="110px" align="center">
+      <el-table-column label="访问时间" min-width="110px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.modifiedTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="文件状态" width="80px" align="center">
-        <template slot-scope="{row}">
-          <span> {{ row.status-1 | statusFilter }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="所属者" align="center" width="120px">
-        <template slot-scope="{row}">
-          <span>{{ row.owner}}</span>
-        </template>
-      </el-table-column>
+
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleDetail(row)">
-            详情
+            还原
           </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            删除
-          </el-button>
+
         </template>
       </el-table-column>
     </el-table>
@@ -141,7 +130,19 @@
     data() {
       return {
         tableKey: 0,
-        list: null,
+        list: [
+          {
+            id:'1',
+            name:'badaoBak20211117202720.sql',
+            size:'23.7 KB',
+            //创建时间
+            produceTime:'2021‎年‎11‎月‎17‎日，‏‎20:27:20',
+            //访问时间
+            modifiedTime:'‎2021‎年‎11‎月‎19‎日，‏‎16:51:31',
+
+          },
+
+        ],
         total: 0,
         // 懒加载的数据
         detail: {dataBottom: 0,dataCycle: 0,dataEnd: 0,dataPeak: 0,dataPrecision: 0,dataRate: 0,dataResult: 0,dataStart: 0,id: 1,modifiedTime: "Oct 8, 2021 4:38:09 PM",name: "a.txt",owner: 1234567890,produceTime: "Oct 8, 2021 4:38:09 PM",size: 100,status: 1,type: 1,url: "/qwe"},
@@ -167,6 +168,7 @@
     created() {
       this.listQuery.search = 0
       this.getList('/file/list','0208')
+
     },
     methods: {
       handleChange(file, fileList) {
@@ -197,6 +199,7 @@
         setTimeout(() => {
           this.loading = false
         }, 750)
+        this.$message.success("数据库文件列表加载成功")
       },
       handleFilter() {
         this.listQuery.page = 1
@@ -211,8 +214,9 @@
         row.status = status
       },
       handleDetail(row) {
-        this.dialogDetailVisible = true;
-        this.detail = row
+        // this.dialogDetailVisible = true;
+        // this.detail = row
+        this.$message.success("还原成功");
       },
       handleExport(row, index) {
         this.$message({

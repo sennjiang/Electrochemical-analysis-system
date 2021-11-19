@@ -45,6 +45,8 @@ public class SystemService extends BaseService {
             }
             map.put("fileList",fileList);
             map.put("length",paths.length);
+
+            map.put("logMessage","完成数据库还原");
             map.put("code",200);
             map.put("message","查询成功");
         }catch (Exception e){
@@ -68,6 +70,7 @@ public class SystemService extends BaseService {
             System.out.println("备份的sql文件保存路径为:"+this.sqlFilePath);
             map.put("sqlFilePath",this.sqlFilePath);
 
+            map.put("logMessage","完成数据库备份");
             map.put("code",200);
             map.put("message","备份成功,路径为："+sqlFilePath);
         }catch (Exception e){
