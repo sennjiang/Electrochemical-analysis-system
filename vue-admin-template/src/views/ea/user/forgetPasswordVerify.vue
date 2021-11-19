@@ -3,18 +3,21 @@
     <h1 class="style-h1-title">电化学分析系统</h1>
     <hr class="style-hr"/>
     <div class="style-form-wrapper">
-      <h2 class="style-h2-forget">邮箱验证</h2>
-      <el-form style="text-align: center; margin-top: 50px;position: relative; top: 10%" ref="emailFormRef"
+      <div style="text-align: left;position:relative; top: 5%;">
+        <h2 class="style-h2-forget">邮箱验证</h2>
+      </div>
+      <el-form style="margin-top: 50px;position: relative; top: 10%" ref="emailFormRef"
                :rules="emailRules" :model="emailForm">
 
-        <el-form-item prop="email">
+        <el-form-item prop="email" style="text-align: left">
           <label style="font-size: large;">邮箱:&nbsp;&nbsp;&nbsp;&nbsp;</label>
           <el-input style="width: 300px;" v-model="emailForm.email"></el-input>
         </el-form-item>
         <br/>
         <br/>
 
-        <el-form-item prop="emailCode" class="code">
+        <el-form-item prop="emailCode" class="code" style="text-align: left">
+          <label style="font-size: large;">验证码:&nbsp;&nbsp;&nbsp;&nbsp;</label>
           <el-input class="style-code-input" placeholder="请输入验证码" v-model="emailForm.emailCode"></el-input>
           <el-button type="primary" :disabled='isDisabled' @click="sendEmailCode">{{ buttonText }}</el-button>
         </el-form-item>
@@ -251,7 +254,7 @@ body {
 .style-h2-forget {
   position: relative;
   top: 10%;
-  margin-left: 60px;
+  //margin-left: 60px;
   margin-bottom: 50px;
 }
 

@@ -3,7 +3,7 @@
     <h1 class="style-h1-title">电化学分析系统</h1>
     <hr class="style-hr"/>
     <div class="style-form-wrapper">
-      <div style="text-align: left;position:relative; top: 5%;">
+      <div style="text-align: left;position:relative; top: 10%;">
         <h2 class="style-h2-forget">邮箱验证</h2>
       </div>
       <el-form style=" margin-top: 5%;position: relative; top: 10%" ref="emailFormRef"
