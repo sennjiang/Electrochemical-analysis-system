@@ -236,6 +236,7 @@ public class FileService extends BaseService {
             map.put("message", e.getMessage());
             map.put("code", 500);
         } finally {
+            map.put("logMessage","上传文件");
             if (reader != null) {
                 try {
                     reader.close();
@@ -260,12 +261,17 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void deleteFile(Map<String, Object> map) {
-        Integer fileId = Integer.parseInt((String) map.get("fileId"));
-        File file = new File();
-        file.setId(fileId);
-        baseDao.delete(file);
-        map.put("code", 200);
-        map.put("message", "删除文件");
+        doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                Integer fileId = Integer.parseInt((String) map.get("fileId"));
+                File file = new File();
+                file.setId(fileId);
+                map.put("logMessage", "删除文件");
+                return baseDao.delete(file);
+            }
+        });
+
     }
 
     /**
@@ -274,13 +280,18 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void remove(Map<String, Object> map) {
-        Integer fileId = Integer.parseInt((String) map.get("fileId"));
-        File file = new File();
-        file.setId(fileId);
-        file.setStatus(2);
-        baseDao.update(file);
-        map.put("code", 200);
-        map.put("message", "移除文件");
+        doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                Integer fileId = Integer.parseInt((String) map.get("fileId"));
+                File file = new File();
+                file.setId(fileId);
+                file.setStatus(2);
+                map.put("logMessage", "移除文件");
+                return baseDao.update(file);
+            }
+        });
+
     }
 
     /**
@@ -289,7 +300,6 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void restore(Map<String, Object> map) {
-        System.out.println("------");
         doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
@@ -297,6 +307,7 @@ public class FileService extends BaseService {
                 File file = new File();
                 file.setId(fileId);
                 file.setStatus(1);
+                map.put("logMessage","还原文件");
                 return baseDao.update(file);
             }
         });
