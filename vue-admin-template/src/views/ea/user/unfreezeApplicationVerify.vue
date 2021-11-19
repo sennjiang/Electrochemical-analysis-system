@@ -3,22 +3,22 @@
     <h1 class="style-h1-title">电化学分析系统</h1>
     <hr class="style-hr"/>
     <div class="style-form-wrapper">
-      <h2 class="style-h2-forget">邮箱验证</h2>
-      <el-form style="text-align: center; margin-top: 50px;position: relative; top: 10%" ref="emailFormRef"
+      <!--<div style="text-align: left">-->
+        <h2 class="style-h2-forget">邮箱验证</h2>
+      <!--</div>-->
+      <el-form style=" margin-top: 50px;position: relative; top: 10%" ref="emailFormRef"
                :rules="emailRules" :model="emailForm">
 
-        <el-form-item prop="email">
+        <el-form-item prop="email" style="text-align: left">
           <label style="font-size: large;">邮箱:&nbsp;&nbsp;&nbsp;&nbsp;</label>
           <el-input style="width: 300px;" v-model="emailForm.email"></el-input>
-          <div class="aaaa">
-            {{ message }}
-        </div>
           <!--<span style="width: 300px; font-size: large" v-text="userInfo.email"></span>-->
         </el-form-item>
         <br/>
         <br/>
 
-        <el-form-item prop="emailCode" class="code">
+        <el-form-item prop="emailCode" class="code" style="text-align: left">
+          <label style="font-size: large;">验证码:&nbsp;&nbsp;&nbsp;&nbsp;</label>
           <el-input class="style-code-input" placeholder="请输入验证码" v-model="emailForm.emailCode"></el-input>
           <el-button type="primary" :disabled='isDisabled' @click="sendEmailCode">{{ buttonText }}</el-button>
         </el-form-item>
@@ -292,8 +292,9 @@ body {
 .style-h2-forget {
   position: relative;
   top: 10%;
-  margin-left: 60px;
-  margin-bottom: 50px;
+  margin-top: 10%;
+  margin-left: 0px;
+  margin-bottom: 1%;
 }
 
 .style-h1-title {
@@ -304,8 +305,8 @@ body {
 
 .style-form-wrapper {
   background-color: white;
-  width: 600px;
-  height: 490px;
+  width: 30%;
+  height: 50%;
   border-radius: 15px;
   padding: 0 50px;
   position: relative;
@@ -314,12 +315,13 @@ body {
   transform: translate(-50%, -50%);
   border: 1px #1ab2ff;
   opacity: 90%;
+  text-align: center;
 }
 
 .style-code-input {
   position: relative;
   width: 200px;
-  left: 5%;
+  //left: 5%;
 }
 .code button {
   position: relative;
@@ -327,15 +329,6 @@ body {
   width: 90px;
   height: 38px;
   text-align: center;
-}
-.aaaa{
-    color: #F56C6C;
-    font-size: 12px;
-    line-height: 1;
-    padding-top: 4px;
-    position: absolute;
-    top: 100%;
-    left: 25%;
 }
 </style>
 
