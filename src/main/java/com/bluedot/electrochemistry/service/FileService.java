@@ -8,14 +8,8 @@ import com.bluedot.electrochemistry.service.base.BaseService;
 import com.bluedot.electrochemistry.service.callback.ServiceCallback;
 import com.bluedot.framework.simplespring.core.annotation.Service;
 import com.bluedot.framework.simplespring.inject.annotation.Autowired;
-import javafx.beans.binding.When;
-import jdk.nashorn.internal.ir.annotations.Ignore;
-
 import java.io.*;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,21 +34,39 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void export(Map<String, Object> map) {
-        //测试1,"a.txt","/qwe",1234567890,100d,(short)1,(short)1
-        File file = new File(1, "1.txt", "/user/file", 12345, "1", "sadf123erd", 1, 1, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
-        file.setModifiedTime(new Timestamp(System.currentTimeMillis()));
-        file.setProduceTime(new Timestamp(System.currentTimeMillis()));
-        List<File> list = new ArrayList<>();
+        int fileId = Integer.parseInt((String) map.get("fileId")) ;
+        BaseMapper mapper = mapperFactory.createMapper();
+        File file = mapper.getFileById(fileId);
+        String url = file.getUrl();
+        url = "D://WorkPlace_Code//IDEA_Code//Electrochemical-analysis-system//" + url;
+        java.io.File f = new java.io.File(url);
+        List<AV> dataList = new ArrayList<>();
 
-        for (int i = 0; i < 60; i++) {
-            list.add(file);
+        try {
+            BufferedReader fis = new BufferedReader(new FileReader(f));
+            String temp = null;
+            boolean flag = false;
+            while((temp = fis.readLine()) != null) {
+                if("Potential/V, Current/A".equals(temp)){
+                    temp = fis.readLine();
+                    flag = true;
+                    continue;
+                }
+                if (flag){
+                    if (temp.contains(",")){
+                        String[] split = temp.split(",");
+                        AV av = new AV(split[0], Double.parseDouble(split[1]));
+                        dataList.add(av);
+                    }
+                }
+            }
+            map.put("dataList",dataList);
+            map.put("message", "执行成功");
+            map.put("code", 200);
+        } catch (IOException e) {
+            map.put("message", e.getMessage());
+            map.put("code", 500);
         }
-
-        map.put("code", 200);
-        map.put("message", "文件列表加载完成");
-        map.put("data", list);
-        map.put("length", list.size());
-
     }
 
     /**
@@ -236,6 +248,7 @@ public class FileService extends BaseService {
             map.put("message", e.getMessage());
             map.put("code", 500);
         } finally {
+            map.put("logMessage","上传文件");
             if (reader != null) {
                 try {
                     reader.close();
@@ -260,12 +273,17 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void deleteFile(Map<String, Object> map) {
-        Integer fileId = Integer.parseInt((String) map.get("fileId"));
-        File file = new File();
-        file.setId(fileId);
-        baseDao.delete(file);
-        map.put("code", 200);
-        map.put("message", "删除文件");
+        doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                Integer fileId = Integer.parseInt((String) map.get("fileId"));
+                File file = new File();
+                file.setId(fileId);
+                map.put("logMessage", "删除文件");
+                return baseDao.delete(file);
+            }
+        });
+
     }
 
     /**
@@ -274,13 +292,18 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void remove(Map<String, Object> map) {
-        Integer fileId = Integer.parseInt((String) map.get("fileId"));
-        File file = new File();
-        file.setId(fileId);
-        file.setStatus(2);
-        baseDao.update(file);
-        map.put("code", 200);
-        map.put("message", "移除文件");
+        doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                Integer fileId = Integer.parseInt((String) map.get("fileId"));
+                File file = new File();
+                file.setId(fileId);
+                file.setStatus(2);
+                map.put("logMessage", "移除文件");
+                return baseDao.update(file);
+            }
+        });
+
     }
 
     /**
@@ -289,7 +312,6 @@ public class FileService extends BaseService {
      * @param map 数据
      */
     private void restore(Map<String, Object> map) {
-        System.out.println("------");
         doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
@@ -297,6 +319,7 @@ public class FileService extends BaseService {
                 File file = new File();
                 file.setId(fileId);
                 file.setStatus(1);
+                map.put("logMessage","还原文件");
                 return baseDao.update(file);
             }
         });
@@ -417,6 +440,31 @@ public class FileService extends BaseService {
      */
     private void saveFile(Map<String, Object> map) {
 
+    }
+    class AV{
+        private String A;
+        private Double V;
+
+        public AV(String a, Double v) {
+            A = a;
+            V = v;
+        }
+
+        public String getA() {
+            return A;
+        }
+
+        public void setA(String a) {
+            A = a;
+        }
+
+        public Double getV() {
+            return V;
+        }
+
+        public void setV(Double v) {
+            V = v;
+        }
     }
 
 }

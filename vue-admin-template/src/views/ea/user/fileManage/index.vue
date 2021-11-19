@@ -98,6 +98,35 @@
       </div>
     </el-dialog>
 
+    <el-dialog :visible.sync="fileDataVisible" width="360px">
+        <!--给表格添加一个id，导出文件事件需要使用-->
+        <el-button v-waves :loading="downloadLoading"  style="margin-left: 30px;"  size="mini" type="primary" icon="el-icon-download" @click="exportExcel()">
+        导出
+        </el-button>
+        <el-button style="margin-left: 110px;" size="mini" type="primary" icon="el-icon-close"  @click="fileDataVisible = false">
+          确认
+        </el-button>
+        <el-table
+        :data="dataList"
+        border
+        style="width: 100%"
+        id="out-table"
+        >
+        <el-table-column
+            prop="A"
+            label="V"
+            width="180"
+        >
+        </el-table-column>
+        <el-table-column
+            prop="V"
+            label="A"
+            width="180"
+        >
+        </el-table-column>
+        </el-table>
+    </el-dialog>
+
     <el-dialog :visible.sync="dialogDetailVisible">
       <table
       fit
@@ -137,6 +166,8 @@
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import FileSaver from "file-saver";
+import XLSX from "xlsx";
 
 const calendarTypeOptions = [
   { key: "最近三天" },
@@ -168,6 +199,7 @@ export default {
       tableKey: 0,
       list: null,
       total: 0,
+      dataList: null,
       // 懒加载的数据
       detail: {dataBottom: 0,dataCycle: 0,dataEnd: 0,dataPeak: 0,dataPrecision: 0,dataRate: 0,dataResult: 0,dataStart: 0,id: 1,modifiedTime: "Oct 8, 2021 4:38:09 PM",name: "a.txt",owner: 1234567890,produceTime: "Oct 8, 2021 4:38:09 PM",size: 100,status: 1,type: 1,url: "/qwe"},
       listLoading: true,
@@ -186,7 +218,8 @@ export default {
       dialogDetailVisible: false,
       fileUploadVisible : false,
       dialogStatus: '',
-      downloadLoading: false
+      downloadLoading: false,
+      fileDataVisible:false
     }
   },
   created() {
@@ -238,11 +271,62 @@ export default {
       this.detail = row
     },
     handleExport(row) {
-      this.$message({
-        message: 'Export TODO fileid ' + row.id,
-        type: 'success'
-      })
+      let dataDetail = {boundary: '0207',fileId: row.id}
+      this.postRequest("/file/data",dataDetail).then(response => {
+            if (response) {
+              this.dataList = response.dataList
+              console.log(this.dataList)
+            }
+          })
+        this. fileDataVisible= true;
+        // /* 从表生成工作簿对象 */
+        // var wb = XLSX.utils.table_to_book(document.querySelector("#out-table"));
+        // /* 获取二进制字符串作为输出 */
+        // var wbout = XLSX.write(wb, {
+        //     bookType: "xlsx",
+        //     bookSST: true,
+        //     type: "array"
+        // });
+        // try {
+        //     FileSaver.saveAs(
+        //     //Blob 对象表示一个不可变、原始数据的类文件对象。
+        //     //Blob 表示的不一定是JavaScript原生格式的数据。
+        //     //File 接口基于Blob，继承了 blob 的功能并将其扩展使其支持用户系统上的文件。
+        //     //返回一个新创建的 Blob 对象，其内容由参数中给定的数组串联组成。
+        //     new Blob([wbout], { type: "application/octet-stream" }),
+        //     //设置导出文件名称
+        //     "av.xlsx"
+        //     );
+        // } catch (e) {
+        //     if (typeof console !== "undefined") console.log(e, wbout);
+        // }
+        // return wbout;
+        
     },
+    exportExcel() {
+        /* 从表生成工作簿对象 */
+        let wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
+        /* 获取二进制字符串作为输出 */
+        var wbout = XLSX.write(wb, {
+            bookType: 'xlsx',
+            bookSST: true,
+            type: 'array'
+        })
+        try {
+            FileSaver.saveAs(
+            //Blob 对象表示一个不可变、原始数据的类文件对象。
+            //Blob 表示的不一定是JavaScript原生格式的数据。
+            //File 接口基于Blob，继承了 blob 的功能并将其扩展使其支持用户系统上的文件。
+            //返回一个新创建的 Blob 对象，其内容由参数中给定的数组串联组成。
+            new Blob([wbout], { type: 'application/octet-stream' }),
+            //设置导出文件名称
+            'sheetjs.xlsx'
+            )
+        } catch (e) {
+            if (typeof console !== 'undefined') console.log(e, wbout)
+        }
+        return wbout
+        },
     handleDelete(row, index) {
      let deleteData = {boundary:"0206",fileId:row.id};
      this.getRequest('/file/delete', deleteData).then(response => {

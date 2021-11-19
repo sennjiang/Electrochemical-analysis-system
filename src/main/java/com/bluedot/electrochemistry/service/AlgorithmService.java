@@ -44,6 +44,7 @@ public class AlgorithmService extends BaseService {
      * 会将加载完数据的算法实体在函数体内放入到map中去
      */
     private void loadingData(Map<String, Object> map){
+        map.put("logMessage", "加载算法文件(*^▽^*)");
         int algorithmId = Integer.parseInt((String) map.get("algorithmId"));
         BaseMapper mapper = mapperFactory.createMapper();
         Algorithm algorithm = mapper.getAlgorithmById(algorithmId);
@@ -95,6 +96,7 @@ public class AlgorithmService extends BaseService {
        1.事务处理还没有做,数据库中的数据要和文件上传做事务同步提交
     * */
     private void addAlgorithm(Map<String, Object> map){
+        map.put("logMessage", "添加算法(*^▽^*)");
         File file  = (File) map.get("file");
         BufferedReader reader = null;
         try {
@@ -174,6 +176,7 @@ public class AlgorithmService extends BaseService {
        1.事务处理还没有做,数据库中的数据要和文件删除做事务同步提交
     * */
     private void deleteAlgorithm(Map<String, Object> map){
+        map.put("logMessage", "删除算法(*^▽^*)");
         try {
             doSimpleModifyTemplate(map, new ServiceCallback<Object>() {
                 @Override
