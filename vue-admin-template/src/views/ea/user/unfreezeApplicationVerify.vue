@@ -3,15 +3,15 @@
     <h1 class="style-h1-title">电化学分析系统</h1>
     <hr class="style-hr"/>
     <div class="style-form-wrapper">
-      <!--<div style="text-align: left">-->
+      <div style="text-align: left;position:relative; top: 5%;">
         <h2 class="style-h2-forget">邮箱验证</h2>
-      <!--</div>-->
-      <el-form style=" margin-top: 50px;position: relative; top: 10%" ref="emailFormRef"
+      </div>
+      <el-form style=" margin-top: 5%;position: relative; top: 10%" ref="emailFormRef"
                :rules="emailRules" :model="emailForm">
 
         <el-form-item prop="email" style="text-align: left">
           <label style="font-size: large;">邮箱:&nbsp;&nbsp;&nbsp;&nbsp;</label>
-          <el-input style="width: 300px;" v-model="emailForm.email"></el-input>
+          <el-input style="width: 80%;" v-model="emailForm.email"></el-input>
           <!--<span style="width: 300px; font-size: large" v-text="userInfo.email"></span>-->
         </el-form-item>
         <br/>
@@ -291,10 +291,11 @@ body {
 
 .style-h2-forget {
   position: relative;
-  top: 10%;
+  top: 1%;
   margin-top: 10%;
   margin-left: 0px;
   margin-bottom: 1%;
+  //border: solid blue 1px;
 }
 
 .style-h1-title {
@@ -311,7 +312,7 @@ body {
   padding: 0 50px;
   position: relative;
   left: 50%;
-  top: 50%;
+  top: 40%;
   transform: translate(-50%, -50%);
   border: 1px #1ab2ff;
   opacity: 90%;
