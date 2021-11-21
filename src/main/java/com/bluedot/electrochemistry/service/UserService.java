@@ -231,9 +231,10 @@ public class UserService extends BaseService {
      * 注销用户 更改用户状态
      * @param map 用户名
      */
-    private void logOutUser(Map map) {
+    private void logoutUser(Map map) {
         User user = parseToUser(map);
         user.setStatus(2);
+        user.setEmail("null");
         doSimpleModifyTemplate(map, new ServiceCallback<User>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {

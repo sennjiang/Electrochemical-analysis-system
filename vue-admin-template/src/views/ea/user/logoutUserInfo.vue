@@ -81,7 +81,7 @@ export default {
 
     // 注销账户
     deleteUSerByUsername () {
-      this.postRequest('/deleteUSerByUsername', {boundary: '0105', username: this.userInfo.username}).then(resp => {
+      this.postRequest('/logoutUser', {boundary: '0105', username: this.userInfo.username}).then(resp => {
         window.sessionStorage.removeItem('tokenStr')
         this.$router.push('/login')
       })
