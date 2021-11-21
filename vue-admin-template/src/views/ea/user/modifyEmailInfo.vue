@@ -3,13 +3,16 @@
     <h1 class="style-h1-title">电化学分析系统</h1>
     <hr class="style-hr"/>
     <div class="style-form-wrapper">
-      <h2 class="style-h2-forget">填写新邮箱</h2>
-      <el-form style="text-align: center; margin-top: 50px;position: relative; top: 10%" ref="emailFormRef"
+      <div style="text-align: left;position:relative; top: 10%;">
+        <h2 class="style-h2-forget">填写新邮箱</h2>
+      </div>
+      <el-form style="text-align: left; margin-top: 50px;position: relative; top: 10%" ref="emailFormRef"
                :rules="emailRules" :model="emailForm">
 
         <el-form-item prop="email">
-          <label style="font-size: large;">邮箱:&nbsp;&nbsp;&nbsp;&nbsp;</label>
-          <el-input style="width: 300px;" v-model="emailForm.email"></el-input>
+          <label style="font-size: large;">新邮箱:</label>
+          <br/>
+          <el-input style="width: 300px;" v-model="emailForm.email" placeholder="新邮箱"></el-input>
           <!--<span style="width: 300px; font-size: large" v-text="userInfo.email"></span>-->
         </el-form-item>
         <br/>
@@ -233,7 +236,7 @@ body {
 .style-h2-forget {
   position: relative;
   top: 10%;
-  margin-left: 60px;
+  //margin-left: 60px;
   margin-bottom: 50px;
 }
 
@@ -260,7 +263,7 @@ body {
 .style-code-input {
   position: relative;
   width: 200px;
-  left: 5%;
+  //left: 5%;
 }
 
 .code button {

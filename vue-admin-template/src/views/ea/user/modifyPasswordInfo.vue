@@ -4,17 +4,17 @@
     <hr class="style-hr"/>
     <div class="style-form-wrapper">
       <h2 class="style-h2-forget">填写新密码</h2>
-      <el-form style="text-align: center; margin-top: 50px;position: relative; top: 10%" ref="passwordForm"
+      <el-form style="text-align: left; margin-top: 50px;position: relative; top: 10%" ref="passwordForm"
                :rules="passwordFormRules" :model="passwordForm">
-        <el-form-item prop="password1">
-          <span>新的密码:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <el-form-item label="新的密码" prop="password1">
+          <!--<span>新的密码:&nbsp;&nbsp;&nbsp;&nbsp;</span>-->
           <el-input style="width: 300px;" type="password" v-model="passwordForm.password1"></el-input>
         </el-form-item>
         <br/>
         <br/>
 
-        <el-form-item prop="password2">
-          <span>密码确认:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <el-form-item label="密码确认" prop="password2">
+          <!--<span>密码确认:&nbsp;&nbsp;&nbsp;&nbsp;</span>-->
           <el-input style="width: 300px" v-model="passwordForm.password2" type="password"></el-input>
         </el-form-item>
         <br/>
@@ -73,7 +73,9 @@ export default {
           {validator: validatePwd1, trigger: 'blur'},
           {min: 6, max: 18, message: '长度在 5 到 12 个字符', trigger: 'blur'}
         ],
-        password2: {validator: validatePwd2, trigger: 'blur'},
+        password2: [
+          {required: true, message: '请再输入一次', trigger: 'blur'},
+          {validator: validatePwd2, trigger: 'blur'}]
       }
 
     }
