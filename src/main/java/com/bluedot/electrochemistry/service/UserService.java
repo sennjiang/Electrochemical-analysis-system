@@ -228,6 +228,22 @@ public class UserService extends BaseService {
     }
 
     /**
+     * 注销用户 更改用户状态
+     * @param map 用户名
+     */
+    private void logOutUser(Map map) {
+        User user = parseToUser(map);
+        user.setStatus(2);
+        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                map.put("logMessage","注销用户");
+                return baseDao.update(user);
+            }
+        });
+    }
+
+    /**
      * 删除用户根据id
      *
      * @param map UnfreezeApplication实体类
@@ -236,10 +252,10 @@ public class UserService extends BaseService {
         doSimpleModifyTemplate(map, new ServiceCallback<User>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
+                map.put("logMessage","删除用户");
                 return baseDao.delete(parseToUser(map));
             }
         });
-        map.put("logMessage","删除用户");
     }
 
     /**
@@ -339,10 +355,10 @@ public class UserService extends BaseService {
         doSimpleModifyTemplate(map, new ServiceCallback<User>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
+                map.put("logMessage","保存用户解冻信息");
                 return baseDao.insert(parseToUnfreeze(map));
             }
         });
-        map.put("logMessage","保存用户解冻信息");
     }
 
     /**
@@ -387,14 +403,12 @@ public class UserService extends BaseService {
         User user = new User();
         user.setUsername(username);
         user.setPortrait(portraitPath);
-        System.out.println(user);
         doSimpleModifyTemplate(map, new ServiceCallback<User>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
                 return baseDao.update(user);
             }
         });
-        map.put("logMessage","用户上传头像");
     }
 
     /**
