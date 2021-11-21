@@ -180,7 +180,7 @@ export default {
       },
       //TODO 算法类型待修改
       fileUploadPath: 'http://localhost:8080/Electrochemical_Analysis_System_war/algorithm/addAlgorithm?boundary=0406&username='
-        +this.username,
+        +window.sessionStorage.getItem("tokenStr"),
       importanceOptions: ['正常','已删除'],
       /*calendarTypeOptions,*/
       statusOptions,
@@ -193,6 +193,7 @@ export default {
   created() {
     this.username = window.sessionStorage.getItem("tokenStr");
     this.getList('/algorithm/list','0404');
+
   },
   methods: {
     handleChange(file, fileList) {
