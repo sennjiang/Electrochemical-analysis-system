@@ -3,8 +3,9 @@
     <h1 class="style-h1-title">电化学分析系统</h1>
     <hr class="style-hr"/>
     <div class="style-form-wrapper">
+      <div style="position:relative; left: 10%; top: 15%">
       <h2 class="style-h2-forget">邮箱验证</h2>
-      <el-form style="text-align: center; margin-top: 50px;position: relative; top: 10%" ref="emailFormRef" :rules="emailRules" :model="emailForm">
+      <el-form style="text-align: left; margin-top: 50px;position: relative; top: 10%" ref="emailFormRef" :rules="emailRules" :model="emailForm">
 
         <el-form-item prop="email">
           <label style="font-size: large;">邮箱:&nbsp;&nbsp;&nbsp;&nbsp;</label>
@@ -24,6 +25,7 @@
         <br/>
         <el-row><el-button  type="primary" size="medium" class="style-form-button" :loading="loadState" @click="goToInfo">确定</el-button></el-row>
       </el-form>
+    </div>
     </div>
   </div>
 </template>
@@ -219,7 +221,7 @@ body {
 .style-h2-forget {
   position: relative;
   top: 10%;
-  margin-left: 60px;
+  //margin-left: 60px;
   margin-bottom: 50px;
 }
 
@@ -246,7 +248,7 @@ body {
 .style-code-input {
   position: relative;
   width: 200px;
-  left: 5%;
+  //left: 5%;
 }
 
 .code button {
