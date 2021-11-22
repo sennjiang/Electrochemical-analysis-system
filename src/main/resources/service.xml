@@ -23,7 +23,7 @@
     <node>
         <number>0105</number>
         <service>UserService</service>
-        <method>deleteUserByUsername</method>
+        <method>logoutUser</method>
     </node>
     <node>
         <number>0106</number>

@@ -60,13 +60,15 @@
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <span v-text='userInfo.email'></span>
-          <el-button size="small" style="position: relative; left: 20%" @click="goToEmailVerify">修改邮箱</el-button>
+        <el-form-item label="邮箱" prop="email" style="position: relative;">
+
+            <span v-text='userInfo.email'></span>
+            <el-button size="small" style="position: relative; margin-left: 38%" @click="goToEmailVerify">修改邮箱</el-button>
+
         </el-form-item>
-        <el-form-item label="密码" prop="pwd">
+        <el-form-item label="密码" prop="pwd" style="position: relative;">
           <span>******</span>
-          <el-button size="small" style="position: relative; left: 31%" @click="goToPasswordVerify">修改密码</el-button>
+          <el-button size="small" style="position: relative; left: 50%" @click="goToPasswordVerify">修改密码</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm">保存修改</el-button>

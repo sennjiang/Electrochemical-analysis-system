@@ -22,6 +22,8 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 用户业务
@@ -45,16 +47,28 @@ public class UserService extends BaseService {
      */
     private void login(Map map) {
 
-        String username = (String) map.get("username");
+        String account = (String) map.get("username");
         String password = (String) map.get("password");
         BaseMapper mapper = mapperFactory.createMapper();
-        User user = mapper.queryUserByUsername(Integer.parseInt(username));
-        if (user != null && password.equals(user.getPassword())) {
-            map.put("userInfo", user);
-            map.put("code", 200);
+        // 判断是邮箱还是username
+        if (isEmail(account)) {
+            User user = mapper.queryUserByEmail(account);
+            if (user != null && password.equals(user.getPassword())) {
+                map.put("userInfo", user);
+                map.put("code", 200);
+            } else {
+                map.put("code", 500);
+                map.put("message", "账号或者密码错误");
+            }
         } else {
-            map.put("code", 500);
-            map.put("message", "账号或者密码错误");
+            User user = mapper.queryUserByUsername(Integer.parseInt(account));
+            if (user != null && password.equals(user.getPassword())) {
+                map.put("userInfo", user);
+                map.put("code", 200);
+            } else {
+                map.put("code", 500);
+                map.put("message", "账号或者密码错误");
+            }
         }
     }
 
@@ -228,6 +242,23 @@ public class UserService extends BaseService {
     }
 
     /**
+     * 注销用户 更改用户状态
+     * @param map 用户名
+     */
+    private void logoutUser(Map map) {
+        User user = parseToUser(map);
+        user.setStatus(2);
+        user.setEmail("null");
+        doSimpleModifyTemplate(map, new ServiceCallback<User>() {
+            @Override
+            public int doDataModifyExecutor(BaseDao baseDao) {
+                map.put("logMessage","注销用户");
+                return baseDao.update(user);
+            }
+        });
+    }
+
+    /**
      * 删除用户根据id
      *
      * @param map UnfreezeApplication实体类
@@ -236,10 +267,10 @@ public class UserService extends BaseService {
         doSimpleModifyTemplate(map, new ServiceCallback<User>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
+                map.put("logMessage","删除用户");
                 return baseDao.delete(parseToUser(map));
             }
         });
-        map.put("logMessage","删除用户");
     }
 
     /**
@@ -339,10 +370,10 @@ public class UserService extends BaseService {
         doSimpleModifyTemplate(map, new ServiceCallback<User>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
+                map.put("logMessage","保存用户解冻信息");
                 return baseDao.insert(parseToUnfreeze(map));
             }
         });
-        map.put("logMessage","保存用户解冻信息");
     }
 
     /**
@@ -387,14 +418,12 @@ public class UserService extends BaseService {
         User user = new User();
         user.setUsername(username);
         user.setPortrait(portraitPath);
-        System.out.println(user);
         doSimpleModifyTemplate(map, new ServiceCallback<User>() {
             @Override
             public int doDataModifyExecutor(BaseDao baseDao) {
                 return baseDao.update(user);
             }
         });
-        map.put("logMessage","用户上传头像");
     }
 
     /**
@@ -434,4 +463,27 @@ public class UserService extends BaseService {
         Timestamp gmtCreated = (Timestamp) map.get("gmtCreated");
         return new User(username, password, nickname, gender, age, email, birth, status, portrait, gmtCreated);
     }
+
+    /**
+     * 判断是否是邮箱
+     * @param email
+     * @return
+     */
+    public static boolean isEmail(String email) {
+
+        Pattern emailPattern = Pattern.compile("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
+
+        Matcher matcher = emailPattern.matcher(email);
+
+        if(matcher.find()){
+
+            return true;
+
+        }
+
+        return false;
+
+    }
+
+
 }
