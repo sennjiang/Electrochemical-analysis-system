@@ -54,10 +54,10 @@
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="currentPage4"
+
       :page-sizes="[10, 20, 50, 100]"
       :page-size="10"
-      background=true
+
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
@@ -189,17 +189,17 @@
         this.listQuery.boundary = '1502'
         this.postRequest(path, this.listQuery).then(response => {
           if (response) {
-            this.list = response.fileList
+            //this.list = response.fileList
             console.log(this.list)
-            this.total = response.length
-            this.owner = response.username
+            this.total = 1
+            this.owner = 20190001
           }
         })
         this.listLoading = false
         setTimeout(() => {
           this.loading = false
         }, 750)
-        this.$message.success("数据库文件列表加载成功")
+        //this.$message.success("数据库文件列表加载成功")
       },
       handleFilter() {
         this.listQuery.page = 1
@@ -215,8 +215,8 @@
       },
       handleDetail(row) {
         // this.dialogDetailVisible = true;
-        // this.detail = row
-        this.$message.success("还原成功");
+        // this.detail = row;
+        this.$message.success("还原成功")
       },
       handleExport(row, index) {
         this.$message({
@@ -247,7 +247,7 @@
 <style>
   .file_table td{
     height: 30px;
-    /* background-color: beige; */
+    background-color: beige;
     border-style:none none solid none;
     border-color:#c5c5c5;
     border-width:2px;

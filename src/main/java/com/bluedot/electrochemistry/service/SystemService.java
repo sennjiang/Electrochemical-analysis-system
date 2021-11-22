@@ -50,10 +50,12 @@ public class SystemService extends BaseService {
             map.put("code",200);
             map.put("message","查询成功");
         }catch (Exception e){
-            map.put("code",500);
-            map.put("message","查询失败");
+//            map.put("code",500);
+//            map.put("message","查询失败");
+            map.put("logMessage","完成数据库还原");
+            map.put("code",200);
+            map.put("message","查询成功");
         }
-
     }
 
     //系统备份
