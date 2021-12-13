@@ -1,6 +1,5 @@
 package com.bluedot.framework.simplespring.util;
 
-import com.bluedot.framework.simplespring.mvc.monitor.Data;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

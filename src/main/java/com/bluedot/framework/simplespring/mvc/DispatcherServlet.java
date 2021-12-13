@@ -6,7 +6,6 @@ import com.bluedot.framework.simplespring.aop.AspectWeaver;
 import com.bluedot.framework.simplespring.core.BeanContainer;
 import com.bluedot.framework.simplespring.inject.DependencyInject;
 import com.bluedot.framework.simplespring.mvc.processor.RequestProcessor;
-import com.bluedot.framework.simplespring.mvc.processor.impl.MQRequestProcessor;
 import com.bluedot.framework.simplespring.mvc.processor.impl.PreRequestProcessor;
 import com.bluedot.framework.simplespring.mvc.processor.impl.StaticResourceRequestProcessor;
 import com.bluedot.framework.simplespring.util.LogUtil;
@@ -68,7 +67,7 @@ public class DispatcherServlet extends HttpServlet {
         // 静态资源的请求处理器（如果是静态资源让RequestDispatcher自己处理）
         PROCESSORS.add(new StaticResourceRequestProcessor(servletConfig.getServletContext()));
         // 根据业务需要自定义的请求处理器
-        PROCESSORS.add(new MQRequestProcessor(contextConfig));
+//        PROCESSORS.add(new MQRequestProcessor(contextConfig));
     }
 
 

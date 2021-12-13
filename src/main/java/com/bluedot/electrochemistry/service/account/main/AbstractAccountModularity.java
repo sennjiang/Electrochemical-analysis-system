@@ -6,7 +6,7 @@ import com.bluedot.electrochemistry.service.sender.Sender;
 import com.bluedot.electrochemistry.service.utils.VerifyCodeMaker;
 
 /**
- * @author Jangs
+ * @author Sens
  * @param <T> 用户类
  */
 public abstract class AbstractAccountModularity<T> implements Lifecycle {
