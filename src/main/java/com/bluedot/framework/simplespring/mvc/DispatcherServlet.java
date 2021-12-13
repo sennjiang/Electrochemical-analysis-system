@@ -5,17 +5,11 @@ import com.bluedot.framework.simplemybatis.session.SqlSessionFactoryBuilder;
 import com.bluedot.framework.simplespring.aop.AspectWeaver;
 import com.bluedot.framework.simplespring.core.BeanContainer;
 import com.bluedot.framework.simplespring.inject.DependencyInject;
-import com.bluedot.framework.simplespring.mvc.mapper.CommonMapper;
 import com.bluedot.framework.simplespring.mvc.processor.RequestProcessor;
 import com.bluedot.framework.simplespring.mvc.processor.impl.MQRequestProcessor;
 import com.bluedot.framework.simplespring.mvc.processor.impl.PreRequestProcessor;
 import com.bluedot.framework.simplespring.mvc.processor.impl.StaticResourceRequestProcessor;
 import com.bluedot.framework.simplespring.util.LogUtil;
-import javafx.util.Pair;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 
 import javax.servlet.ServletConfig;
@@ -33,7 +27,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * @author JDsen99
+ * @author Sens
  */
 @WebServlet(name = "DispatcherServlet", urlPatterns = "/*",
         initParams = {@WebInitParam(name = "contextConfigLocation", value = "application.properties")},
@@ -67,8 +61,6 @@ public class DispatcherServlet extends HttpServlet {
         new SqlSessionFactoryBuilder().build(servletConfig.getInitParameter("contextConfigLocation"));
         //依赖注入
         new DependencyInject().doDependencyInject();
-        //映射初始化
-        new CommonMapper().initMapper(contextConfig);
 
         //初始化请求处理器责任链
         // 预处理的请求处理器
