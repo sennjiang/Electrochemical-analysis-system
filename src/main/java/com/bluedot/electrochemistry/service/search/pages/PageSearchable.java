@@ -1,6 +1,6 @@
 package com.bluedot.electrochemistry.service.search.pages;
 
-import com.bluedot.electrochemistry.service.role.RoleModularity;
+import com.bluedot.electrochemistry.service.search.condition.Conditional;
 
 /**
  * @author Sens
@@ -8,6 +8,6 @@ import com.bluedot.electrochemistry.service.role.RoleModularity;
 public interface PageSearchable {
 
     /**/
-    void search(int pageStart, int pageSize);
+    void search(Conditional condition, int pageStart, int pageSize);
 
 }
