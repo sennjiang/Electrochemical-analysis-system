@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="com.bluedot.electrochemistry.dao.BaseMapper">
+
+    <select id="getList" resultType="com.bluedot.electrochemistry.pojo.domain.User">
+        select * from user limit #{currentPage},#{pageSize}
+    </select>
+
+</mapper>
