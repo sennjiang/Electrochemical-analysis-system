@@ -3,6 +3,7 @@ package com.bluedot.electrochemistry.service.file.processor;
 /**
  * 抽象 文件上传类
  * @author Sens
+ * @Create 2021/12/16 18:58
  */
 public abstract class AbstractFileProcessor {
 

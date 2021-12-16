@@ -2,6 +2,7 @@ package com.bluedot.electrochemistry.service.sender;
 
 /**
  * @author Sens
+ * @Create 2021/12/16 18:58
  */
 public interface Sender {
     //发送消息
