@@ -9,7 +9,7 @@ import com.bluedot.electrochemistry.service.search.pages.PageSearchable;
  */
 public abstract class Direction<T> implements Lifecycle{
 
-    protected PageSearchable[] indexs;
+    protected T[] indexs;
 
     protected int capacity;
 

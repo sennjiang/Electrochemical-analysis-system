@@ -2,8 +2,6 @@ package com.bluedot.electrochemistry.service.account.main;
 
 import com.bluedot.electrochemistry.service.Lifecycle;
 import com.bluedot.electrochemistry.service.account.verify.Verify;
-import com.bluedot.electrochemistry.service.sender.Sender;
-import com.bluedot.electrochemistry.service.utils.VerifyCodeMaker;
 
 /**
  * @author Sens

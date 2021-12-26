@@ -31,10 +31,6 @@ public class JsonUtil {
                 }
             }
         }
-        //剔除 service 因为service是Class对象 不需要输出Json
-        //TODO 使用更优秀的方式 或设计模式
-        ((Map) ojb).remove("service");
-        ((Map) ojb).remove("file");
         return gson.toJson(ojb);
     }
 }

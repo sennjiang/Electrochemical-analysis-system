@@ -11,10 +11,10 @@ import java.util.List;
  * @author Sens
  * @Create 2021/12/16 18:58
  */
-public class SearchDirection extends Direction<PageSearchable> {
+public class SearchDirection extends Direction<PageSearchable<?>> {
 
     @Override
-    public PageSearchable get(int index) throws IllegalIndexException {
+    public PageSearchable<?> get(int index) throws IllegalIndexException {
         if (index < 0 || index >= capacity) throw new IllegalIndexException("非法索引异常");
         return indexs[index];
     }
